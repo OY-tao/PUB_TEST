@@ -1,0 +1,197 @@
+api: pytorch
+api_type: function_FlashAttnBwdSeqused
+version: v1.0
+name: flash_attn_npu_3._flash_attn_backward
+generate: ascend_generate_FlashAttnBwdSeqused
+dtype_numbers: 110
+extra_numbers: 0
+standard:
+  acc:
+    # Slightly looser than 2/1.2: FA bwd vs fp64 with a native-dtype BM
+    # (cpu_bm) still has a few small-value outliers on irregular headdim.
+    cv_fused_double_benchmark:
+      max_re_ratio: 5
+      avg_re_ratio: 1.5
+      root_mean_squared_ratio: 1.5
+  perf: [0.95,0.95]
+inputs:
+  # TND only. cu_seqlens is the allocated region; seqused_q/seqused_k are the
+  # used prefixes and are rebuilt from aclnn_name, not from these placeholders.
+  #
+  # backend selects the NPU bwd entry:
+  #   ascend950 -> flash_attn_npu_3.flash_attn_npu_interface_950
+  #                (csrc/ascend950/flash_attn_npu_3)
+  #   ascend910 -> flash_attn_npu_3.flash_attn_npu_interface
+  #                (csrc/ascend910/flash_attn_npu_3)
+  # Put a single value to lock one SoC, or both to sample.
+  - name: q
+    type: tensor
+    required: true
+    dtypes:
+      values: [ fp16, bf16 ]
+    ranges:
+      valid:
+        # Keep FA scores in a stable range; [-5,5] blows up QK*scale and
+        # makes bwd double-benchmark fail even when seqused itself is correct.
+        values: [ [-1, 1] ]
+      invalid:
+        values: [ [-1, 1] ]
+    shapes:
+      dim_numbers:
+        values: [ 3 ]
+      dim_values:
+        values: [ 1, 2, 4, 8, 16, 32, 64, 128, 256, 511, 512 ]
+  - name: k
+    type: tensor
+    required: true
+    dtypes:
+      values: [ fp16, bf16 ]
+    ranges:
+      valid:
+        values: [ [-1, 1] ]
+      invalid:
+        values: [ [-1, 1] ]
+    shapes:
+      dim_numbers:
+        values: [ 3 ]
+      dim_values:
+        values: [ 1, 2, 4, 8, 16, 32, 64, 128, 256, 511, 512 ]
+  - name: v
+    type: tensor
+    required: true
+    dtypes:
+      values: [ fp16, bf16 ]
+    ranges:
+      valid:
+        values: [ [-1, 1] ]
+      invalid:
+        values: [ [-1, 1] ]
+    shapes:
+      dim_numbers:
+        values: [ 3 ]
+      dim_values:
+        values: [ 1, 2, 4, 8, 16, 32, 64, 128, 256, 511, 512 ]
+  - name: cu_seqlens_q
+    type: tensor
+    required: false
+    dtypes:
+      values: [ int32 ]
+    ranges:
+      valid:
+        values: [ [0, 1] ]
+      invalid:
+        values: [ [0, 1] ]
+    shapes:
+      dim_numbers:
+        values: [ 1 ]
+      dim_values:
+        values: [ 2, 3, 5, 9 ]
+  - name: cu_seqlens_k
+    type: tensor
+    required: false
+    dtypes:
+      values: [ int32 ]
+    ranges:
+      valid:
+        values: [ [0, 1] ]
+      invalid:
+        values: [ [0, 1] ]
+    shapes:
+      dim_numbers:
+        values: [ 1 ]
+      dim_values:
+        values: [ 2, 3, 5, 9 ]
+  - name: max_seqlen_q
+    type: attr
+    required: false
+    dtypes:
+      values: [ int ]
+    ranges:
+      valid:
+        values: [ 512 ]
+      invalid:
+        values: [ 1 ]
+  - name: max_seqlen_k
+    type: attr
+    required: false
+    dtypes:
+      values: [ int ]
+    ranges:
+      valid:
+        values: [ 512 ]
+      invalid:
+        values: [ 1 ]
+  - name: layout
+    type: attr
+    required: true
+    dtypes:
+      values: [ string ]
+    ranges:
+      valid:
+        values: [ TND ]
+      invalid:
+        values: [ TND ]
+  - name: softmax_scale
+    type: attr
+    required: false
+    dtypes:
+      values: [ float ]
+    ranges:
+      valid:
+        values: [ default, [0.000001, 1.0] ]
+      invalid:
+        values: [ default ]
+  - name: causal
+    type: attr
+    required: false
+    dtypes:
+      values: [ bool ]
+    ranges:
+      valid:
+        values: [ True, False ]
+      invalid:
+        values: [ True, False ]
+  - name: window_size
+    type: attr_tuple
+    required: false
+    dtypes:
+      values: [ int ]
+    tuple_numbers:
+      values: [ 2 ]
+    ranges:
+      valid:
+        values: [ -1 ]
+      invalid:
+        values: [ -1 ]
+  - name: softcap
+    type: attr
+    required: false
+    dtypes:
+      values: [ float ]
+    ranges:
+      valid:
+        values: [ 0.0 ]
+      invalid:
+        values: [ 0.0 ]
+  - name: deterministic
+    type: attr
+    required: false
+    dtypes:
+      values: [ bool ]
+    ranges:
+      valid:
+        values: [ False ]
+      invalid:
+        values: [ False ]
+  - name: backend
+    type: attr
+    required: true
+    dtypes:
+      values: [ string ]
+    ranges:
+      valid:
+        # Lock one SoC, or list both to sample per case.
+        # values: [ ascend950, ascend910 ]
+        values: [ ascend950 ]
+      invalid:
+        values: [ ascend950 ]

@@ -1,0 +1,5953 @@
+[
+ {
+  "id": 1,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_GT_REGION_Q",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[257],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_Q\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[257],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_Q\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_gt_region",
+   "tag": "USED_GT_REGION_Q"
+  }
+ },
+ {
+  "id": 2,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_GT_REGION_K",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[257],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_K\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[257],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_K\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_gt_region",
+   "tag": "USED_GT_REGION_K"
+  }
+ },
+ {
+  "id": 3,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_GT_REGION_BOTH",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[512],\"sk\":[512],\"uq\":[999],\"uk\":[999],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_BOTH\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[512],\"sk\":[512],\"uq\":[999],\"uk\":[999],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_BOTH\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_gt_region",
+   "tag": "USED_GT_REGION_BOTH"
+  }
+ },
+ {
+  "id": 4,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_GT_REGION_LAST",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[128,256],\"sk\":[128,256],\"uq\":[128,257],\"uk\":[128,200],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_LAST\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     384,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     384,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     384,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     3
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     3
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[128,256],\"sk\":[128,256],\"uq\":[128,257],\"uk\":[128,200],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_GT_REGION_LAST\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_gt_region",
+   "tag": "USED_GT_REGION_LAST"
+  }
+ },
+ {
+  "id": 5,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_ZERO_Q",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[0],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_ZERO_Q\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[0],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_ZERO_Q\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_zero",
+   "tag": "USED_ZERO_Q"
+  }
+ },
+ {
+  "id": 6,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_ZERO_K",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[0],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_ZERO_K\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[0],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_ZERO_K\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_zero",
+   "tag": "USED_ZERO_K"
+  }
+ },
+ {
+  "id": 7,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_ZERO_BOTH",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[0],\"uk\":[0],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_ZERO_BOTH\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[0],\"uk\":[0],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_ZERO_BOTH\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_zero",
+   "tag": "USED_ZERO_BOTH"
+  }
+ },
+ {
+  "id": 8,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_NEG_Q",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[-1],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_NEG_Q\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[-1],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_NEG_Q\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_neg",
+   "tag": "USED_NEG_Q"
+  }
+ },
+ {
+  "id": 9,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_USED_NEG_K",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[-8],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_NEG_K\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "outside allocated region",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[-8],\"pass_q\":true,\"pass_k\":true,\"negative\":\"USED_NEG_K\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "used_neg",
+   "tag": "USED_NEG_K"
+  }
+ },
+ {
+  "id": 10,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_CAUSAL_UQ_GT_UK",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[512],\"sk\":[512],\"uq\":[400],\"uk\":[200],\"pass_q\":true,\"pass_k\":true,\"negative\":\"CAUSAL_UQ_GT_UK\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "used_q > used_k",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[512],\"sk\":[512],\"uq\":[400],\"uk\":[200],\"pass_q\":true,\"pass_k\":true,\"negative\":\"CAUSAL_UQ_GT_UK\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "causal_uq_gt_uk",
+   "tag": "CAUSAL_UQ_GT_UK"
+  }
+ },
+ {
+  "id": 11,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_CAUSAL_UQ_GT_UK_D1",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[512],\"sk\":[512],\"uq\":[257],\"uk\":[256],\"pass_q\":true,\"pass_k\":true,\"negative\":\"CAUSAL_UQ_GT_UK_D1\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "used_q > used_k",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[512],\"sk\":[512],\"uq\":[257],\"uk\":[256],\"pass_q\":true,\"pass_k\":true,\"negative\":\"CAUSAL_UQ_GT_UK_D1\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "causal_uq_gt_uk",
+   "tag": "CAUSAL_UQ_GT_UK_D1"
+  }
+ },
+ {
+  "id": 12,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_CAUSAL_Q_ONLY_CONTROL",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"q_only\",\"sq\":[512],\"sk\":[512],\"uq\":[400],\"uk\":[200],\"pass_q\":true,\"pass_k\":false,\"negative\":\"CAUSAL_Q_ONLY_CONTROL\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "<control: must run>",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     512,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"q_only\",\"sq\":[512],\"sk\":[512],\"uq\":[400],\"uk\":[200],\"pass_q\":true,\"pass_k\":false,\"negative\":\"CAUSAL_Q_ONLY_CONTROL\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "none",
+   "tag": "CAUSAL_Q_ONLY_CONTROL"
+  }
+ },
+ {
+  "id": 13,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_SUM_MISMATCH_Q",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SUM_MISMATCH_Q\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "case meta seqlens sum",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     300,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SUM_MISMATCH_Q\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "sum_mismatch",
+   "tag": "SUM_MISMATCH_Q"
+  }
+ },
+ {
+  "id": 14,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_SUM_MISMATCH_K",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SUM_MISMATCH_K\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "case meta seqlens sum",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     300,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     300,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SUM_MISMATCH_K\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "sum_mismatch",
+   "tag": "SUM_MISMATCH_K"
+  }
+ },
+ {
+  "id": 15,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_SUM_MISMATCH_BOTH",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[128,128],\"sk\":[128,128],\"uq\":[64,64],\"uk\":[64,64],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SUM_MISMATCH_BOTH\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "case meta seqlens sum",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     100,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     3
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     3
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 128,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 128,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[128,128],\"sk\":[128,128],\"uq\":[64,64],\"uk\":[64,64],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SUM_MISMATCH_BOTH\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "sum_mismatch",
+   "tag": "SUM_MISMATCH_BOTH"
+  }
+ },
+ {
+  "id": 16,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_LAYOUT_BSND",
+  "aclnn_name": "{\"layout\":\"BSND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"LAYOUT_BSND\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "missing seqused metadata",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "BSND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"BSND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"LAYOUT_BSND\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "layout_bad",
+   "tag": "LAYOUT_BSND"
+  }
+ },
+ {
+  "id": 17,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_LAYOUT_BNSD",
+  "aclnn_name": "{\"layout\":\"BNSD\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"LAYOUT_BNSD\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "missing seqused metadata",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "BNSD",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"BNSD\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"LAYOUT_BNSD\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "layout_bad",
+   "tag": "LAYOUT_BNSD"
+  }
+ },
+ {
+  "id": 18,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_META_EMPTY",
+  "aclnn_name": "",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "missing seqused metadata",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "meta_missing",
+   "tag": "META_EMPTY"
+  }
+ },
+ {
+  "id": 19,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_META_NOT_JSON",
+  "aclnn_name": "TND-seqused",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "missing seqused metadata",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "TND-seqused",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "meta_missing",
+   "tag": "META_NOT_JSON"
+  }
+ },
+ {
+  "id": 20,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_BACKEND_BAD",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend999\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"BACKEND_BAD\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "unsupported backend",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend999\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"BACKEND_BAD\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "backend_bad",
+   "tag": "BACKEND_BAD"
+  }
+ },
+ {
+  "id": 21,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_Q_RANK2",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"Q_RANK2\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "expects TND q rank 3",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"Q_RANK2\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "q_rank",
+   "tag": "Q_RANK2"
+  }
+ },
+ {
+  "id": 22,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_GQA_NOT_DIVISIBLE",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"GQA_NOT_DIVISIBLE\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "out of range",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     3,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     3,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.125,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"GQA_NOT_DIVISIBLE\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "gqa_bad",
+   "tag": "GQA_NOT_DIVISIBLE"
+  }
+ },
+ {
+  "id": 23,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_SCALE_ZERO_CONTROL",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SCALE_ZERO_CONTROL\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "<control: must run>",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SCALE_ZERO_CONTROL\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "none",
+   "tag": "SCALE_ZERO_CONTROL"
+  }
+ },
+ {
+  "id": 24,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:NEG_SCALE_GT1_CONTROL",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SCALE_GT1_CONTROL\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": "<control: must run>",
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "fp16",
+    "shape": [
+     256,
+     4,
+     64
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 256,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 4.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"sq\":[256],\"sk\":[256],\"uq\":[128],\"uk\":[128],\"pass_q\":true,\"pass_k\":true,\"negative\":\"SCALE_GT1_CONTROL\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "guard": "none",
+   "tag": "SCALE_GT1_CONTROL"
+  }
+ }
+]

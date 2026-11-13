@@ -1,0 +1,1986 @@
+[
+ {
+  "id": 80060,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_PREFILL_S16384_H8_D128",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[16384],\"sk\":[16384],\"uq\":[8192],\"uk\":[8192],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_prefill\",\"tag\":\"XL_PREFILL_S16384_H8_D128\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 16384,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 16384,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[16384],\"sk\":[16384],\"uq\":[8192],\"uk\":[8192],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_prefill\",\"tag\":\"XL_PREFILL_S16384_H8_D128\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_prefill",
+   "tag": "XL_PREFILL_S16384_H8_D128"
+  }
+ },
+ {
+  "id": 80061,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_PREFILL_S16384_H16_D128",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":16,\"kv_heads\":16,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[16384],\"sk\":[16384],\"uq\":[8192],\"uk\":[8192],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_prefill\",\"tag\":\"XL_PREFILL_S16384_H16_D128\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     16,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     16,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     16,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 16384,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 16384,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":16,\"kv_heads\":16,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[16384],\"sk\":[16384],\"uq\":[8192],\"uk\":[8192],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_prefill\",\"tag\":\"XL_PREFILL_S16384_H16_D128\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_prefill",
+   "tag": "XL_PREFILL_S16384_H16_D128"
+  }
+ },
+ {
+  "id": 80062,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_PREFILL_S32768_H8_D128",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[32768],\"sk\":[32768],\"uq\":[16384],\"uk\":[16384],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_prefill\",\"tag\":\"XL_PREFILL_S32768_H8_D128\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     32768,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     32768,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     32768,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 32768,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 32768,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[32768],\"sk\":[32768],\"uq\":[16384],\"uk\":[16384],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_prefill\",\"tag\":\"XL_PREFILL_S32768_H8_D128\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_prefill",
+   "tag": "XL_PREFILL_S32768_H8_D128"
+  }
+ },
+ {
+  "id": 80063,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_DECODE_KV65536_U32768",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[1],\"sk\":[65536],\"uq\":[1],\"uk\":[32768],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_decode\",\"tag\":\"XL_DECODE_KV65536_U32768\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     1,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 1,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 65536,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[1],\"sk\":[65536],\"uq\":[1],\"uk\":[32768],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_decode\",\"tag\":\"XL_DECODE_KV65536_U32768\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_decode",
+   "tag": "XL_DECODE_KV65536_U32768"
+  }
+ },
+ {
+  "id": 80064,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_DECODE_KV131072_U65536",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[1],\"sk\":[131072],\"uq\":[1],\"uk\":[65536],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_decode\",\"tag\":\"XL_DECODE_KV131072_U65536\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     1,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     131072,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     131072,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 1,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 131072,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[1],\"sk\":[131072],\"uq\":[1],\"uk\":[65536],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_decode\",\"tag\":\"XL_DECODE_KV131072_U65536\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_decode",
+   "tag": "XL_DECODE_KV131072_U65536"
+  }
+ },
+ {
+  "id": 80065,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_VARLEN_N128_S512",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"sk\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"uq\":[256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256],\"uk\":[256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_varlen\",\"tag\":\"XL_VARLEN_N128_S512\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     129
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     129
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 512,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"sk\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"uq\":[256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256],\"uk\":[256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_varlen\",\"tag\":\"XL_VARLEN_N128_S512\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_varlen",
+   "tag": "XL_VARLEN_N128_S512"
+  }
+ },
+ {
+  "id": 80066,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_VARLEN_N64_S1024",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024],\"sk\":[1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024],\"uq\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"uk\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_varlen\",\"tag\":\"XL_VARLEN_N64_S1024\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     65536,
+     8,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     65
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     65
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 1024,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 1024,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":8,\"kv_heads\":8,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024],\"sk\":[1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024],\"uq\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"uk\":[512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,512],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_varlen\",\"tag\":\"XL_VARLEN_N64_S1024\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_varlen",
+   "tag": "XL_VARLEN_N64_S1024"
+  }
+ },
+ {
+  "id": 80067,
+  "default_seed": null,
+  "name": "flash_attn_npu_3._flash_attn_backward:PERF_XL_GQA_S16384_H32_KV4",
+  "aclnn_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":32,\"kv_heads\":4,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[16384],\"sk\":[16384],\"uq\":[8192],\"uk\":[8192],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_gqa\",\"tag\":\"XL_GQA_S16384_H32_KV4\"}",
+  "triton_name": null,
+  "kernel_name": null,
+  "version": "v1.0",
+  "expected_error_msg": null,
+  "api": "pytorch",
+  "api_type": "function_FlashAttnBwdSeqused",
+  "aclnn_api_type": "aclnn_function",
+  "triton_api_type": "triton_function",
+  "fusion_api_type": "fusion_function",
+  "fusion_mode": null,
+  "dist_api_type": "dist_function",
+  "kernel_api_type": "kernel_function",
+  "backward": false,
+  "standard": {
+   "acc": {
+    "cv_fused_double_benchmark": {
+     "max_re_ratio": 5,
+     "avg_re_ratio": 1.5,
+     "root_mean_squared_ratio": 1.5
+    }
+   },
+   "perf": [
+    0.95,
+    0.95
+   ],
+   "mem": 1.1
+  },
+  "outputs": null,
+  "inputs": [
+   {
+    "name": "q",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     32,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "k",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     4,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "v",
+    "type": "tensor",
+    "required": true,
+    "dtype": "bf16",
+    "shape": [
+     16384,
+     4,
+     128
+    ],
+    "range_values": [
+     -1,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_q",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "cu_seqlens_k",
+    "type": "tensor",
+    "required": false,
+    "dtype": "int32",
+    "shape": [
+     2
+    ],
+    "range_values": [
+     0,
+     1
+    ],
+    "backward": true,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_q",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 16384,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "max_seqlen_k",
+    "type": "attr",
+    "required": false,
+    "dtype": "int",
+    "shape": null,
+    "range_values": 16384,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "layout",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "TND",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "softmax_scale",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.08838834764831843,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "causal",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": true,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   [
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    },
+    {
+     "name": "window_size",
+     "type": "attr_tuple",
+     "required": false,
+     "dtype": "attr_tuple",
+     "shape": null,
+     "range_values": -1,
+     "backward": false,
+     "align_32B": null,
+     "outlier_values": null
+    }
+   ],
+   {
+    "name": "softcap",
+    "type": "attr",
+    "required": false,
+    "dtype": "float",
+    "shape": null,
+    "range_values": 0.0,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "deterministic",
+    "type": "attr",
+    "required": false,
+    "dtype": "bool",
+    "shape": null,
+    "range_values": false,
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   },
+   {
+    "name": "backend",
+    "type": "attr",
+    "required": false,
+    "dtype": "string",
+    "shape": null,
+    "range_values": "ascend950",
+    "backward": false,
+    "align_32B": null,
+    "outlier_values": null
+   }
+  ],
+  "acl_json": "",
+  "method_inputs": null,
+  "tensor_input": null,
+  "compute_times": null,
+  "save_name": "{\"layout\":\"TND\",\"backend\":\"ascend950\",\"mode\":\"both\",\"dtype\":\"bf16\",\"heads\":32,\"kv_heads\":4,\"head_dim\":128,\"window\":[-1,-1],\"softcap\":0.0,\"sq\":[16384],\"sk\":[16384],\"uq\":[8192],\"uk\":[8192],\"pass_q\":true,\"pass_k\":true,\"perf_profile\":\"xl_gqa\",\"tag\":\"XL_GQA_S16384_H32_KV4\"}",
+  "uuid": null,
+  "downloaded": false,
+  "is_boundary": false,
+  "xrun_cs_name": null,
+  "xrun_data": null,
+  "strategy": {
+   "perf_profile": "xl_gqa",
+   "tag": "XL_GQA_S16384_H32_KV4"
+  }
+ }
+]
