@@ -10,8 +10,8 @@
 
 ```
 scripts/
-├── gen_cases.py              ★ 按 700 例规格生成 bench 命令行批次
-├── cases_700.json            ★ 700 例规格（单一事实来源）
+├── gen_cases.py              ★ 按规格生成 bench 命令行批次
+├── cases_1148.json           ★ 1148 例规格（单一事实来源）
 ├── verify_ledger.py          跑测前算 6 种字节分母（纯 CPU，不需 NPU）
 ├── extract_v1_stages.py      跑测后取 layout/expand/aggregate 三阶段
 ├── lifecycle_test.py         构造/销毁功能验证（需 torchrun + NPU）
@@ -27,7 +27,7 @@ scripts/
 
 | 工具 | 何时用 | 输入 | 输出 | 覆盖被测项 |
 |---|---|---|---|---|
-| `gen_cases.py` | 跑测**前** | `cases_700.json` | 700 条 bench 命令 + shell 批次 | 全部 700 例 |
+| `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条 bench 命令 + shell 批次 | 全部 1148 例 |
 | `verify_ledger.py` | 跑测**前** | 形状参数 | 6 种字节口径 | —（只算分母） |
 | `extract_v1_stages.py` | 跑测**后** | bench 输出目录 | 分阶段耗时 | V1-2 / V1-4 / V1-5 |
 | `lifecycle_test.py` | 独立 | torchrun | 构造/销毁耗时 + 失败路径 + 泄漏 | V1-1 / V1-7 / V2-1 / V2-4 |
@@ -36,9 +36,9 @@ scripts/
 
 ## 用法
 
-### gen_cases.py —— 按 md 生成 700 例
+### gen_cases.py —— 按 md 生成 1148 例
 
-**这是把文档里的 700 例变成可执行命令的入口。** 规格全在 `cases_700.json`，
+**这是把文档里的 1148 例变成可执行命令的入口。** 规格全在 `cases_1148.json`，
 改范围只改 JSON，不用动代码。
 
 ```bash
@@ -79,7 +79,7 @@ bash batches/v2_A.sh 128      # 从第 128 条开始
 组    名称                 期望       实际     结果
 A    形状                252      252     OK
 ...
-合计                     700      700     OK
+合计                    1148     1148     OK
 ```
 
 参数名的合法性在生成时就校验：`ep-size`/`nnodes`/`aiv`/`dtypes`/`expand`/
@@ -151,12 +151,12 @@ docker exec -e ASCEND_RT_VISIBLE_DEVICES=6,7 ...
 
 ## 脚本与文档的对应关系
 
-**`gen_cases.py` + `cases_700.json` 才是文档 700 例的可执行实现**，
-另外三个是分析工具，覆盖的不是 700 例，而是 bench 补不了的部分。
+**`gen_cases.py` + `cases_1148.json` 才是文档 1148 例的可执行实现**，
+另外三个是分析工具，覆盖的不是这 1148 例，而是 bench 补不了的部分。
 
 | 工具 | 对应文档的哪部分 | 是否一一对应 |
 |---|---|---|
-| `gen_cases.py` | 700 例矩阵（A~H 八组） | ✅ 完全对应，`--check` 可验证 |
+| `gen_cases.py` | 1148 例矩阵（A~H 八组） | ✅ 完全对应，`--check` 可验证 |
 | `verify_ledger.py` | 第二/三章的字节口径与分母陷阱 | ❌ 扫描范围更宽，用于画趋势曲线 |
 | `extract_v1_stages.py` | V1-2/V1-4/V1-5 的覆盖缺口 | 部分（只补这三个） |
 | `lifecycle_test.py` | V1-1/V1-7/V2-1/V2-4 的覆盖缺口 | 部分（L7 的 32 例） |
@@ -170,9 +170,9 @@ docker exec -e ASCEND_RT_VISIBLE_DEVICES=6,7 ...
 | `mask` | 0.1-0.9（4 档） | 0.0, 0.1, 0.3, 0.5, 0.7, **0.9** | 多 0.0 做基线、0.7 加密采样 |
 
 **如果直接把 `verify_ledger.py` 的扫描结果当用例清单，会多跑 skew=16/32 两档无用 case。**
-700 例的权威来源是 `cases_700.json`。
+1148 例的权威来源是 `cases_1148.json`。
 
-### cases_700.json 的规格要点
+### cases_1148.json 的规格要点
 
 规格里记录的参数名全部对照上游核实过（见文件内 `_verified` 字段）：
 

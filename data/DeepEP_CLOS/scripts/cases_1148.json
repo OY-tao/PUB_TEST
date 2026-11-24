@@ -1,0 +1,435 @@
+{
+  "_comment": "DeepEP CLOS 泛化用例规格：1148 例（A 组 700 + 其余七组 448）。参数名与取值已对照 bench_v2_bandwidth.py / route_workloads.py 核实。",
+  "_verified": {
+    "bench": "benchmarks/clos/bench_v2_bandwidth.py (main @ 2026-11-24)",
+    "route": "benchmarks/clos/route_workloads.py (main @ 2026-11-24)",
+    "notes": [
+      "bench 无 --op 参数，每 case 固定跑 4 个 op（dispatch / cached-dispatch / combine x2）",
+      "bench 无 --tokens 参数，用 --num-tokens",
+      "route-mode 只有 3 种：uniform / rank_hotspot / local_group；mask 是 --route-mask-rate 叠加参数，不是独立模式",
+      "ep-size choices=(2,4,8,16,32,64,128,256)，nnodes choices=(1,2,4,8,16,32)",
+      "aiv choices=range(2,65,2)，即 2..64 的偶数"
+    ]
+  },
+  "fixed": {
+    "ep_size": 8,
+    "aiv": 32,
+    "num_tokens": 8192,
+    "hidden": 6144,
+    "num_topk": 8,
+    "experts_per_rank": 32,
+    "warmup": 10,
+    "iterations": 30,
+    "seed": 20260823
+  },
+  "groups": {
+    "A": {
+      "name": "形状",
+      "level": "性能",
+      "_comment": "A 组单独 700 例：25 tokens x 7 hidden x 2 dtype x 2 expand",
+      "axes": {
+        "num_tokens": [
+          1,
+          64,
+          128,
+          256,
+          512,
+          768,
+          1024,
+          1536,
+          2048,
+          3072,
+          4096,
+          5120,
+          6144,
+          7168,
+          8192,
+          10240,
+          12288,
+          14336,
+          16384,
+          20480,
+          24576,
+          28672,
+          32768,
+          49152,
+          65536
+        ],
+        "hidden": [
+          512,
+          1024,
+          2048,
+          4096,
+          6144,
+          8192,
+          16384
+        ],
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ],
+        "expand": [
+          0,
+          1
+        ]
+      },
+      "_expected": 700
+    },
+    "B": {
+      "name": "topk/专家",
+      "level": "性能",
+      "axes": {
+        "num_topk": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "experts_per_rank": [
+          1,
+          8,
+          32,
+          128,
+          256
+        ],
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ],
+        "expand": [
+          0,
+          1
+        ]
+      },
+      "_expected": 140
+    },
+    "C": {
+      "name": "路由",
+      "level": "性能",
+      "_comment": "route_mode 只有 3 种；mask 用 --route-mask-rate 叠加",
+      "variants": [
+        {
+          "route_mode": "uniform",
+          "count": 2
+        },
+        {
+          "route_mode": "rank_hotspot",
+          "route_skew": [
+            1,
+            1.5,
+            2,
+            3,
+            4,
+            8
+          ],
+          "route_hotspot": [
+            0,
+            3,
+            7
+          ]
+        },
+        {
+          "route_mode": "local_group",
+          "route_group_size": [
+            2,
+            4
+          ],
+          "route_local_fraction": [
+            0.5,
+            0.8,
+            0.95
+          ]
+        },
+        {
+          "route_mode": "uniform",
+          "route_mask_rate": [
+            0.1,
+            0.3,
+            0.5,
+            0.9
+          ]
+        }
+      ],
+      "combinatorics": {
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ],
+        "expand": [
+          0,
+          1
+        ]
+      },
+      "_expected": 120
+    },
+    "D": {
+      "name": "拓扑",
+      "level": "性能",
+      "_comment": "多机 case 需要 --master-addr/--run-id，生成器只标注不自动展开",
+      "cases": [
+        {
+          "ep_size": 2,
+          "nnodes": 1
+        },
+        {
+          "ep_size": 4,
+          "nnodes": 1
+        },
+        {
+          "ep_size": 8,
+          "nnodes": 1
+        },
+        {
+          "ep_size": 16,
+          "nnodes": 1
+        },
+        {
+          "ep_size": 16,
+          "nnodes": 2
+        },
+        {
+          "ep_size": 32,
+          "nnodes": 2
+        },
+        {
+          "ep_size": 32,
+          "nnodes": 4
+        },
+        {
+          "ep_size": 64,
+          "nnodes": 4
+        },
+        {
+          "ep_size": 128,
+          "nnodes": 8
+        },
+        {
+          "ep_size": 256,
+          "nnodes": 16
+        }
+      ],
+      "multi_device": {
+        "ep_size": 8,
+        "nnodes": 1,
+        "first_device": [
+          0,
+          8,
+          16,
+          32
+        ]
+      },
+      "combinatorics": {
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ]
+      },
+      "_expected": 28
+    },
+    "E": {
+      "name": "AIV",
+      "level": "性能",
+      "axes": {
+        "aiv": [
+          2,
+          4,
+          8,
+          16,
+          24,
+          32,
+          48,
+          64
+        ],
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ]
+      },
+      "_extra": [
+        {
+          "aiv": 32,
+          "dtypes": "bf16",
+          "expand": 1,
+          "_note": "基准复测"
+        },
+        {
+          "aiv": 32,
+          "dtypes": "fp8",
+          "expand": 1,
+          "_note": "基准复测"
+        }
+      ],
+      "fixed_extra": {
+        "expand": 1
+      },
+      "_expected": 18
+    },
+    "F": {
+      "name": "边界",
+      "level": "功能",
+      "cases": [
+        {
+          "_id": "F1",
+          "desc": "单 token",
+          "num_tokens": 1
+        },
+        {
+          "_id": "F2",
+          "desc": "hidden 最小",
+          "hidden": 128
+        },
+        {
+          "_id": "F3",
+          "desc": "hidden 最大",
+          "hidden": 16384
+        },
+        {
+          "_id": "F4",
+          "desc": "单专家",
+          "num_topk": 1
+        },
+        {
+          "_id": "F5",
+          "desc": "全专家 topk=E",
+          "num_topk": "E"
+        },
+        {
+          "_id": "F6",
+          "desc": "epr=1",
+          "experts_per_rank": 1
+        },
+        {
+          "_id": "F7",
+          "desc": "90%无效槽",
+          "route_mask_rate": 0.9
+        },
+        {
+          "_id": "F8",
+          "desc": "极端集中",
+          "route_mode": "local_group",
+          "route_local_fraction": 0.95
+        },
+        {
+          "_id": "F9",
+          "desc": "热点饱和",
+          "route_mode": "rank_hotspot",
+          "route_skew": 8
+        },
+        {
+          "_id": "F10",
+          "desc": "最大负载",
+          "num_tokens": 65536,
+          "hidden": 16384
+        },
+        {
+          "_id": "F11",
+          "desc": "rank分布不均",
+          "_special": "uneven_tokens"
+        },
+        {
+          "_id": "F12",
+          "desc": "全专家+50%mask",
+          "num_topk": "E",
+          "route_mask_rate": 0.5
+        },
+        {
+          "_id": "F13",
+          "desc": "最小核数",
+          "aiv": 2
+        },
+        {
+          "_id": "F14",
+          "desc": "最大核数",
+          "aiv": 64
+        },
+        {
+          "_id": "F15",
+          "desc": "最小规模",
+          "ep_size": 2
+        }
+      ],
+      "combinatorics": {
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ],
+        "expand": [
+          0,
+          1
+        ]
+      },
+      "_expected": 60
+    },
+    "G": {
+      "name": "口径对照",
+      "level": "功能",
+      "_comment": "只动测量参数，形状固定",
+      "cases": [
+        {
+          "_id": "G1",
+          "huge_pages": false,
+          "iterations": 30
+        },
+        {
+          "_id": "G2",
+          "huge_pages": true,
+          "iterations": 30
+        },
+        {
+          "_id": "G3",
+          "iterations": 5
+        },
+        {
+          "_id": "G4",
+          "iterations": 100
+        },
+        {
+          "_id": "G5",
+          "warmup": 0
+        },
+        {
+          "_id": "G6",
+          "warmup": 50
+        },
+        {
+          "_id": "G7",
+          "combine_bias": "none"
+        },
+        {
+          "_id": "G8",
+          "combine_bias": "two"
+        }
+      ],
+      "combinatorics": {
+        "dtypes": [
+          "bf16",
+          "fp8"
+        ],
+        "expand": [
+          0,
+          1
+        ]
+      },
+      "_expected": 32
+    },
+    "H": {
+      "name": "稳定性",
+      "level": "性能",
+      "_comment": "同配置重复 50 次，用于算变异系数(CV<5%)",
+      "repeat": 50,
+      "case": {
+        "ep_size": 8,
+        "num_tokens": 8192,
+        "hidden": 6144,
+        "num_topk": 8,
+        "dtypes": "bf16",
+        "expand": 1,
+        "aiv": 32
+      },
+      "_expected": 50
+    }
+  }
+}

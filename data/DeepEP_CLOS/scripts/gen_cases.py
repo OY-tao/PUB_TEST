@@ -1,14 +1,14 @@
-"""按 cases_700.json 生成 DeepEP CLOS 泛化用例的 bench 命令行批次。
+"""按 cases_1148.json 生成 DeepEP CLOS 泛化用例的 bench 命令行批次。
 
 背景
 ----
 上游 bench 一次调用只能跑一组形状参数，且每个 case 固定产出 4 个 op
 （dispatch / cached-dispatch / combine_unweighted / combine_weighted）。
-700 例需要 700 次独立 torchrun，手工敲不现实，本脚本负责展开。
+1148 例需要 1148 次独立 torchrun，手工敲不现实，本脚本负责展开。
 
 设计原则
 --------
-1. **配置与代码分离**：700 例的规格全在 cases_700.json，改范围只改 JSON。
+1. **配置与代码分离**：1148 例的规格全在 cases_1148.json，改范围只改 JSON。
 2. **参数名对齐上游**：所有参数名对照 bench_v2_bandwidth.py 与
    route_workloads.py 核实过，未核实的参数一律不生成（见 _verified 字段）。
 3. **可校验**：--check 会逐组核对例数，与规格里的 _expected 对不上就报错。
@@ -19,7 +19,7 @@
     # 只校验配比（不写文件、不碰设备）
     python gen_cases.py --check
 
-    # 生成全部（v1 + v2 各 700 条）
+    # 生成全部（v1 + v2 各 1148 条）
     python gen_cases.py --out batches/
 
     # 只生成某一组
@@ -48,7 +48,7 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SPEC_DEFAULT = os.path.join(HERE, "cases_700.json")
+SPEC_DEFAULT = os.path.join(HERE, "cases_1148.json")
 
 # bench 支持的合法取值（对照 argparse choices 核实）
 VALID_EP = (2, 4, 8, 16, 32, 64, 128, 256)
@@ -410,19 +410,19 @@ def write_outputs(built, spec, outdir, api, bench_path, groups_order):
     os.chmod(os.path.join(outdir, "index.sh"), 0o755)
 
 
-def write_summary(rows, total, path):
-    lines = ["# 700 例配比核对", "",
+def write_summary(rows, total, path, expected_total):
+    lines = ["# 配比核对", "",
              "| 组 | 名称 | 期望 | 实际 | 结果 |", "|---|---|---|---|---|"]
     for key, name, exp, got, good in rows:
         lines.append(f"| {key} | {name} | {exp} | {got} | {'OK' if good else '**不一致**'} |")
-    lines.append(f"| **合计** | | **700** | **{total}** | "
-                 f"{'OK' if total == 700 else '**不一致**'} |")
+    lines.append(f"| **合计** | | **{expected_total}** | **{total}** | "
+                 f"{'OK' if total == expected_total else '**不一致**'} |")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines) + "\n")
 
 
 def main():
-    ap = argparse.ArgumentParser(description="生成 DeepEP CLOS 700 例 bench 命令行批次")
+    ap = argparse.ArgumentParser(description="生成 DeepEP CLOS 泛化用例 bench 命令行批次")
     ap.add_argument("--spec", default=SPEC_DEFAULT, help="规格文件路径")
     ap.add_argument("--out", default="", help="输出目录（留空则只校验）")
     ap.add_argument("--check", action="store_true", help="只校验配比，不写文件")
@@ -459,20 +459,21 @@ def main():
 
     # 配比核对
     ok, rows, total = check(spec, built)
+    expected_total = sum(spec["groups"][k]["_expected"] for k in built)
     print("=" * 72)
-    print("700 例配比核对")
+    print("配比核对")
     print("=" * 72)
     print("%-4s %-12s %8s %8s %6s" % ("组", "名称", "期望", "实际", "结果"))
     print("-" * 72)
     for key, name, exp, got, good in rows:
         print("%-4s %-12s %8d %8d %6s" % (key, name, exp, got, "OK" if good else "FAIL"))
     print("-" * 72)
-    print("%-4s %-12s %8s %8d %6s" % ("合计", "", "700", total,
-                                      "OK" if total == 700 else "FAIL"))
+    print("%-4s %-12s %8d %8d %6s" % ("合计", "", expected_total, total,
+                                      "OK" if total == expected_total else "FAIL"))
     print()
 
     if not ok:
-        print("配比与规格不符，请检查 cases_700.json")
+        print(f"配比与规格不符，请检查 {os.path.basename(args.spec)}")
         return 1
 
     if args.dry_run:
@@ -496,7 +497,7 @@ def main():
         # v1 的 aiv 取法不同，但命令行参数一致
         write_outputs(built, spec, args.out, api, bench, list(spec["groups"].keys()))
         print(f"已生成 {api.upper()}: {args.out}/{api}_*.sh")
-    write_summary(rows, total, os.path.join(args.out, "summary.md"))
+    write_summary(rows, total, os.path.join(args.out, "summary.md"), expected_total)
     print(f"已生成核对表: {args.out}/summary.md")
     print(f"已生成明细:   {args.out}/manifest_*.csv")
     print(f"已生成入口:   {args.out}/index.sh")
