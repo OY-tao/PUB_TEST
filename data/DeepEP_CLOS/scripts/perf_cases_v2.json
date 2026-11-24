@@ -1,0 +1,56 @@
+{
+  "_comment": "DeepEP CLOS V2 性能用例规格，参照 OY-tao/Ascned_Test 的 V2测试Case.txt 生成。60 个形状组合。",
+  "_source": {
+    "file": "V2测试Case.txt",
+    "repo": "https://github.com/OY-tao/Ascned_Test",
+    "parsed_rows": 60,
+    "note": "原表是 EP8~128 的带宽结果汇总，本文件把它的形状维度抽出来作为用例规格"
+  },
+  "_semantics": {
+    "experts": "原表 Experts 列 = 全局专家总数 = ep_size × experts_per_rank。生成时 epr = experts / ep",
+    "bandwidth_basis": "去重后 BF16 逻辑 payload（含本卡，不含索引及权重）÷ 通信耗时，十进制 GB/s/rank，对应官方口径 official_logical_GBps",
+    "ops": {
+      "Dispatch 无权重": "dispatch，topk_weights=None",
+      "Dispatch 带权重": "dispatch，topk_weights 非空",
+      "Cached dispatch": "cached-dispatch，复用 handle",
+      "Combine 无权重": "combine，topk_weights=None",
+      "Combine 带权重": "combine，topk_weights 非空"
+    }
+  },
+
+  "fixed": {
+    "num_topk": 8,
+    "warmup": 10,
+    "iterations": 30,
+    "seed": 20260823,
+    "route_mode": "uniform",
+    "dtypes": ["bf16"],
+    "expand": [1]
+  },
+
+  "axes": {
+    "ep_size": [8, 16, 32, 64, 128],
+    "num_tokens": [8192, 16384],
+    "hidden": [2816, 6144, 7168],
+    "aiv": [32, 64]
+  },
+
+  "experts_map": {
+    "8": 256,
+    "16": 256,
+    "32": 256,
+    "64": 256,
+    "128": 512
+  },
+
+  "topology": {
+    "_comment": "每节点最多 16 卡（bench 硬约束 local_world_size ∈ 1..16）",
+    "8":   {"nnodes": 1, "local": 8},
+    "16":  {"nnodes": 1, "local": 16},
+    "32":  {"nnodes": 2, "local": 16},
+    "64":  {"nnodes": 4, "local": 16},
+    "128": {"nnodes": 8, "local": 16}
+  },
+
+  "_expected": 60
+}

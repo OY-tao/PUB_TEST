@@ -10,8 +10,10 @@
 
 ```
 scripts/
+├── gen_perf_cases.py         ★ 60 例性能用例（对齐 V2测试Case.txt）
+├── perf_cases_v2.json        ★ 60 例性能规格
 ├── gen_cases.py              ★ 按规格生成 bench 命令行批次
-├── cases_1148.json           ★ 1148 例规格（单一事实来源）
+├── cases_1148.json           ★ 1148 例泛化规格（单一事实来源）
 ├── verify_ledger.py          跑测前算 6 种字节分母（纯 CPU，不需 NPU）
 ├── extract_v1_stages.py      跑测后取 layout/expand/aggregate 三阶段
 ├── lifecycle_test.py         构造/销毁功能验证（需 torchrun + NPU）
@@ -23,18 +25,75 @@ scripts/
     └── stage_metrics.py
 ```
 
-## 四个工具的分工
+## 两套用例，目标不同
 
-| 工具 | 何时用 | 输入 | 输出 | 覆盖被测项 |
+| 套件 | 例数 | 目标 | 文档 |
+|---|---|---|---|
+| **性能用例** | 60 | 复现历史带宽数据、回归验证 | [`../V2性能测试.md`](../V2性能测试.md) |
+| **泛化用例** | 1148 | 覆盖边界与异常、找缺陷 | [`../泛化用例测试设计V2.md`](../泛化用例测试设计V2.md) |
+
+**先跑 60 例性能用例**确认基线正常，再跑 1148 例泛化。
+顺序反了会浪费大量时间在错误配置上。
+
+## 五个工具的分工
+
+| 工具 | 何时用 | 输入 | 输出 | 覆盖 |
 |---|---|---|---|---|
-| `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条 bench 命令 + shell 批次 | 全部 1148 例 |
+| `gen_perf_cases.py` | 跑测**前** | `perf_cases_v2.json` | 60 条命令，按 EP 分脚本 | 性能 60 例 |
+| `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条命令 + shell 批次 | 泛化 1148 例 |
 | `verify_ledger.py` | 跑测**前** | 形状参数 | 6 种字节口径 | —（只算分母） |
 | `extract_v1_stages.py` | 跑测**后** | bench 输出目录 | 分阶段耗时 | V1-2 / V1-4 / V1-5 |
 | `lifecycle_test.py` | 独立 | torchrun | 构造/销毁耗时 + 失败路径 + 泄漏 | V1-1 / V1-7 / V2-1 / V2-4 |
 
-四个工具都不修改上游代码。
+五个工具都不修改上游代码。
 
 ## 用法
+
+### gen_perf_cases.py —— 60 例性能用例
+
+形状严格对齐参考表 `V2测试Case.txt`（EP8~128 的带宽汇总），
+用于复现与回归。
+
+```bash
+# 校验配比，并与参考表逐项核对形状
+python gen_perf_cases.py --check --verify-against V2测试Case.txt
+
+# 生成（按 EP 分组，多机脚本自带 NODE_RANK 环境变量）
+python gen_perf_cases.py --out perf_batches/
+
+# 只生成某几个 EP
+python gen_perf_cases.py --out perf_batches/ --ep 8 16
+```
+
+产物：
+
+```
+perf_batches/
+├── perf_ep8.sh  ... perf_ep128.sh   每个 EP 一个脚本
+├── manifest.csv                     逐条明细（含拓扑列）
+└── index.sh                         串行入口
+```
+
+**单机**（EP=8/16）：
+
+```bash
+bash perf_batches/perf_ep8.sh
+```
+
+**多机**（EP=32/64/128）—— 每台都跑同一脚本，用环境变量区分：
+
+```bash
+NODE_RANK=0 bash perf_batches/perf_ep32.sh   # 30.104.128.4
+NODE_RANK=1 bash perf_batches/perf_ep32.sh   # 30.104.128.6
+```
+
+`MASTER_ADDR` 默认 `30.104.128.4`，可用环境变量覆盖。
+
+⚠️ 三个易错点：两机必须**同时**启动；两个端口（29500 与 29501）都要通；
+`run_id` 两机必须相同（脚本按序号自动生成，同序号即同 run-id）。
+
+**关键语义**：参考表的 `Experts` 是全局总数，`experts_per_rank = Experts / EP`。
+EP=64 时 epr=4（每卡 4 个专家），路由会很集中，属参考表设定而非缺陷。
 
 ### gen_cases.py —— 按 md 生成 1148 例
 
