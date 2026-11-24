@@ -4,12 +4,14 @@
 
 被测对象是 DeepEP 的 CLOS 组网带宽基准
 （`benchmarks/clos/bench_v1_bandwidth.py`、`bench_v2_bandwidth.py`）。
-本目录是分析过程中自研的 3 个工具 + 4 个上游脚本快照。
+本目录是分析过程中自研的 4 个工具 + 4 个上游脚本快照。
 
 ## 目录
 
 ```
 scripts/
+├── gen_cases.py              ★ 按 700 例规格生成 bench 命令行批次
+├── cases_700.json            ★ 700 例规格（单一事实来源）
 ├── verify_ledger.py          跑测前算 6 种字节分母（纯 CPU，不需 NPU）
 ├── extract_v1_stages.py      跑测后取 layout/expand/aggregate 三阶段
 ├── lifecycle_test.py         构造/销毁功能验证（需 torchrun + NPU）
@@ -21,17 +23,70 @@ scripts/
     └── stage_metrics.py
 ```
 
-## 三个工具的分工
+## 四个工具的分工
 
 | 工具 | 何时用 | 输入 | 输出 | 覆盖被测项 |
 |---|---|---|---|---|
+| `gen_cases.py` | 跑测**前** | `cases_700.json` | 700 条 bench 命令 + shell 批次 | 全部 700 例 |
 | `verify_ledger.py` | 跑测**前** | 形状参数 | 6 种字节口径 | —（只算分母） |
 | `extract_v1_stages.py` | 跑测**后** | bench 输出目录 | 分阶段耗时 | V1-2 / V1-4 / V1-5 |
 | `lifecycle_test.py` | 独立 | torchrun | 构造/销毁耗时 + 失败路径 + 泄漏 | V1-1 / V1-7 / V2-1 / V2-4 |
 
-三者都不修改上游代码。
+四个工具都不修改上游代码。
 
 ## 用法
+
+### gen_cases.py —— 按 md 生成 700 例
+
+**这是把文档里的 700 例变成可执行命令的入口。** 规格全在 `cases_700.json`，
+改范围只改 JSON，不用动代码。
+
+```bash
+# 只校验配比（不写文件、不碰设备）
+python gen_cases.py --check
+
+# 生成 v1/v2 两套批次
+python gen_cases.py --out batches/
+
+# 只生成某几组
+python gen_cases.py --out batches/ --groups A B C
+
+# 只看命令，不落盘
+python gen_cases.py --dry-run --limit 5
+```
+
+产物：
+
+```
+batches/
+├── v2_A.sh ... v2_H.sh     每组一个脚本，可单独跑
+├── v1_A.sh ... v1_H.sh
+├── manifest_v2.csv         逐条明细（组/编号/层级/标签/参数/命令）
+├── summary.md              配比核对表
+└── index.sh                串行执行入口
+```
+
+**支持断点续跑**（每个 case 独立 torchrun，中断后不用从头）：
+
+```bash
+bash batches/v2_A.sh          # 跑全部 252 条
+bash batches/v2_A.sh 128      # 从第 128 条开始
+```
+
+`--check` 会逐组核对例数与规格里的 `_expected`，对不上直接报错退出：
+
+```
+组    名称                 期望       实际     结果
+A    形状                252      252     OK
+...
+合计                     700      700     OK
+```
+
+参数名的合法性在生成时就校验：`ep-size`/`nnodes`/`aiv`/`dtypes`/`expand`/
+`route-mode` 都在 bench 的 `choices` 范围内，且 `hidden` 必须是 128 的倍数。
+生成器只放行 `ALLOWED_KEYS` 白名单里的参数名，防止规格文件里的内部字段
+（`_id`/`desc`/`count`）被误当成命令行参数——argparse 的前缀匹配会让这种
+错误静默通过，是个坑。
 
 ### verify_ledger.py
 
@@ -93,6 +148,44 @@ docker exec -e ASCEND_RT_VISIBLE_DEVICES=6,7 ...
 已知副作用：测「活跃 slot 拒绝销毁」会 `acquire_slot()` 后无法释放
 （`Buffer` 没有 `release_slot` 接口），该实例只能等进程退出回收。
 建议这一项单独跑一轮。
+
+## 脚本与文档的对应关系
+
+**`gen_cases.py` + `cases_700.json` 才是文档 700 例的可执行实现**，
+另外三个是分析工具，覆盖的不是 700 例，而是 bench 补不了的部分。
+
+| 工具 | 对应文档的哪部分 | 是否一一对应 |
+|---|---|---|
+| `gen_cases.py` | 700 例矩阵（A~H 八组） | ✅ 完全对应，`--check` 可验证 |
+| `verify_ledger.py` | 第二/三章的字节口径与分母陷阱 | ❌ 扫描范围更宽，用于画趋势曲线 |
+| `extract_v1_stages.py` | V1-2/V1-4/V1-5 的覆盖缺口 | 部分（只补这三个） |
+| `lifecycle_test.py` | V1-1/V1-7/V2-1/V2-4 的覆盖缺口 | 部分（L7 的 32 例） |
+
+`verify_ledger.py` 的扫描档位**故意宽于文档**，因为它的用途是证明结论而不是当用例清单：
+
+| 参数 | 文档规格 | verify_ledger 实际 | 原因 |
+|---|---|---|---|
+| `skew` | 1-8（6 档） | 1, 1.5, 2, 4, 6, 8, **16, 32** | 扫到 32 才能证明「skew>8 已饱和」（收行封顶 65536 就是这么测出来的） |
+| `topk` | 1-64（7 档） | 1, 2, 4, 8, 16, 32（**缺 64**） | 论证「algorithm 随 topk 线性涨」用不到 64 |
+| `mask` | 0.1-0.9（4 档） | 0.0, 0.1, 0.3, 0.5, 0.7, **0.9** | 多 0.0 做基线、0.7 加密采样 |
+
+**如果直接把 `verify_ledger.py` 的扫描结果当用例清单，会多跑 skew=16/32 两档无用 case。**
+700 例的权威来源是 `cases_700.json`。
+
+### cases_700.json 的规格要点
+
+规格里记录的参数名全部对照上游核实过（见文件内 `_verified` 字段）：
+
+- bench **没有** `--op` 参数，每个 case 固定跑 4 个 op（dispatch / cached-dispatch / combine ×2）
+- bench **没有** `--tokens`，是 `--num-tokens`
+- `--route-mode` 只有 3 种（`uniform`/`rank_hotspot`/`local_group`）；
+  **mask 不是独立模式**，是 `--route-mask-rate` 叠加参数
+- `--ep-size` choices=(2,4,8,16,32,64,128,256)
+- `--nnodes` choices=(1,2,4,8,16,32)
+- `--aiv` choices=range(2,65,2)
+
+多机 case（`nnodes>1`，D 组共 12 条）生成时只标注，不自动展开——各节点需
+分别执行并注入 `--master-addr` / `--node-rank`。
 
 ## 环境前置
 
