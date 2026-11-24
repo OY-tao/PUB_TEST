@@ -187,6 +187,36 @@ docker exec -e ASCEND_RT_VISIBLE_DEVICES=6,7 ...
 多机 case（`nnodes>1`，D 组共 12 条）生成时只标注，不自动展开——各节点需
 分别执行并注入 `--master-addr` / `--node-rank`。
 
+## ⚠️ 跑测前核对：确认走 `global_clos`
+
+**这是开工前第一件事。** bench 用的是
+`from deep_ep.backends.global_clos import Buffer / ElasticBuffer`，
+而 `global_clos` 是 `direct` 的别名入口（目录下只有 274 B 的 `__init__.py`）。
+
+**为什么必须核对**：同仓库还有 `mesh_clos`，那是**另一套独立实现**
+（`elastic.py` 78 KB vs `direct` 的 64 KB）。一旦走错，
+性能与精度数字**都不能和 `direct` 的结果对比**，且从输出上看不出来。
+
+```bash
+# 一行判据
+python -c "import sys; from deep_ep.backends.global_clos import Buffer, ElasticBuffer; \
+bad=[c.__name__ for c in (Buffer,ElasticBuffer) if 'mesh_clos' in c.__module__]; \
+print('FAIL: 走了 mesh_clos', bad) if bad else print('OK: global_clos'); sys.exit(1 if bad else 0)"
+```
+
+也可直接 grep 源码：
+
+```bash
+grep -n "from deep_ep.backends" benchmarks/clos/bench_v1_bandwidth.py
+grep -n "from deep_ep.backends" benchmarks/clos/bench_v2_bandwidth.py
+```
+
+`Buffer` / `ElasticBuffer` 必须来自 `global_clos`；`Config` 来自 `direct`、
+`loaded_identity()` 里的 `direct as clos` 都属正常，别误判。
+
+完整调用链与三个易混淆目录的对照见文档
+[`../泛化用例测试设计V2.md`](../泛化用例测试设计V2.md) 的「零」章。
+
 ## 环境前置
 
 ```bash
