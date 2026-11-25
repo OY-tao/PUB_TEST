@@ -1,8 +1,8 @@
 {
-  "snapshot": "2026-11-25 14:37:49 CST",
-  "completed_case_count": 39,
-  "op_row_count": 156,
-  "rank_and_all_row_count": 3612,
+  "snapshot": "2026-11-25 15:48:51 CST",
+  "completed_case_count": 48,
+  "op_row_count": 192,
+  "rank_and_all_row_count": 5952,
   "span_violations": 0,
   "sources": [
     {
@@ -901,6 +901,213 @@
       "summary_sha256": "c3a37664d5e408d8f59b965ae649661e22d20e39b85d41975c5acc61e089622b",
       "report_sha256": "2b54073b3b51cb267bf93441cd0c911763065a9591f682dad13ae51dcfb1f4f1",
       "shmem_udma_connect_timeout_ms": "300000"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_004",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_004",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 8192,
+      "hidden": 6144,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 64,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "71f64442d7a43ef47b50044eb9b15674f8cdb7f2b7b2e752e03d5b05eab77efe",
+      "report_sha256": "47ac7469405a5f6d450abf214797ace30f4ae82c8f8cce29e58c15b9d9e0dc37"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_005",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_005",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 8192,
+      "hidden": 7168,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 32,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "2f619379e46bc53aba64a6f4f2538fff4c7c5c64f8327cc98c2e5edc417fa31c",
+      "report_sha256": "e0e80b79b23ce2a62bfae4a85ecf20ee786c61c42099a10d1a17de096583c50c"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_006",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_006",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 8192,
+      "hidden": 7168,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 64,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "6ecc1c36c4572232c25556a9e504443b8a35afd9fbf6774661a3a16092101844",
+      "report_sha256": "14de4f968e063649580a04df5a4676d5fc65c9d6f23f9b95cee58d245bcd5fbc"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_007",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_007",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 16384,
+      "hidden": 2816,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 32,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "ea9622cf3cc8f2b396574ad46b931bc5c0a8b4ce05416aabb05ef6827433ce1c",
+      "report_sha256": "190429d4806b751ce87efaee333eb17e4f4375395d80e635ddcd4004e695d1ef"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_008",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_008",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 16384,
+      "hidden": 2816,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 64,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "1837e53704bd3263b0ff3a2d7975a9c617dacbb1cce1f82bfb2443c9a13dbcd4",
+      "report_sha256": "05635feb0212275cd7ffee2aaf02209d8614ad319d95d42f364ba309ba29fe23"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_009",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_009",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 16384,
+      "hidden": 6144,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 32,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "f6163dd87b99ff5d3c0fa6ce50d49b1c8c8e015ce7fd033611407aad5ee21a9b",
+      "report_sha256": "63f549d6050d9a5b98e05153db53c791599499a2e8abf7049a3909970ec2b3e1"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_010",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_010",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 16384,
+      "hidden": 6144,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 64,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "e4e6c391fbce75fb3801a3bb48b384956abf86ff842f30b68b86c98115f9e6dc",
+      "report_sha256": "5a1e3a5ddbac141f4de45a9039dcea8f2017f4d669ee66553d1ffd44c59a094a"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_011",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_011",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 16384,
+      "hidden": 7168,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 32,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "6cf04ed753fd1cdab8e521045656c3731cb204fedaed3cef7a100ad64c7d275d",
+      "report_sha256": "0f786a19122f741b0b27e3196eadbafd4f740ded9cde195ab6a551b8cf791ebd"
+    },
+    {
+      "run_id": "perf_ep64_4to7_20261125_r2_012",
+      "source_run_id": "perf_ep64_4to7_20261125_r2_012",
+      "ep_size": 64,
+      "nnodes": 4,
+      "num_tokens": 16384,
+      "hidden": 7168,
+      "experts_per_rank": 4,
+      "warmup": 10,
+      "iterations": 30,
+      "seed": 20260823,
+      "route_mode": "uniform",
+      "hosts": "30.104.128.4;30.104.128.5;30.104.128.6;30.104.128.7",
+      "driver_version": "25.8.rc10",
+      "summary_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node0/summary.csv",
+      "shmem_udma_connect_timeout_ms": "300000",
+      "aiv": 64,
+      "suite_exit_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node0/suite_exit.json",
+      "report_source": "perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node0/report.json",
+      "source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+      "summary_sha256": "67858fcf9f3658a0ba50a65cca868db5ff49a39d86bb481c74af750f6b27036d",
+      "report_sha256": "5ca3785f254a76db8926a81800280eb5c3e1a00ba91f7e2b74c9dcad985c85b3"
     }
   ],
   "report_limits": [
@@ -915,7 +1122,7 @@
     "L2 eviction mode is recorded in flush_l2_cache/l2_flush_bytes. When enabled, eviction precedes each full API call and is excluded from all API timing fields; internal stages are not flushed. This is cache eviction by memory writes, not a hardware invalidation guarantee. Repeated fixed routing/input, caller allocation, independent GM outputs. A bandwidth comparison also requires matching routing, caching, hardware and library versions."
   ],
   "ep64": {
-    "state": "running",
+    "state": "completed",
     "started": "2026-11-25 14:18:36",
     "environment": {
       "SHMEM_UDMA_CONNECT_TIMEOUT_MS": "300000"
@@ -1019,6 +1226,303 @@
             "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_003/node3/run.log"
           }
         ]
+      },
+      {
+        "index": 4,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_004/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_005/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_006/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_007/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_008/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_009/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_010/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_011/node3/run.log"
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "nodes": [
+          {
+            "host": "30.104.128.4",
+            "rank": 0,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node0/run.log"
+          },
+          {
+            "host": "30.104.128.5",
+            "rank": 1,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node1/run.log"
+          },
+          {
+            "host": "30.104.128.6",
+            "rank": 2,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node2/run.log"
+          },
+          {
+            "host": "30.104.128.7",
+            "rank": 3,
+            "passed": true,
+            "exit_code": 0,
+            "log": "/taijifs_cqtl31/share304153846/yuantao/perf_batches/perf_ep64_4to7_20261125_r2/perf_ep64_4to7_20261125_r2_012/node3/run.log"
+          }
+        ]
       }
     ],
     "driver_versions": [
@@ -1027,7 +1531,7 @@
       "25.8.rc10",
       "25.8.rc10"
     ],
-    "current": 4
+    "current": 12
   },
   "precision": {
     "state": "paused",
