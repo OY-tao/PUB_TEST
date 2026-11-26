@@ -1,0 +1,73 @@
+{
+  "_comment": "2-16P 泛化精度用例规格：每个 EP 50 条。仅生成清单，不含执行逻辑。",
+  "_source": "C:/Users/OY/Desktop/AITest/DeepEP_CLOS_Test.txt 第1条",
+  "_shape_limits": {
+    "v1": "0<H<=7168（BF16 16 倍数 / FP8 128 倍数）；1<=T<=16384；1<=K<=16；P<=E<=1024",
+    "v2": "H>0；1<=K<=32；P<=E<=1024；E 可被 P 整除",
+    "note": "超过上限的形状仅对 V2 合法，用于验证 V1 拒绝 / V2 接受的行为差异"
+  },
+
+  "ep_list": [2, 4, 8, 16],
+  "per_ep": 50,
+  "apis": ["v1", "v2"],
+  "dtypes": ["bf16", "fp8"],
+  "expands": [0, 1],
+
+  "groups": {
+    "A": {
+      "name": "形状主干",
+      "count": 20,
+      "fixed": {"num_topk": 8, "experts_per_rank": 32},
+      "axes": {
+        "num_tokens": [1, 512, 4096, 16384],
+        "hidden": [512, 2048, 4608, 7168],
+        "dtypes": ["bf16", "fp8"],
+        "expand": [0, 1]
+      },
+      "_note": "4x4x2x2=64 的组合中选 20 条，覆盖四角与对角"
+    },
+    "B": {
+      "name": "专家/topk 主干",
+      "count": 12,
+      "fixed": {"num_tokens": 1024, "hidden": 2048},
+      "axes": {
+        "num_topk": [1, 2, 4, 8, 16, 32],
+        "experts_per_rank": [1, 4, 16, 64],
+        "dtypes": ["bf16"],
+        "expand": [0, 1]
+      },
+      "_note": "topk 上限受 min(32, ep*epr) 约束，生成时自动裁剪"
+    },
+    "C": {
+      "name": "AIV",
+      "count": 6,
+      "fixed": {"num_tokens": 2048, "hidden": 2816, "num_topk": 8, "experts_per_rank": 32},
+      "axes": {"aiv": [2, 16, 32], "dtypes": ["bf16", "fp8"]}
+    },
+    "D": {
+      "name": "路由与 mask",
+      "count": 8,
+      "fixed": {"num_tokens": 2048, "hidden": 2816, "num_topk": 8, "experts_per_rank": 32},
+      "variants": [
+        {"route_mode": "uniform", "dtypes": ["bf16"], "expand": [0, 1]},
+        {"route_mode": "rank_hotspot", "route_skew": [2, 8], "dtypes": ["bf16"]},
+        {"route_mode": "local_group", "route_local_fraction": [0.5, 0.95], "dtypes": ["bf16"]},
+        {"route_mode": "uniform", "route_mask_rate": [0.3, 0.9], "dtypes": ["bf16"]}
+      ]
+    },
+    "E": {
+      "name": "FP8 专项",
+      "count": 4,
+      "fixed": {"num_tokens": 1024, "num_topk": 8, "experts_per_rank": 32},
+      "axes": {
+        "hidden": [128, 1024, 4096, 7168],
+        "expand": [0, 1]
+      },
+      "dtypes": ["fp8"],
+      "_note": "FP8 的 hidden 必须是 128 倍数，128 是最小合法值"
+    }
+  },
+
+  "_expected_total_per_ep": 50,
+  "_expected_total": 200
+}
