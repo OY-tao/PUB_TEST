@@ -1,5 +1,5 @@
 {
-  "snapshot": "2026-11-25 15:48:51 CST",
+  "snapshot": "2026-11-26 09:42:16 CST",
   "completed_case_count": 48,
   "op_row_count": 192,
   "rank_and_all_row_count": 5952,
@@ -1724,5 +1724,66 @@
     "applicable_cases_per_api": 1106,
     "not_applicable_cases_per_api": 16,
     "manifest": "scripts/ep64_precision_manifest.json"
+  },
+  "precision_result_file": "precision_20261126_ep32.csv",
+  "precision_ep32_d_group": {
+    "state": "completed",
+    "completed": "2026-11-25 16:16:28",
+    "ep_size": 32,
+    "nnodes": 2,
+    "hosts": [
+      "30.104.128.6",
+      "30.104.128.7"
+    ],
+    "variants": 8,
+    "passed_variants": 8,
+    "ranks_per_variant": 32,
+    "source_cases": [
+      "D0011",
+      "D0012"
+    ],
+    "precision_only": true,
+    "performance_collection": false,
+    "buffer_policy": "one persistent process group; V1 one Buffer, V2 two dtype-compatible groups; 3 Buffer initializations per rank",
+    "result_directory": "precision_ep32_reuse_20261125_96W7tw/results_full (previous/ for the reused V1 BF16 expand=0 variant)"
+  },
+  "precision_ep32_ab200": {
+    "state": "paused",
+    "paused_at": "2026-11-25 21:35:16 CST",
+    "ep_size": 32,
+    "nnodes": 2,
+    "hosts": [
+      "30.104.128.6",
+      "30.104.128.7"
+    ],
+    "total_cases": 400,
+    "completed_cases": 294,
+    "remaining_cases": 106,
+    "failed_cases": 0,
+    "completed_prefix": 294,
+    "next_variant": "v2_A0575_fp8_expand0",
+    "counts_completed": {
+      "v1_A": 160,
+      "v1_B": 40,
+      "v2_A": 94,
+      "v2_B": 0
+    },
+    "precision_only": true,
+    "performance_collection": false,
+    "buffer_policy": "one persistent process group; V1 one Buffer across all 200 cases; V2 grouped by hidden/topk/dtype (26 planned groups); tokens within reserved capacity",
+    "buffer_initializations_at_pause": 9,
+    "cross_node_digest_verified": true,
+    "result_location": {
+      "node0": "/workspace/precision_ep32_ab200_20261125_D8nMOU/results_full/node0 (30.104.128.6; host /data2/perf_v2_67_20261125_puVjF7/...)",
+      "node1": "/workspace/precision_ep32_ab200_20261125_D8nMOU/results_full/node1 (30.104.128.7; host /data2/perf_v2_20261125_Lu2QQN/...)"
+    },
+    "results_retrieved_to_local": false,
+    "checkpoint": "precision_ep32_ab200_20261125_D8nMOU/pause_checkpoint.json",
+    "note": "Paused per user request; 106 cases never ran. Local controller was lost on session switch, so raw per-rank results remain only on remote container disks and were NOT copied into this repository. Do NOT treat 294 cases as a completed 400-case suite."
+  },
+  "precision_summary": {
+    "completed_variants": 302,
+    "csv_rows": 302,
+    "note": "D-group 8 complete + A/B 294 paused-complete; all 32 ranks per variant passed precision-only checks; no performance data."
   }
 }
