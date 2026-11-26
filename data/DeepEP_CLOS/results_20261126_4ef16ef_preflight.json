@@ -1,0 +1,58 @@
+{
+  "drivers": [
+    "25.8.rc10",
+    "25.8.rc10"
+  ],
+  "harness": [
+    {
+      "bench_sha256": "e705d662ea8fbdd1185862d93497c8d51be8de2bea099ef81a679087811619b6",
+      "harness_revision": "83252a54d2363734a706a7dd8368bebc3094af5a"
+    },
+    {
+      "bench_sha256": "e705d662ea8fbdd1185862d93497c8d51be8de2bea099ef81a679087811619b6",
+      "harness_revision": "83252a54d2363734a706a7dd8368bebc3094af5a"
+    }
+  ],
+  "runtime": [
+    {
+      "module": "/workspace/runtime_4ef16ef/deep_ep/__init__.py",
+      "torch": "2.10.0+cpu",
+      "torch_npu": "2.10.0.post7",
+      "shmem_rev": "29fad1201858af29f687c4b8637d112d5d0ff28b",
+      "cann": "9.2.1",
+      "build_info_sha": "369c9d2d290fdc8915760e48f6c8f1edb1b35893ae42c334d39a50e06780b6b9",
+      "so": {
+        "_C.cpython-313-x86_64-linux-gnu.so": "334fa276c54ca440edc704dad4b08816afe71ee23dacb5884c1baf3681364c7e",
+        "_clos_C.cpython-313-x86_64-linux-gnu.so": "a2caa529996c75bc41a0170b5037a8356e6901d5c17168e214e7e540db586f5b"
+      },
+      "libs": [
+        "aclshmem_bootstrap_config_store.so",
+        "aclshmem_bootstrap_uid.so",
+        "libshmem.so",
+        "libshmem_utils.so"
+      ]
+    },
+    {
+      "module": "/workspace/runtime_4ef16ef/deep_ep/__init__.py",
+      "torch": "2.10.0+cpu",
+      "torch_npu": "2.10.0.post7",
+      "shmem_rev": "29fad1201858af29f687c4b8637d112d5d0ff28b",
+      "cann": "9.2.1",
+      "build_info_sha": "369c9d2d290fdc8915760e48f6c8f1edb1b35893ae42c334d39a50e06780b6b9",
+      "so": {
+        "_C.cpython-313-x86_64-linux-gnu.so": "334fa276c54ca440edc704dad4b08816afe71ee23dacb5884c1baf3681364c7e",
+        "_clos_C.cpython-313-x86_64-linux-gnu.so": "a2caa529996c75bc41a0170b5037a8356e6901d5c17168e214e7e540db586f5b"
+      },
+      "libs": [
+        "aclshmem_bootstrap_config_store.so",
+        "aclshmem_bootstrap_uid.so",
+        "libshmem.so",
+        "libshmem_utils.so"
+      ]
+    }
+  ],
+  "switchback_module": [
+    "/opt/conda/envs/hunyuan4_tenpu/lib/python3.13/site-packages/deep_ep/__init__.py",
+    "/opt/conda/envs/hunyuan4_tenpu/lib/python3.13/site-packages/deep_ep/__init__.py"
+  ]
+}

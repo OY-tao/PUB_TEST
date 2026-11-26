@@ -1,0 +1,46 @@
+{
+  "commit": "4ef16ef6d5dd1e1b453430d2acd0ca17746b0ce7",
+  "commit_subject": "Use measured EP128 launch plans for BF16 H2816",
+  "commit_date": "2026-11-15 22:22:33 +0800",
+  "source_date_epoch": 1794752553,
+  "repository": "https://github.com/shaoxunli/DeepEP (local full clone; shallow main repo lacks this object)",
+  "source_sha256": "034d71487e2eefe5dd3a0672ed071b621b64811501b33de77eb4fd532c69c296",
+  "wheel": "ascend_deepep-0.1.0.dev5-cp313-cp313-linux_x86_64.whl",
+  "wheel_sha256": "afc9e3a228493d0dcf36cd94054bc12332238ebcc178b063adfbde7a58f9104f",
+  "build_exit": "0",
+  "cpu_pytest_exit": "0",
+  "cpu_pytest_result": "256 passed (tests/api/test_contracts.py, test_framework_import.py, tests/runtime/test_runtime.py, test_communication_stream.py, test_build.py, test_loader.py)",
+  "shmem_revision": "29fad1201858af29f687c4b8637d112d5d0ff28b",
+  "shmem_source": "third-party/shmem @ 29fad1201858af29f687c4b8637d112d5d0ff28b (local object, offline)",
+  "cann": {
+    "timestamp": "20261024_000123916",
+    "version": "9.2.1"
+  },
+  "direct": {
+    "topk_idx_bits": 64,
+    "torch": "2.10.0+cpu",
+    "torch_cxx11_abi": true,
+    "torch_npu": "2.10.0.post7"
+  },
+  "build_info_sha256": "369c9d2d290fdc8915760e48f6c8f1edb1b35893ae42c334d39a50e06780b6b9",
+  "source_version": "0.1.0.dev5",
+  "so_sha256": {
+    "_C.cpython-313-x86_64-linux-gnu.so": "334fa276c54ca440edc704dad4b08816afe71ee23dacb5884c1baf3681364c7e",
+    "_clos_C.cpython-313-x86_64-linux-gnu.so": "a2caa529996c75bc41a0170b5037a8356e6901d5c17168e214e7e540db586f5b",
+    "libdeepep_clos_kernels.so": "771e445e9118b4cdeb301e74bc8caeea3cd11f49142d9c6e803f8370a550ad11",
+    "libdeepep_instances.so": "065defbcfdeb7f8b014cf917be890451c3e2dbd1e53f11bbadc96f089f5fd136",
+    "libdeepep_kernels.so": "c76af87e8fb5ac1edca554027c1834f62f1cfd334dc6d245fc2c01890c3c3dd6"
+  },
+  "libs_sha256": {
+    "aclshmem_bootstrap_config_store.so": "1a153f080f5313b4c9d213f5f0e35afb6815173e09ad02accb4ec8e2276bc715",
+    "aclshmem_bootstrap_uid.so": "6a5b115d89065c386f54d49c3854a972b78fa928fa4ab440082b97abed3b13b5",
+    "libshmem.so": "e410cbefc9bd6beb59f2e2465dd7e8cb519f62be000d48f84e979a5c8ad148ed",
+    "libshmem_utils.so": "9dfe05d3cc75f1fe277a7198382bc520b96efb90c59408fa011fe4ca8e5b7136"
+  },
+  "runtime_layout": "/data2/deepep_ep32_pwq_sweep_20261126_u8nfur/rebuild_4ef16ef/runtime_4ef16ef",
+  "harness_revision": "83252a54d2363734a706a7dd8368bebc3094af5a (unchanged /workspace/deepep)",
+  "bench_sha256": "e705d662ea8fbdd1185862d93497c8d51be8de2bea099ef81a679087811619b6",
+  "baseline_shmem_revision": "a5e55f750d506d0fcfe01b5959299cbf019f762a (83252a5 runtime)",
+  "note": "Single-variable comparison: only the loaded deep_ep runtime differs; harness/params/driver unchanged. shmem revision differs from baseline and is an unavoidable confounder.",
+  "generated": "2026-11-26 18:47:57 CST"
+}

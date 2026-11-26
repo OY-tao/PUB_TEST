@@ -1,0 +1,71 @@
+{
+  "snapshot": "2026-11-26 18:57:23 CST",
+  "purpose": "re-run 2 degraded EP32 cases with rebuilt 4ef16ef runtime; single-variable comparison vs 83252a5 baseline",
+  "runtime_revision": "4ef16ef6d5dd1e1b453430d2acd0ca17746b0ce7",
+  "runtime_source_date_epoch": 1794752553,
+  "runtime_wheel_sha256": "afc9e3a228493d0dcf36cd94054bc12332238ebcc178b063adfbde7a58f9104f",
+  "runtime_build_info_sha256": "369c9d2d290fdc8915760e48f6c8f1edb1b35893ae42c334d39a50e06780b6b9",
+  "runtime_so_sha256": {
+    "_C.cpython-313-x86_64-linux-gnu.so": "334fa276c54ca440edc704dad4b08816afe71ee23dacb5884c1baf3681364c7e",
+    "_clos_C.cpython-313-x86_64-linux-gnu.so": "a2caa529996c75bc41a0170b5037a8356e6901d5c17168e214e7e540db586f5b",
+    "libdeepep_clos_kernels.so": "771e445e9118b4cdeb301e74bc8caeea3cd11f49142d9c6e803f8370a550ad11",
+    "libdeepep_instances.so": "065defbcfdeb7f8b014cf917be890451c3e2dbd1e53f11bbadc96f089f5fd136",
+    "libdeepep_kernels.so": "c76af87e8fb5ac1edca554027c1834f62f1cfd334dc6d245fc2c01890c3c3dd6"
+  },
+  "runtime_shmem_revision": "29fad1201858af29f687c4b8637d112d5d0ff28b",
+  "runtime_cann_version": "9.2.1",
+  "runtime_cann_timestamp": "20261024_000123916",
+  "harness_revision": "83252a54d2363734a706a7dd8368bebc3094af5a (unchanged /workspace/deepep)",
+  "bench_sha256": "e705d662ea8fbdd1185862d93497c8d51be8de2bea099ef81a679087811619b6",
+  "baseline_source_revision": "83252a54d2363734a706a7dd8368bebc3094af5a",
+  "baseline_shmem_revision": "a5e55f750d506d0fcfe01b5959299cbf019f762a",
+  "driver_version": "25.8.rc10",
+  "hosts": "30.104.128.6;30.104.128.7",
+  "huge_pages": false,
+  "cases": [
+    {
+      "index": 1,
+      "num_tokens": 8192,
+      "hidden": 2816,
+      "aiv": 32,
+      "run_id": "perf_v2_4ef16ef_20261126_QHxsGJ_ep32_001"
+    },
+    {
+      "index": 7,
+      "num_tokens": 16384,
+      "hidden": 2816,
+      "aiv": 32,
+      "run_id": "perf_v2_4ef16ef_20261126_QHxsGJ_ep32_007"
+    }
+  ],
+  "comparison_metric": "official_logical_GBps_rank_mean",
+  "run_count": 1,
+  "repeats": 0,
+  "rank_and_all_rows": 264,
+  "op_rows": 8,
+  "compare_rows": 8,
+  "cpu_pytest": "256 passed (tests/api/test_contracts.py, test_framework_import.py, tests/runtime/test_runtime.py, test_communication_stream.py, test_build.py, test_loader.py)",
+  "cpu_pytest_exit": "0",
+  "build_exit": "0",
+  "build_environment_match": {
+    "verified_equal": true,
+    "cann": "9.2.1 (timestamp 20261024_000123916)",
+    "compiler": "GNU 13.3.0",
+    "cmake": "3.28.3",
+    "python": "3.13.16",
+    "pybind11": "3.0.4",
+    "arch": "Ascend950",
+    "build_type": "Release",
+    "note": "Compared field-by-field from both _build_info.json files; build toolchain is NOT a confounder."
+  },
+  "limitations": [
+    "4ef16ef is 73 commits behind the 83252a5 baseline (41 touching csrc/): single-point rollback, not a full version regression.",
+    "Unavoidable confounder: shmem revision differs (baseline a5e55f75, replay 29fad12, pwq c485ee7).",
+    "Build toolchain is identical (verified); the remaining differences are deepep source + pinned shmem revision.",
+    "Only 2 EP32 cases (8192/16384 x H2816 x aiv32); no EP8/16/64, no fp8, no expand=0, no other hidden/aiv.",
+    "Single sampling per case (warmup=10/iterations=30); no repeats, no confidence interval. delta_pct is descriptive.",
+    "plan.json.identity.revision is the harness source revision (83252a5), NOT the loaded runtime; runtime evidence is runtime_manifest.json + .so sha256.",
+    "Measurement success does not imply no regression; verdict requires delta_pct with matched timing boundaries.",
+    "No --huge-pages: results are not comparable with 1G大页重测结果_20261126.md."
+  ]
+}

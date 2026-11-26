@@ -1,0 +1,62 @@
+[
+  {
+    "run_id": "perf_v2_4ef16ef_20261126_QHxsGJ_ep32_001",
+    "node_rank": true,
+    "suite_exit_code_0": true,
+    "report_passed": true,
+    "huge_pages_off": true,
+    "same_run_id": true,
+    "nnodes_2": true,
+    "master_addr": true,
+    "master_port": true,
+    "four_ops": true,
+    "rank_coverage_32": true,
+    "numeric_valid": true,
+    "passed": true
+  },
+  {
+    "run_id": "perf_v2_4ef16ef_20261126_QHxsGJ_ep32_001",
+    "node_rank": true,
+    "suite_exit_code_0": true,
+    "report_passed": true,
+    "huge_pages_off": true,
+    "same_run_id": true,
+    "nnodes_2": true,
+    "master_addr": true,
+    "master_port": true,
+    "four_ops": true,
+    "rank_coverage_32": true,
+    "numeric_valid": true,
+    "passed": true
+  },
+  {
+    "run_id": "perf_v2_4ef16ef_20261126_QHxsGJ_ep32_007",
+    "node_rank": true,
+    "suite_exit_code_0": true,
+    "report_passed": true,
+    "huge_pages_off": true,
+    "same_run_id": true,
+    "nnodes_2": true,
+    "master_addr": true,
+    "master_port": true,
+    "four_ops": true,
+    "rank_coverage_32": true,
+    "numeric_valid": true,
+    "passed": true
+  },
+  {
+    "run_id": "perf_v2_4ef16ef_20261126_QHxsGJ_ep32_007",
+    "node_rank": true,
+    "suite_exit_code_0": true,
+    "report_passed": true,
+    "huge_pages_off": true,
+    "same_run_id": true,
+    "nnodes_2": true,
+    "master_addr": true,
+    "master_port": true,
+    "four_ops": true,
+    "rank_coverage_32": true,
+    "numeric_valid": true,
+    "passed": true
+  }
+]
