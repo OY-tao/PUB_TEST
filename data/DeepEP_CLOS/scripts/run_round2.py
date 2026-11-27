@@ -8,6 +8,15 @@
   3. 新代码下 EP8-EP64 精度，各复测 50 条，充分利用 4 机
   4. 异常场景重测 E4、E5
 
+代码仓 `https://github.com/lueelu/DeepEP`（branch `main`）。main 会持续前进
+（用户 2026-11-27 16:26：「main 还不是最新，等通知」），所以**开跑前先跑
+`check_main_delta.py`** 重新判一遍"新在哪"，别沿用上次结论。
+
+`gate` 除四机一致性外，还会校验：remote 指向 `lueelu/DeepEP`、HEAD 与 fetch 后的
+`origin/main` 同一提交、`_C.so` 与 `libdeepep_kernels.so` 都在包里、四机
+`_build_info.json` 一致。只看 `single_commit` 会漏掉"四机一起停在旧 commit"
+和"装了新 commit 但库还是旧的"这两种假通过。
+
 设计约束
 --------
 * **门禁优先**：`gate` 不通过，`perf` / `precision` 直接拒绝执行。否则会把
@@ -377,13 +386,35 @@ from deep_ep.backends.global_clos import Buffer, ElasticBuffer
 bad = [c.__module__ for c in (Buffer, ElasticBuffer) if "mesh_clos" in c.__module__]
 root = pathlib.Path(deep_ep.__file__).resolve().parent
 sos = sorted(str(p) for p in root.rglob("*.so"))
+bi = root / "_build_info.json"
+ver = "unknown"
+try:
+    import importlib.metadata as md
+    ver = md.version("ascend-deepep")
+except Exception:
+    pass
 print(json.dumps({
     "deep_ep": str(root),
+    "version": ver,
+    "build_info_sha": hashlib.sha256(bi.read_bytes()).hexdigest() if bi.exists() else "",
     "backends": [Buffer.__module__, ElasticBuffer.__module__],
     "mesh_clos": bad,
     "sos": {p: hashlib.sha256(open(p, "rb").read()).hexdigest() for p in sos},
 }))
 '''
+
+
+def git_in(node, args, timeout=90):
+    """在**容器内**取 git 信息（容器里的那份才是真正被编译/运行的），失败回退宿主机。"""
+    inner = "git -C %s %s" % (REPO, args)
+    try:
+        r = docker_exec(node, inner, timeout=timeout)
+        if not r.returncode:
+            return r.stdout.strip(), "container"
+    except Exception:
+        pass
+    r = run_ssh(node["host"], inner, timeout=timeout)
+    return (r.stdout.strip() if not r.returncode else ""), "host"
 
 
 def stage_gate(args):
@@ -395,12 +426,15 @@ def stage_gate(args):
         try:
             c = container_of(node)
             rec["container"] = c
-            r = run_ssh(host, "git -C %s rev-parse HEAD" % REPO, timeout=60)
-            rec["commit"] = r.stdout.strip()
-            r = run_ssh(host, "git -C %s log -1 --format='%%h %%ci %%s'" % REPO, timeout=60)
-            rec["commit_detail"] = r.stdout.strip()
-            r = run_ssh(host, "git -C %s status --porcelain | head -20" % REPO, timeout=60)
-            rec["dirty"] = [ln for ln in r.stdout.splitlines() if ln.strip()]
+            rec["commit"], rec["git_where"] = git_in(node, "rev-parse HEAD")
+            rec["commit_detail"], _ = git_in(node, "log -1 --format='%h %ci %s'")
+            rec["origin_main"], _ = git_in(node, "rev-parse origin/main")
+            rec["remote"], _ = git_in(node, "remote get-url origin")
+            dirty, _ = git_in(node, "status --porcelain")
+            rec["dirty"] = [ln for ln in dirty.splitlines() if ln.strip()][:20]
+            # origin/main 的本地引用可能过期：fetch 一次再看，避免"同步"是假象
+            git_in(node, "fetch --quiet origin main", timeout=180)
+            rec["origin_main_fetched"], _ = git_in(node, "rev-parse origin/main")
             r = docker_exec(node, "python -c " + shlex.quote(GATE_CODE), timeout=180)
             if r.returncode:
                 rec["import_error"] = (r.stderr or r.stdout or "")[-500:]
@@ -418,18 +452,47 @@ def stage_gate(args):
     digests = {h: tuple(sorted(report["nodes"][h]["sos"].items())) for h in ok_nodes}
     same = len(set(digests.values())) == 1 if digests else False
     commits = {report["nodes"][h].get("commit") for h in ok_nodes}
+    origin = {report["nodes"][h].get("origin_main_fetched")
+              or report["nodes"][h].get("origin_main") for h in ok_nodes}
+    remotes = {report["nodes"][h].get("remote") for h in ok_nodes}
+    infos = {h: report["nodes"][h].get("build_info_sha", "") for h in ok_nodes}
+
+    # 关键算子库必须进包：Host 扩展 _C*.so + Device kernel libdeepep_kernels.so
+    kern = {}
+    for h in ok_nodes:
+        names = [os.path.basename(p) for p in report["nodes"][h]["sos"]]
+        kern[h] = {"host_ext": any(n.startswith("_C") for n in names),
+                   "device_kernels": any(n == "libdeepep_kernels.so" for n in names)}
+    kernels_ok = bool(kern) and all(v["host_ext"] and v["device_kernels"] for v in kern.values())
+
     report["checks"] = {
         "all_nodes_reachable": len(ok_nodes) == len(NODES),
-        "single_commit": len(commits) == 1,
-        "commit": (list(commits)[0] if len(commits) == 1 else sorted(map(str, commits))),
+        "remote_repo": bool(remotes) and all(r and "lueelu/DeepEP" in r for r in remotes),
+        "remotes": sorted(map(str, remotes)),
+        "in_sync_with_origin_main": (bool(commits) and len(commits) == 1
+                                     and "" not in commits and commits == origin),
+        "single_commit": len(commits) == 1 and "" not in commits,
+        "commit": (list(commits)[0] if len(commits) == 1 and "" not in commits
+                   else sorted(map(str, commits))),
+        "origin_main": sorted(map(str, origin)),
         "so_identical": same,
+        "kernels_so_present": kernels_ok,
+        "build_info_identical": len(set(infos.values())) == 1,
+        "build_info_state": ("present" if all(infos.values())
+                             else ("absent" if not any(infos.values()) else "partial")),
+        "versions": sorted({report["nodes"][h].get("version", "") for h in ok_nodes}),
         "no_mesh_clos": all(not report["nodes"][h].get("mesh_clos") for h in ok_nodes),
         "clean_worktree": all(not report["nodes"][h].get("dirty") for h in ok_nodes),
     }
     report["pass"] = all([report["checks"]["all_nodes_reachable"],
+                          report["checks"]["remote_repo"],
+                          report["checks"]["in_sync_with_origin_main"],
                           report["checks"]["single_commit"],
                           report["checks"]["so_identical"],
-                          report["checks"]["no_mesh_clos"]])
+                          report["checks"]["kernels_so_present"],
+                          report["checks"]["build_info_identical"],
+                          report["checks"]["no_mesh_clos"],
+                          report["checks"]["clean_worktree"]])
     (DATA / "round2_gate.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report["checks"], indent=2, ensure_ascii=False))

@@ -2,3 +2,7 @@
 2，在新代码下重新测试性能EP8-EP64，不开1g大页，充分利用4机
 3，在新代码下EP8-EP64精度，各复测50条，充分利用4机
 4，异常场景重E4、E5
+
+—— 以下为 2026-11-27 16:24 用户补充，上面四条原文未改动 ——
+代码仓：https://github.com/lueelu/DeepEP
+（branch: main；包名 ascend-deepep，导入名 deep_ep）

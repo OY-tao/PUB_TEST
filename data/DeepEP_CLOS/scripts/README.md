@@ -12,6 +12,7 @@
 ```
 scripts/
 ├── run_round2.py             ★ R2 编排：门禁 + 性能 48 + 精度 200 + 异常 E4/E5
+├── check_main_delta.py       ★ 核对上游 main「新在哪」（GitHub API，不碰设备）
 ├── gen_perf_cases.py         ★ 60 例性能用例（对齐 V2测试Case.txt）
 ├── perf_cases_v2.json        ★ 60 例性能规格
 ├── gen_precision_cases.py    ★ 2-16P 泛化精度清单生成器
@@ -46,6 +47,7 @@ scripts/
 | 工具 | 何时用 | 输入 | 输出 | 覆盖 |
 |---|---|---|---|---|
 | `run_round2.py` | 换代码后整轮 | 需求原文 | 4 个 CSV + gate/state JSON | R2：门禁 + 48 性能 + 200 精度 + E4/E5 |
+| `check_main_delta.py` | 每次上游更新后**先跑** | 基线 sha（默认 `83252a5`） | 变更归属表 | 判定 dispatch/combine/bench 是否真的变了 |
 | `gen_perf_cases.py` | 跑测**前** | `perf_cases_v2.json` | 60 条命令，按 EP 分脚本 | 性能 60 例 |
 | `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条命令 + shell 批次 | 泛化 1148 例 |
 | `verify_ledger.py` | 跑测**前** | 形状参数 | 6 种字节口径 | —（只算分母） |
@@ -77,6 +79,25 @@ python run_round2.py abnormal --eps 8,16 --api v1,v2 --scenarios E4,E5
 
 > bench 自带 torchrun（`bench_*:172` 起拼 `torch.distributed.run`），
 > 每节点只需 `python bench_*.py --node-rank=N`，**外面不要再套 torchrun**。
+
+### check_main_delta.py —— 上游 main「新在哪」
+
+用户 2026-11-27 明确「main 还不是最新，等通知」，所以每次更新都要重新判一遍变更归属，
+而不是沿用上次的结论。脚本走 GitHub REST 匿名接口，约 11 个请求。
+
+```bash
+python check_main_delta.py                     # 打表：main tip / 与基线区间 / 8 条路径归属
+python check_main_delta.py --base <sha>        # 换基线
+python check_main_delta.py --json              # 机器可读
+```
+
+判定口径：某路径**最后一次被修改的 commit** 是否落在 `基线...main` 区间内。
+
+| 结果 | 对性能预期的影响 |
+|---|---|
+| `csrc/kernels/dispatch` / `combine` 变了 | 核心变量变了，预期有变化，报告需逐条对标 kernel 改动 |
+| `benchmarks/clos` 变了 | 口径也变了，与上轮数字不可直接比，先 diff bench |
+| 都没变（仅 `csrc/kernels` 新增 MegaMoE） | 预期 delta 落在 CV 内（≈0），偏差应先查环境 |
 
 ### gen_perf_cases.py —— 60 例性能用例
 
