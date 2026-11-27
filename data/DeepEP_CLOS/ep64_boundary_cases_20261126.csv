@@ -1,0 +1,17 @@
+ep,case_id,num_tokens,hidden,num_topk,experts_per_rank,dtype,expected_reject,semantics_changed,note
+64,S1,1,2816,8,32,bf16,False,False,tokens lower bound 1
+64,S2,16384,2816,8,32,bf16,False,False,tokens upper bound 16384
+64,S3,1024,16,8,32,bf16,True,False,BF16 hidden lower bound 16; rejected by hidden%128
+64,S4,1024,128,8,32,fp8,False,False,FP8 hidden lower bound 128
+64,S5,1024,7168,8,32,bf16,False,False,hidden upper bound 7168
+64,S6,1024,100,8,32,bf16,True,False,hidden 100 not 128-aligned; expected reject
+64,S7,32768,2816,8,32,bf16,True,False,"tokens 32768 beyond V1 16384; no argparse bound, runtime OOM risk"
+64,S8,1024,8192,8,32,bf16,True,False,hidden 8192 beyond V1 7168; no argparse bound
+64,X1,1024,2048,1,1,bf16,False,False,E=P=64 minimal
+64,X2,1024,2048,2,1,bf16,False,False,topk>epr cross-rank
+64,X3,1024,2048,8,16,bf16,False,False,E=1024 (epr=16)
+64,X4,1024,2048,16,16,bf16,False,False,V1 topk upper 16 with E=1024
+64,X5,1024,2048,32,16,bf16,True,False,V2 topk upper 32; V1 should reject but does not
+64,X6,1024,2048,65,1,bf16,True,False,"topk=65>E=64; rejected by min(128,ep*epr)"
+64,X7,1024,2048,8,16,bf16,True,True,E=1025 not divisible by 64; epr=1025//64=16 silently becomes E=1024
+64,X8,1024,2048,1,16,bf16,False,False,topk lower bound 1
