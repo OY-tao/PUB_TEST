@@ -746,7 +746,7 @@ def stage_abnormal(args):
     print("abnormal: %d 次执行（%s），commit=%s" % (
         len(jobs), ",".join("%s/%s" % (j["api"], j["sid"]) for j in jobs[:4]) + "…", commit))
 
-    for ep in sorted({j["ep"] for j in eps}):
+    for ep in sorted({j["ep"] for j in jobs}):
         need = nnodes_of(ep)
         for i in EP_NODES[ep]:
             check_idle(node_by_idx(i), ep // need)
@@ -759,7 +759,7 @@ def stage_abnormal(args):
         node = node_by_idx(EP_NODES[ep][0])       # 异常场景沿用上轮的 EP8/EP16 单机
         run_id = "abn_ep%d_%s_%s_r2" % (ep, api, sid)
         out_root = "%s/out/abn/%s" % (STAGE, run_id)
-        argv = ["python", "torch.distributed.run",
+        argv = ["python", "-m", "torch.distributed.run",
                 "--nnodes=1", "--nproc-per-node=%d" % ep, "--node-rank=0",
                 "--master-addr=127.0.0.1", "--master-port=%d" % (PORTS["abnormal"] + ep),
                 "--max-restarts=0",
