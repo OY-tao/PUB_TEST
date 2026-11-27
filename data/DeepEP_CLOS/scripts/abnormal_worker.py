@@ -8,23 +8,10 @@ profiler, timing, bandwidth, GBps or CV collection.
 
 Scenarios follow 边界与异常用例清单_2to16P.md section 4:
   E1-E4  multi-round dispatch / handle isolation / handle reuse
-  E5     over-capacity round-2 input on ALL ranks, then combine round 1
+  E5     illegal round-2 input on ALL ranks, then combine round 1
   E6     round-2 expert output with round-1 handle (different/same row count)
   E7-E9  V1-only expand/aggregate variants of E1/E2/E4
 E5/E6 are executed last in each API group because they may disturb the Buffer.
-
-R2（2026-11-27）按原文口径修正两处，旧实现保留为 E5X 以便对照：
-
-  E4  原文「一次 dispatch，用同一个 handle combine 两次，第二次换一份同布局的
-      专家输出」。旧实现用 dispatch_cached 又跑了一次 dispatch（多了一次通信，
-      也可能改动 handle），属于等价但更重的偏离。现在第二次的专家输出直接由
-      golden 路由参考生成（同 seed、同行数、不同取值），真正只 dispatch 一次。
-
-  E5  原文「第 2 轮在所有 rank 上传超容量输入」。旧实现传的是越界 expert id
-      （≥ num_experts），打的是"取值未校验"这一另一个缺口，实测直接设备级崩溃。
-      现在按字面构造：num_tokens = num_max_tokens_per_rank + 1，期望在两版
-      kernel 之前就被 ValueError 拒绝（V1 buffer_v1.py:508 / V2 elastic_v2.py:1378）。
-      越界 expert id 的旧场景改名为 E5X 保留，仍可复现此前的崩溃结论。
 """
 import argparse
 import copy
@@ -125,7 +112,7 @@ class Harness:
         return owned
 
     def dispatch_illegal(self, seed):
-        """All ranks post an out-of-range topk_idx (>= num_experts).  [E5X, legacy]"""
+        """All ranks post an out-of-range topk_idx (>= num_experts)."""
         from deep_ep import topk_idx_t
         a = self.args_for(seed)
         num_experts = self.ep * a.experts_per_rank
@@ -141,50 +128,6 @@ class Harness:
             x, topk_idx=bad, topk_weights=weights, handle=None,
             num_experts=num_experts, num_sms=a.num_aiv, do_expand=False,
             expert_alignment=1, async_with_compute_stream=True))
-
-    def dispatch_over_capacity(self):
-        """E5 严格口径：payload 超容量（tokens > num_max_tokens_per_rank）。
-
-        与越界 expert id 是两个不同维度：这里路由本身合法，只是本 rank 的 token
-        行数超过了 Buffer 声明的容量，应在 kernel 之前被 Python 层 ValueError 拒绝。
-
-        校验位置（快照 scripts/upstream/）：
-          V1 buffer_v1.py:508-509  "local token count exceeds num_max_tokens_per_rank"
-          V2 elastic_v2.py:1378    "x.size(0) exceeds num_max_tokens_per_rank"
-        """
-        a = self.args_for(self.seed_base + 4)
-        a.num_tokens = int(self.o.max_tokens) + 1
-        routes = [self.g._make_topk_idx(p, a) for p in range(self.ep)]
-        idx = routes[self.rank].to("npu")
-        weights = self.g._make_weights(self.rank, a).to("npu")
-        x = self.g._to_npu(self.g._make_dispatch_x(self.rank, a, delta=3.0))
-        if self.o.api == "v1":
-            ops = self.V1Operations(self.buffer, self.config, idx, weights,
-                                    self.ep * a.experts_per_rank, False)
-            return self.wait(ops.dispatch(x))
-        return self.wait(self.buffer.dispatch(
-            x, topk_idx=idx, topk_weights=weights, handle=None,
-            num_experts=self.ep * a.experts_per_rank, num_sms=a.num_aiv,
-            do_expand=False, expert_alignment=1, async_with_compute_stream=True))
-
-    def expert_output_from_reference(self, rnd, delta):
-        """同布局、不同取值的专家输出（不跑第二次 dispatch）。
-
-        E4 原文只要求"换一份同布局的专家输出"；用 golden 的路由参考按同一 seed
-        生成另一组行，行数与顺序完全一致、内容不同，比 dispatch_cached 更贴近
-        原文——后者会真的再通信一次，可能顺带改动 handle 状态。
-        """
-        ref = self.g._dispatch_reference(self.rank, rnd["args"], delta=delta)
-        if rnd["expanded"]:
-            exp = self.g._expand_reference(ref["recv_x"], ref["recv_topk_idx"],
-                                           ref["recv_topk_weights"], ref["expert_counts"])
-            cpu = exp["expanded_x"]
-        else:
-            cpu = ref["recv_x"]
-        own = self.g._dequantize_x(cpu, self.torch.bfloat16)
-        if getattr(own, "device", None) is not None and own.device.type == "cpu":
-            own = self.g._to_npu(own)
-        return own
 
     def combine(self, rnd, owned=None, weighted=False):
         x = rnd["owned"] if owned is None else owned
@@ -274,64 +217,20 @@ def scenario(h, sid):
         return True, "passed", checks, notes
 
     if sid in ("E4", "E9"):
-        # 原文：一次 dispatch，同一个 handle combine 两次；第二次换一份同布局的
-        # 专家输出，两次都要成功且各自算对。**只 dispatch 一次**。
         r = h.dispatch(S + 1, 0.0, expanded)
         checks["dispatch_payload"] = h.check_dispatch_payload(r, sid + " dispatch")
         h.check_combine(r, 0.0, sid + " combine #1")
         checks["combine_1"] = True
-        owned2 = h.expert_output_from_reference(r, 1.0)
-        checks["second_payload_same_layout"] = (
-            tuple(owned2.shape) == tuple(r["owned"].shape))
-        h.check_combine(r, 1.0, sid + " combine #2 (same handle, same-layout expert output)",
+        owned2 = h.dispatch_cached(r, 1.0)
+        h.check_combine(r, 1.0, sid + " combine #2 (same handle, new expert output)",
                         owned=owned2)
         checks["combine_2_same_handle"] = True
-        notes.append("single dispatch; same handle combined twice, second payload derived from "
-                     "the golden route reference (same seed/shape, delta=1) -- no extra dispatch")
+        notes.append("same handle combined twice; second used a same-layout payload with delta=1")
         return True, "passed", checks, notes
 
     if sid == "E5":
-        # 原文：第 1 轮 dispatch 成功；第 2 轮在所有 rank 上传**超容量输入**；
-        # 再 combine 第 1 轮 —— 第 2 轮明确报错，第 1 轮仍能算对。
-        capacity = int(h.o.max_tokens)
         r1 = h.dispatch(S + 1, 0.0, False)
         checks["round1_payload"] = h.check_dispatch_payload(r1, "E5 dispatch round1")
-        notes.append("round2 posts %d tokens on every rank, capacity=%d"
-                     % (capacity + 1, capacity))
-        rejected, err, msg_ok = False, None, False
-        try:
-            h.dispatch_over_capacity()
-            notes.append("round2 over-capacity input was ACCEPTED (no ValueError)")
-        except ValueError as exc:
-            rejected = True
-            err = str(exc)[:240]
-            msg_ok = "num_max_tokens_per_rank" in err
-            notes.append("round2 rejected with ValueError: " + err)
-        except BaseException as exc:
-            rejected = True
-            err = type(exc).__name__ + ": " + str(exc)[:240]
-            notes.append("round2 rejected with a NON-ValueError (capacity check did not fire "
-                         "first): " + err)
-        checks["round2_rejected"] = rejected
-        checks["capacity_message"] = msg_ok
-        try:
-            h.check_combine(r1, 0.0, "E5 combine round1 after over-capacity round2")
-            checks["round1_recovers"] = True
-        except BaseException as exc:
-            checks["round1_recovers"] = False
-            notes.append("round1 combine failed after over-capacity round2: " + str(exc)[:240])
-            return False, "failed_runtime", checks, notes
-        ok = rejected and msg_ok and checks["round1_recovers"]
-        cls = "passed" if ok else "defect_suspected"
-        if not ok:
-            notes.append("expected: round2 raises ValueError mentioning num_max_tokens_per_rank "
-                         "AND round1 still computes correctly")
-        return ok, cls, checks, notes
-
-    if sid == "E5X":
-        # 旧口径（越界 expert id），保留用于对照上一轮的 device_crash 结论。
-        r1 = h.dispatch(S + 1, 0.0, False)
-        checks["round1_payload"] = h.check_dispatch_payload(r1, "E5X dispatch round1")
         rejected = False
         err = None
         try:
@@ -345,7 +244,7 @@ def scenario(h, sid):
             notes.append("round2 illegal input rejected: " + err)
         checks["round2_rejected"] = rejected
         try:
-            h.check_combine(r1, 0.0, "E5X combine round1 after illegal round2")
+            h.check_combine(r1, 0.0, "E5 combine round1 after illegal round2")
             checks["round1_recovers"] = True
         except BaseException as exc:
             checks["round1_recovers"] = False
@@ -480,8 +379,6 @@ def main():
     ap.add_argument("--aiv", type=int, default=32)
     ap.add_argument("--workspace-bytes", type=int, required=True)
     ap.add_argument("--max-tokens", type=int, default=16384)
-    ap.add_argument("--v1-capacity", choices=("declare", "omit"), default="declare",
-                    help="V1 是否声明 num_max_tokens_per_rank；E5 需要 declare 才有校验")
     ap.add_argument("--seed-base", type=int, default=20260823)
     o = ap.parse_args()
 
@@ -532,12 +429,7 @@ def main():
     os.environ[shared.COMBINE_NOTIFY_ENV] = "0"
 
     if o.api == "v1":
-        # V1 的容量校验只在显式声明 num_max_tokens_per_rank 时生效
-        # （buffer_v1.py:508）。bench_v1_bandwidth 不传这个参数，等于关掉了
-        # 校验；E5 要测"超容量被拒"，必须按文档把容量声明出来。
-        capacity = o.max_tokens if o.v1_capacity == "declare" else None
         buffer = Buffer(dist.group.WORLD, num_nvl_bytes=o.workspace_bytes,
-                        num_max_tokens_per_rank=capacity,
                         explicitly_destroy=True, transport="udma", use_1g_huge_pages=False)
         config = Config(o.aiv)
     else:

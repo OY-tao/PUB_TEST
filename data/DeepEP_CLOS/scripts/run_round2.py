@@ -669,7 +669,9 @@ def run_prec_ep(ep, cases, apis, commit, out_root, csv_path, args):
 def stage_abnormal(args):
     gate = require_gate()
     commit = gate["checks"].get("commit")
-    worker = HERE / "abnormal_worker.py"
+    # 用严格口径的 v2 worker（超容量 E5 + 纯张量 E4，见 commit 5cc6d2d）。
+    # v1 的 abnormal_worker.py 原样保留，它对应上轮已实测的越界 expert id 口径。
+    worker = HERE / "abnormal_worker_v2.py"
     LOGDIR.mkdir(parents=True, exist_ok=True)
     eps = args.eps
     sids = args.scenarios
@@ -685,7 +687,7 @@ def stage_abnormal(args):
         need = nnodes_of(ep)
         for i in EP_NODES[ep]:
             check_idle(node_by_idx(i), ep // need)
-            deploy(node_by_idx(i), worker, "abnormal_worker.py")
+            deploy(node_by_idx(i), worker, "abnormal_worker_v2.py")
 
     results = []
 
@@ -698,13 +700,12 @@ def stage_abnormal(args):
                 "--nnodes=1", "--nproc-per-node=%d" % ep, "--node-rank=0",
                 "--master-addr=127.0.0.1", "--master-port=%d" % (PORTS["abnormal"] + ep),
                 "--max-restarts=0",
-                STAGE + "/abnormal_worker.py",
+                STAGE + "/abnormal_worker_v2.py",
                 "--ep=%d" % ep, "--api=" + api, "--output=" + out_root,
                 "--run-id=" + run_id, "--scenarios=" + sid,
                 "--num-tokens=1024", "--hidden=2048", "--num-topk=8",
                 "--experts-per-rank=32", "--dtype=bf16", "--aiv=32",
-                "--max-tokens=%d" % args.max_tokens, "--seed-base=20260823",
-                "--v1-capacity=" + args.v1_capacity,
+                "--capacity=%d" % args.capacity, "--seed-base=20260823",
                 # 上轮实测工作区：EP8 约 2.16 GB、EP16 约 4.31 GB，即每 rank 256 MiB
                 "--workspace-bytes=%d" % (args.workspace_bytes or 268435456 * ep)]
         inner = env_prefix() + "timeout %d " % max(120, args.timeout - 120) + join_argv(argv)
@@ -778,8 +779,8 @@ def stage_plan(args):
     print("阶段 D 异常：E4 / E5 严格重构造")
     print("  E4: 一次 dispatch + 同一 handle 两次 combine，第二次换本地生成的同布局专家输出")
     print("      （旧实现用 dispatch_cached 多跑了一次 dispatch，已改掉）")
-    print("  E5: 第二轮传超容量 tokens（num_tokens = max_tokens+1），期望 ValueError")
-    print("      （旧实现用越界 expert id，触发设备级崩溃，口径不符）")
+    print("  E5: 第二轮传超容量 tokens（num_tokens = capacity+1），期望 ValueError")
+    print("      （v1 脚本用越界 expert id，触发设备级崩溃，属另一个缺口）")
     print("  矩阵: EP%s × {%s} × {%s}" % (
         ",".join(map(str, args.eps)), ",".join(args.api), ",".join(args.scenarios)))
     print()
@@ -830,12 +831,11 @@ def main():
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--timeout", type=int, default=3600, help="单个 case 超时秒")
     ap.add_argument("--jobs", type=int, default=4, help="异常阶段并发数")
-    ap.add_argument("--max-tokens", type=int, default=16384,
-                    help="Buffer 的 num_max_tokens_per_rank；E5 用它 +1 造超容量")
+    ap.add_argument("--capacity", type=int, default=16384,
+                    help="num_max_tokens_per_rank；E5 传 capacity+1 造超容量")
     ap.add_argument("--workspace-bytes", type=int, default=0,
                     help="V1 工作区字节数；默认每 rank 256 MiB")
-    ap.add_argument("--v1-capacity", choices=("declare", "omit"), default="declare",
-                    help="V1 是否声明 num_max_tokens_per_rank（E5 需要 declare）")
+
     args = ap.parse_args()
 
     args.eps = parse_eps(args.eps)
