@@ -1,0 +1,35 @@
+ep,api,scenario,classification,notes,elapsed_s,attempt,output
+8,v1,E1,passed,only round2 combined; a further round still succeeded,0.81,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v1,E2,passed,round2 used a different route seed and payload; round1 result still correct,0.4,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v1,E3,passed,combined in 2 -> 1 order; both results correct,0.4,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v1,E4,passed,same handle combined twice; second used a same-layout payload with delta=1,0.27,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v1,E5,device_crash,"rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7f9d28403f88.
+Since the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st",0.0,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1_E5/a1
+8,v1,E6,passed,"round1 recv rows=5447, round2 recv rows=5436; group A rejected: RuntimeError: src_idx and x must have the same num_recv_tokens; group B silently returned a WRONG result; detected by per-token comparison",0.68,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1_E6/a1
+8,v1,E7,passed,only round2 combined; a further round still succeeded,1.06,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v1,E8,passed,round2 used a different route seed and payload; round1 result still correct,0.97,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v1,E9,passed,same handle combined twice; second used a same-layout payload with delta=1,0.58,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1
+8,v2,E1,passed,only round2 combined; a further round still succeeded,0.78,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1
+8,v2,E2,passed,round2 used a different route seed and payload; round1 result still correct,0.32,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1
+8,v2,E3,passed,combined in 2 -> 1 order; both results correct,0.36,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1
+8,v2,E4,passed,same handle combined twice; second used a same-layout payload with delta=1,0.24,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1
+8,v2,E5,device_crash,"rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7f4cb4403f88.
+Since the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st",0.0,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2_E5/a1
+8,v2,E6,passed,"round1 recv rows=5447, round2 recv rows=5436; group A rejected: ValueError: x.size(0) must match the handle's token count; group B silently returned a WRONG result; detected by per-token comparison",0.69,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2_E6/a1
+16,v1,E1,passed,only round2 combined; a further round still succeeded,1.09,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v1,E2,passed,round2 used a different route seed and payload; round1 result still correct,0.54,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v1,E3,passed,combined in 2 -> 1 order; both results correct,0.57,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v1,E4,passed,same handle combined twice; second used a same-layout payload with delta=1,0.36,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v1,E5,device_crash,"rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7fe1b0403f88.
+Since the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st",0.0,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1_E5/a1
+16,v1,E6,passed,"round1 recv rows=6601, round2 recv rows=6566; group A rejected: RuntimeError: src_idx and x must have the same num_recv_tokens; group B silently returned a WRONG result; detected by per-token comparison",1.0,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1_E6/a1
+16,v1,E7,passed,only round2 combined; a further round still succeeded,1.36,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v1,E8,passed,round2 used a different route seed and payload; round1 result still correct,1.14,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v1,E9,passed,same handle combined twice; second used a same-layout payload with delta=1,0.74,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1
+16,v2,E1,passed,only round2 combined; a further round still succeeded,1.13,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1
+16,v2,E2,passed,round2 used a different route seed and payload; round1 result still correct,0.56,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1
+16,v2,E3,passed,combined in 2 -> 1 order; both results correct,0.58,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1
+16,v2,E4,passed,same handle combined twice; second used a same-layout payload with delta=1,0.37,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1
+16,v2,E5,device_crash,"rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7f37a4403f88.
+Since the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st",0.0,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2_E5/a1
+16,v2,E6,passed,"round1 recv rows=6601, round2 recv rows=6566; group A rejected: ValueError: x.size(0) must match the handle's token count; group B silently returned a WRONG result; detected by per-token comparison",1.01,1,/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2_E6/a1

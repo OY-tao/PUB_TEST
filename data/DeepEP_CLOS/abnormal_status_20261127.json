@@ -1,0 +1,754 @@
+{
+  "state": "completed",
+  "started": "2026-11-27 11:14:29",
+  "mode": "full + isolated E5/E6 re-run",
+  "tag": "precision_2to16p_abnormal_20261127_E9Cases",
+  "total": 30,
+  "done": 30,
+  "assignment": {
+    "30.104.128.6": 8,
+    "30.104.128.7": 16
+  },
+  "results": {
+    "8": {
+      "v1": {
+        "E1": {
+          "classification": "passed",
+          "notes": [
+            "only round2 combined; a further round still succeeded"
+          ],
+          "elapsed_s": 0.81,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E2": {
+          "classification": "passed",
+          "notes": [
+            "round2 used a different route seed and payload; round1 result still correct"
+          ],
+          "elapsed_s": 0.4,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E3": {
+          "classification": "passed",
+          "notes": [
+            "combined in 2 -> 1 order; both results correct"
+          ],
+          "elapsed_s": 0.4,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E4": {
+          "classification": "passed",
+          "notes": [
+            "same handle combined twice; second used a same-layout payload with delta=1"
+          ],
+          "elapsed_s": 0.27,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E7": {
+          "classification": "passed",
+          "notes": [
+            "only round2 combined; a further round still succeeded"
+          ],
+          "elapsed_s": 1.06,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E8": {
+          "classification": "passed",
+          "notes": [
+            "round2 used a different route seed and payload; round1 result still correct"
+          ],
+          "elapsed_s": 0.97,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E9": {
+          "classification": "passed",
+          "notes": [
+            "same handle combined twice; second used a same-layout payload with delta=1"
+          ],
+          "elapsed_s": 0.58,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1/a1"
+        },
+        "E5": {
+          "classification": "device_crash",
+          "notes": [
+            "rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7f9d28403f88.\nSince the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st"
+          ],
+          "elapsed_s": 0.0,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1_E5/a1"
+        },
+        "E6": {
+          "classification": "passed",
+          "notes": [
+            "round1 recv rows=5447, round2 recv rows=5436",
+            "group A rejected: RuntimeError: src_idx and x must have the same num_recv_tokens",
+            "group B silently returned a WRONG result; detected by per-token comparison"
+          ],
+          "elapsed_s": 0.68,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v1_E6/a1"
+        }
+      },
+      "v2": {
+        "E1": {
+          "classification": "passed",
+          "notes": [
+            "only round2 combined; a further round still succeeded"
+          ],
+          "elapsed_s": 0.78,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1"
+        },
+        "E2": {
+          "classification": "passed",
+          "notes": [
+            "round2 used a different route seed and payload; round1 result still correct"
+          ],
+          "elapsed_s": 0.32,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1"
+        },
+        "E3": {
+          "classification": "passed",
+          "notes": [
+            "combined in 2 -> 1 order; both results correct"
+          ],
+          "elapsed_s": 0.36,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1"
+        },
+        "E4": {
+          "classification": "passed",
+          "notes": [
+            "same handle combined twice; second used a same-layout payload with delta=1"
+          ],
+          "elapsed_s": 0.24,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2/a1"
+        },
+        "E5": {
+          "classification": "device_crash",
+          "notes": [
+            "rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7f4cb4403f88.\nSince the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st"
+          ],
+          "elapsed_s": 0.0,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2_E5/a1"
+        },
+        "E6": {
+          "classification": "passed",
+          "notes": [
+            "round1 recv rows=5447, round2 recv rows=5436",
+            "group A rejected: ValueError: x.size(0) must match the handle's token count",
+            "group B silently returned a WRONG result; detected by per-token comparison"
+          ],
+          "elapsed_s": 0.69,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep8/v2_E6/a1"
+        }
+      }
+    },
+    "16": {
+      "v1": {
+        "E1": {
+          "classification": "passed",
+          "notes": [
+            "only round2 combined; a further round still succeeded"
+          ],
+          "elapsed_s": 1.09,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E2": {
+          "classification": "passed",
+          "notes": [
+            "round2 used a different route seed and payload; round1 result still correct"
+          ],
+          "elapsed_s": 0.54,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E3": {
+          "classification": "passed",
+          "notes": [
+            "combined in 2 -> 1 order; both results correct"
+          ],
+          "elapsed_s": 0.57,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E4": {
+          "classification": "passed",
+          "notes": [
+            "same handle combined twice; second used a same-layout payload with delta=1"
+          ],
+          "elapsed_s": 0.36,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E7": {
+          "classification": "passed",
+          "notes": [
+            "only round2 combined; a further round still succeeded"
+          ],
+          "elapsed_s": 1.36,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E8": {
+          "classification": "passed",
+          "notes": [
+            "round2 used a different route seed and payload; round1 result still correct"
+          ],
+          "elapsed_s": 1.14,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E9": {
+          "classification": "passed",
+          "notes": [
+            "same handle combined twice; second used a same-layout payload with delta=1"
+          ],
+          "elapsed_s": 0.74,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1/a1"
+        },
+        "E5": {
+          "classification": "device_crash",
+          "notes": [
+            "rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7fe1b0403f88.\nSince the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st"
+          ],
+          "elapsed_s": 0.0,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1_E5/a1"
+        },
+        "E6": {
+          "classification": "passed",
+          "notes": [
+            "round1 recv rows=6601, round2 recv rows=6566",
+            "group A rejected: RuntimeError: src_idx and x must have the same num_recv_tokens",
+            "group B silently returned a WRONG result; detected by per-token comparison"
+          ],
+          "elapsed_s": 1.0,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v1_E6/a1"
+        }
+      },
+      "v2": {
+        "E1": {
+          "classification": "passed",
+          "notes": [
+            "only round2 combined; a further round still succeeded"
+          ],
+          "elapsed_s": 1.13,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1"
+        },
+        "E2": {
+          "classification": "passed",
+          "notes": [
+            "round2 used a different route seed and payload; round1 result still correct"
+          ],
+          "elapsed_s": 0.56,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1"
+        },
+        "E3": {
+          "classification": "passed",
+          "notes": [
+            "combined in 2 -> 1 order; both results correct"
+          ],
+          "elapsed_s": 0.58,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1"
+        },
+        "E4": {
+          "classification": "passed",
+          "notes": [
+            "same handle combined twice; second used a same-layout payload with delta=1"
+          ],
+          "elapsed_s": 0.37,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2/a1"
+        },
+        "E5": {
+          "classification": "device_crash",
+          "notes": [
+            "rank0 illegal input surfaced as NPU device-level crash: The Inner error is reported as above. The process exits for this inner error, and the current working event is 0x7f37a4403f88.\nSince the operator is called asynchronously, the stacktrace may be inaccurate. If you want to get the accurate st"
+          ],
+          "elapsed_s": 0.0,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2_E5/a1"
+        },
+        "E6": {
+          "classification": "passed",
+          "notes": [
+            "round1 recv rows=6601, round2 recv rows=6566",
+            "group A rejected: ValueError: x.size(0) must match the handle's token count",
+            "group B silently returned a WRONG result; detected by per-token comparison"
+          ],
+          "elapsed_s": 1.01,
+          "attempt": 1,
+          "output": "/workspace/precision_2to16p_abnormal_20261127_E9Cases/out/ep16/v2_E6/a1"
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E1",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E2",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E3",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E4",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E7",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E8",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E9",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E5",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E6",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E5",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E6",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E1",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E2",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E3",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E4",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E7",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E8",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E9",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E5",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E6",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E5",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E6",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E5",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E6",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E1",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E2",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E3",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E4",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E5",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E6",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E5",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E6",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E5",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E6",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E5",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E6",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E1",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E2",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E3",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E4",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E5",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E6",
+      "attempt": 1,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E5",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E6",
+      "attempt": 2,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E5",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E6",
+      "attempt": 3,
+      "classification": "failed_runtime",
+      "rc": 1
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E5",
+      "group": "v1_E5",
+      "attempt": 1,
+      "classification": "device_crash",
+      "rc": 0
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E5",
+      "group": "v1_E5",
+      "attempt": 1,
+      "classification": "device_crash",
+      "rc": 0
+    },
+    {
+      "ep": 8,
+      "api": "v1",
+      "scenario": "E6",
+      "group": "v1_E6",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 0
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E5",
+      "group": "v2_E5",
+      "attempt": 1,
+      "classification": "device_crash",
+      "rc": 0
+    },
+    {
+      "ep": 16,
+      "api": "v1",
+      "scenario": "E6",
+      "group": "v1_E6",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 0
+    },
+    {
+      "ep": 8,
+      "api": "v2",
+      "scenario": "E6",
+      "group": "v2_E6",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 0
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E5",
+      "group": "v2_E5",
+      "attempt": 1,
+      "classification": "device_crash",
+      "rc": 0
+    },
+    {
+      "ep": 16,
+      "api": "v2",
+      "scenario": "E6",
+      "group": "v2_E6",
+      "attempt": 1,
+      "classification": "passed",
+      "rc": 0
+    }
+  ],
+  "retry_policy": "failed_runtime retried; passed/defect_suspected/device_crash terminal",
+  "ended": "2026-11-27 11:27:35",
+  "counts": {
+    "passed": 26,
+    "device_crash": 4
+  },
+  "isolation_note": "E5/E6 re-run in isolated process groups because E5 illegal input caused an NPU device-level crash that aborted the shared process group and prevented E6 from running",
+  "implementation_note": "E5 的「所有 rank 上传超容量非法输入」实现为：所有 rank 的 topk_idx 取越界值 (expert id = ep*experts_per_rank，合法范围 0..N-1)，而非字面意义的超出 tokens 容量；原因是后者需重新分配 Buffer 且 OOM 风险不可控。观测结果：该输入未在 Python 层被拒绝，而是以异步 NPU 设备级错误暴露 (EE9999 / vector core exception / device error 507035)，导致整个进程组崩溃，前序成功轮次无法再 combine —— 不符合清单 E5 的预期「第 2 轮明确报错、第 1 轮仍能算对」，记为 device_crash（发现）。E6 三组判据均满足：行数不同被拒绝、行数相同的静默错配被逐 token 比对发现、换回正确 handle 后结果正确。"
+}
