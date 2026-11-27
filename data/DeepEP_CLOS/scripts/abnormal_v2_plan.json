@@ -1,0 +1,309 @@
+{
+  "generated_at": "2026-11-27 15:19:04",
+  "note": "PREPARED ONLY — not executed. Run with --run to start NPU work.",
+  "tag": "precision_2to16p_abnormal_v2_20261127",
+  "worker": "abnormal_worker_v2.py",
+  "eps": [
+    2,
+    4,
+    8,
+    16
+  ],
+  "only": null,
+  "repeat": 1,
+  "capacity": 16384,
+  "num_tokens": 1024,
+  "hidden": 2048,
+  "num_topk": 8,
+  "experts_per_rank": 32,
+  "dtype": "bf16",
+  "aiv": 32,
+  "scenarios_per_ep": 15,
+  "total_groups": 24,
+  "total_executions": 60,
+  "assignment": {
+    "2": {
+      "host": "30.104.128.6",
+      "container": "deepep-perf-v2-67-puVjF7-node0",
+      "port": 29930
+    },
+    "4": {
+      "host": "30.104.128.6",
+      "container": "deepep-perf-v2-67-puVjF7-node0",
+      "port": 29931
+    },
+    "8": {
+      "host": "30.104.128.6",
+      "container": "deepep-perf-v2-67-puVjF7-node0",
+      "port": 29932
+    },
+    "16": {
+      "host": "30.104.128.7",
+      "container": "deepep-perf-v2-20261125-Lu2QQN-node1",
+      "port": 29933
+    }
+  },
+  "corrections": {
+    "E5": "real over-capacity tokens (num_tokens=capacity+1, legal topk_idx values); V1 Buffer constructed with num_max_tokens_per_rank so buffer_v1.py:509 fires",
+    "E4/E9": "second same-layout expert output is a pure golden tensor, no second dispatch",
+    "E7/E8/E9": "notes explicitly state expanded=True / via expand+aggregate",
+    "E5_judgement": "except Exception (not BaseException)",
+    "EP_range": "full 2/4/8/16 (v1 only ran 8/16)",
+    "repeatability": "--repeat N for multi-round handle isolation (E1/E2/E3)",
+    "elapsed": "controller-side timer, so crashes no longer record 0.0"
+  },
+  "groups": [
+    {
+      "group_id": "v1_safe",
+      "api": "v1",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "ep": 2,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E5",
+      "api": "v1",
+      "sids": [
+        "E5"
+      ],
+      "ep": 2,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E6",
+      "api": "v1",
+      "sids": [
+        "E6"
+      ],
+      "ep": 2,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_safe",
+      "api": "v2",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "ep": 2,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E5",
+      "api": "v2",
+      "sids": [
+        "E5"
+      ],
+      "ep": 2,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E6",
+      "api": "v2",
+      "sids": [
+        "E6"
+      ],
+      "ep": 2,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_safe",
+      "api": "v1",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "ep": 4,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E5",
+      "api": "v1",
+      "sids": [
+        "E5"
+      ],
+      "ep": 4,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E6",
+      "api": "v1",
+      "sids": [
+        "E6"
+      ],
+      "ep": 4,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_safe",
+      "api": "v2",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "ep": 4,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E5",
+      "api": "v2",
+      "sids": [
+        "E5"
+      ],
+      "ep": 4,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E6",
+      "api": "v2",
+      "sids": [
+        "E6"
+      ],
+      "ep": 4,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_safe",
+      "api": "v1",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "ep": 8,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E5",
+      "api": "v1",
+      "sids": [
+        "E5"
+      ],
+      "ep": 8,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E6",
+      "api": "v1",
+      "sids": [
+        "E6"
+      ],
+      "ep": 8,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_safe",
+      "api": "v2",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "ep": 8,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E5",
+      "api": "v2",
+      "sids": [
+        "E5"
+      ],
+      "ep": 8,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E6",
+      "api": "v2",
+      "sids": [
+        "E6"
+      ],
+      "ep": 8,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_safe",
+      "api": "v1",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E7",
+        "E8",
+        "E9"
+      ],
+      "ep": 16,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E5",
+      "api": "v1",
+      "sids": [
+        "E5"
+      ],
+      "ep": 16,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v1_E6",
+      "api": "v1",
+      "sids": [
+        "E6"
+      ],
+      "ep": 16,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_safe",
+      "api": "v2",
+      "sids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "ep": 16,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E5",
+      "api": "v2",
+      "sids": [
+        "E5"
+      ],
+      "ep": 16,
+      "repeat_index": 1
+    },
+    {
+      "group_id": "v2_E6",
+      "api": "v2",
+      "sids": [
+        "E6"
+      ],
+      "ep": 16,
+      "repeat_index": 1
+    }
+  ]
+}
