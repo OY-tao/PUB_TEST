@@ -1,0 +1,5 @@
+# R2 跑批运行时产物，不入库
+round2_state.json
+round2_logs/
+scripts/__pycache__/
+__pycache__/

@@ -1,6 +1,7 @@
 # DeepEP CLOS 配套脚本
 
 配套文档：[`../泛化用例测试设计V2.md`](../泛化用例测试设计V2.md)
+第二轮（换代码后重测）见 [`../第二轮测试执行指南_20261127.md`](../第二轮测试执行指南_20261127.md)。
 
 被测对象是 DeepEP 的 CLOS 组网带宽基准
 （`benchmarks/clos/bench_v1_bandwidth.py`、`bench_v2_bandwidth.py`）。
@@ -10,6 +11,7 @@
 
 ```
 scripts/
+├── run_round2.py             ★ R2 编排：门禁 + 性能 48 + 精度 200 + 异常 E4/E5
 ├── gen_perf_cases.py         ★ 60 例性能用例（对齐 V2测试Case.txt）
 ├── perf_cases_v2.json        ★ 60 例性能规格
 ├── gen_precision_cases.py    ★ 2-16P 泛化精度清单生成器
@@ -39,10 +41,11 @@ scripts/
 **先跑 60 例性能用例**确认基线正常，再跑 1148 例泛化。
 顺序反了会浪费大量时间在错误配置上。
 
-## 五个工具的分工
+## 工具分工
 
 | 工具 | 何时用 | 输入 | 输出 | 覆盖 |
 |---|---|---|---|---|
+| `run_round2.py` | 换代码后整轮 | 需求原文 | 4 个 CSV + gate/state JSON | R2：门禁 + 48 性能 + 200 精度 + E4/E5 |
 | `gen_perf_cases.py` | 跑测**前** | `perf_cases_v2.json` | 60 条命令，按 EP 分脚本 | 性能 60 例 |
 | `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条命令 + shell 批次 | 泛化 1148 例 |
 | `verify_ledger.py` | 跑测**前** | 形状参数 | 6 种字节口径 | —（只算分母） |
@@ -52,6 +55,28 @@ scripts/
 五个工具都不修改上游代码。
 
 ## 用法
+
+### run_round2.py —— 换代码后重测（R2）
+
+需求原文见 [`../需求原文_R2_20261127.txt`](../需求原文_R2_20261127.txt)，完整说明见
+[`../第二轮测试执行指南_20261127.md`](../第二轮测试执行指南_20261127.md)。
+
+```bash
+python run_round2.py plan                 # 离线看用例与波次，不 ssh
+python run_round2.py gate                 # 四机 commit/.so/空闲/大页，落 round2_gate.json
+python run_round2.py perf --eps 8,16,32,64
+python run_round2.py precision --eps 8,16,32,64
+python run_round2.py abnormal --eps 8,16 --api v1,v2 --scenarios E4,E5
+```
+
+三条设计约束：
+
+1. `gate` 不通过则 `perf`/`precision`/`abnormal` 拒绝执行——版本没换成功的跑批没有意义；
+2. 波次只为占满四机（EP64 独占四机；EP8/16/32 分居 node3/node2/node0+1），**不改任何用例参数**；
+3. 性能命令行断言不含 `--huge-pages`（本轮明确不开 1G 大页）。
+
+> bench 自带 torchrun（`bench_*:172` 起拼 `torch.distributed.run`），
+> 每节点只需 `python bench_*.py --node-rank=N`，**外面不要再套 torchrun**。
 
 ### gen_perf_cases.py —— 60 例性能用例
 

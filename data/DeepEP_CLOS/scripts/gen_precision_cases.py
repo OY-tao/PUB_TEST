@@ -11,6 +11,9 @@ bench_v1_precision.py / bench_v2_precision.py（带 --precision-only）。
     python gen_precision_cases.py --check          # 校验配比
     python gen_precision_cases.py --out .          # 生成清单
     python gen_precision_cases.py --dry-run        # 打印前几条
+
+    # 第二轮（R2）：EP8/16/32/64 各 50 条，沿用同一套 50 条规格
+    python gen_precision_cases.py --eps 8,16,32,64 --suffix r2 --out .
 """
 
 import argparse
@@ -159,7 +162,6 @@ def check(spec, built):
         total += len(cases)
     return ok, rows, total
 
-
 def validate(built, spec):
     errs = []
     for ep, cases in built.items():
@@ -277,9 +279,21 @@ def main():
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--eps", default="",
+                    help="覆盖 spec.ep_list，如 8,16,32,64（R2 复测用）")
+    ap.add_argument("--suffix", default="",
+                    help="产物文件名后缀，如 r2 → precision_cases_r2.csv")
     args = ap.parse_args()
 
     spec = json.load(open(args.spec, encoding="utf-8"))
+    if args.eps:
+        eps = [int(x) for x in args.eps.replace(" ", "").split(",") if x]
+        bad = [e for e in eps if e not in VALID_EP]
+        if bad:
+            print("非法 EP: %s，合法值 %s" % (bad, VALID_EP))
+            return 1
+        spec["ep_list"] = eps
+        spec["_expected_total"] = spec["per_ep"] * len(eps)
     built = {ep: build(spec, ep) for ep in spec["ep_list"]}
 
     errs = validate(built, spec)
@@ -323,10 +337,13 @@ def main():
         return 0
 
     os.makedirs(args.out, exist_ok=True)
-    write_csv(built, os.path.join(args.out, "precision_cases_2to16p.csv"))
-    write_md(built, spec, os.path.join(args.out, "精度用例清单_2to16P.md"))
-    print(f"已生成: {args.out}/precision_cases_2to16p.csv")
-    print(f"已生成: {args.out}/精度用例清单_2to16P.md")
+    tag = ("_" + args.suffix) if args.suffix else ""
+    csv_name = "precision_cases_2to16p%s.csv" % tag
+    md_name = "精度用例清单_2to16P%s.md" % tag
+    write_csv(built, os.path.join(args.out, csv_name))
+    write_md(built, spec, os.path.join(args.out, md_name))
+    print(f"已生成: {args.out}/{csv_name}")
+    print(f"已生成: {args.out}/{md_name}")
     return 0
 
 
