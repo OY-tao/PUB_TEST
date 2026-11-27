@@ -54,8 +54,13 @@ class Case:
 
 
 def topk_cap(ep, epr):
-    """bench 校验：num_topk <= min(128, ep*epr)；V2 额外允许到 32。"""
-    return min(32, ep * epr)
+    """bench 硬校验：num_topk <= min(128, ep*epr)。
+
+    注意是 128 而非 32——此前版本误写 32，与 bench_v2_bandwidth.py:140 不一致，
+    已按源码统一。V2 库文档允许 topk<=32，但 bench 层的上限是 128，
+    所以 min(128, ...) 才是实际可执行的边界。
+    """
+    return min(128, ep * epr)
 
 
 def build(spec, ep):
@@ -238,7 +243,7 @@ def write_md(built, spec, path):
     L.append("|---|---|")
     L.append("| V1 形状上限 | `H≤7168`（BF16 16 倍数 / FP8 **128** 倍数）、`T≤16384`、`K≤16`、`E≤1024` |")
     L.append("| V2 形状上限 | `H>0`、`K≤32`、`E≤1024`、E 可被 P 整除 |")
-    L.append("| topk 上限 | `min(32, ep × epr)`，本清单已按此裁剪 |")
+    L.append("| topk 上限 | `min(128, ep × epr)`（bench 硬校验，注意是 128 不是 32），本清单已按此裁剪 |")
     L.append("| 每节点卡数 | 1~16，故 EP≤16 均单机 |")
     L.append("| FP8 hidden | **必须 128 倍数**，最小合法 128 |")
     L.append("")
