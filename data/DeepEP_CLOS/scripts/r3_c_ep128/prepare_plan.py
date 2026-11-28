@@ -144,12 +144,19 @@ def build_cases(epr_tiers=("main",)):
             p = dict(raw)                            # kebab-case keys
             epr = min(int(p.get("experts-per-rank", 32)), cap)
             k = min(int(p.get("num-topk", 8)), gpc.topk_cap(EP, epr))
+            aiv = int(p.get("aiv", 32))
+            # PR#37 wheel 的 Config.__post_init__ 要求 num_aiv 为 0(默认) 或
+            # 偶数且 >=8；spec 里 C 组的 aiv=2 会直接抛
+            # "communication num_aiv must be at least 8"。保留该用例（variant
+            # 集合不变，checkpoint 可对上），把非法值折成 0 走默认配置。
+            if 0 < aiv < 8:
+                aiv = 0
             params = {
                 "num_tokens": int(p.get("num-tokens", 1)),
                 "hidden": int(p.get("hidden", 512)),
                 "num_topk": k,
                 "experts_per_rank": epr,
-                "aiv": int(p.get("aiv", 32)),
+                "aiv": aiv,
                 "warmup": 10, "iterations": 30, "seed": 20260823,
                 "route_mode": str(p.get("route-mode", "uniform")),
                 "route_group_size": EP // 2,
