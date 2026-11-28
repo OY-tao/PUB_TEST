@@ -151,7 +151,7 @@ def supervise_c(proc, interval, deadline):
         time.sleep(interval)
         st = c_status()
         completed = len(st.get("completed", {}))
-        total = st.get("total_cases", 200)
+        total = st.get("total_cases", 400)
         state = st.get("state", "unknown")
         rc = proc.poll()
         if state == "completed":
