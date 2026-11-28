@@ -327,6 +327,10 @@ def run_on_nodes(ep, argv_tail, port, tag, timeout, extra_check=None):
     返回 {node_idx: rc}。
     """
     idxs = EP_NODES_ACTIVE[ep]
+    # rendezvous 的 master 必须是本 EP 的 node-rank=0 节点（即 idxs[0]），
+    # 不能固定 node0=.4：EP32 用 node5,6 时 master=.4 上没有该 run 的 rank0，
+    # bench 会一直 WAIT 到超时。
+    ep_master = node_by_idx(idxs[0])["host"]
     barrier = threading.Barrier(len(idxs))
     rcs = {}
 
@@ -335,7 +339,7 @@ def run_on_nodes(ep, argv_tail, port, tag, timeout, extra_check=None):
         argv = list(argv_tail)
         if len(idxs) > 1:
             argv += ["--node-rank=%d" % local_rank,
-                     "--master-addr=" + MASTER,
+                     "--master-addr=" + ep_master,
                      "--master-port=%d" % port]
         else:
             argv += ["--node-rank=0"]
@@ -405,7 +409,7 @@ def perf_argv(case, out_root, run_id):
          "--aiv=%d" % case["aiv"], "--warmup=%d" % case["warmup"],
          "--iterations=%d" % case["iterations"], "--seed=%d" % case["seed"],
          "--route-mode=" + case["route_mode"],
-         "--run-id=" + run_id, "--output=" + out_root]
+         "--run-id=" + run_id, "--output=" + out_root + "/" + run_id]
     assert "--huge-pages" not in a, "本轮明令不开 1G 大页"
     return a
 
@@ -426,39 +430,60 @@ def precision_argv(case, out_root, run_id, api):
     a += ["--dtypes=" + str(p.get("dtypes", "bf16")),
           "--expand=%d" % int(p.get("expand", 0)),
           "--route-mode=" + str(p.get("route-mode", "uniform")),
-          "--run-id=" + run_id, "--output=" + out_root]
+          "--run-id=" + run_id, "--output=" + out_root + "/" + run_id]
     return a
 
 
 def summarize_pref(text):
     """从 bench 的 summary.csv 取每 op 的 official_logical_GBps 统计。
 
-    bench 的列名以 `official_logical_GBps` 为前缀（含 rank_mean / rank_min /
-    rank_max），这里按前缀匹配而不写死全名，避免上游改列名就整表读空。
+    PR #37 的 bench 改成逐 rank 明细：每行一个 (rank, op)，rank 取 0..EP-1
+    外加一行 `all`（whole-EP 聚合）。列名是 `official_logical_GBps`，不再有
+    旧版的 `official_logical_GBps_rank_mean`。按指南 §四·B3「只采信
+    official_logical_GBps_rank_mean」，这里对**数值 rank**（排除 `all`）按 op
+    分组求 mean/min/max；`all` 行只作诊断、不计入主表。
     """
-    rows = list(csv.DictReader(io.StringIO(text)))
+    rows = list(csv.DictReader(io.StringIO(text.lstrip("\ufeff"))))
     if not rows:
         return []
     cols = list(rows[0].keys())
 
     def pick(pred):
-        for c in cols:
-            if pred(c.lower()):
-                return c
-        return None
+        return next((c for c in cols if pred(c.lower())), None)
 
     opc = pick(lambda k: k in ("op", "operator", "op_name", "case_op"))
+    gbps_c = pick(lambda k: k == "official_logical_gbps")
+    # 兼容旧版：若上游已给好 *_rank_mean/min/max，直接取用
     mean_c = pick(lambda k: "official_logical_gbps" in k and "rank_mean" in k)
     min_c = pick(lambda k: "official_logical_gbps" in k and "rank_min" in k)
     max_c = pick(lambda k: "official_logical_gbps" in k and "rank_max" in k)
-    if not (opc and mean_c):
+    if opc and mean_c:
+        return [{"op": r.get(opc, ""), "gbps_mean": r.get(mean_c, ""),
+                 "gbps_min": r.get(min_c, "") if min_c else "",
+                 "gbps_max": r.get(max_c, "") if max_c else ""} for r in rows]
+    if not (opc and gbps_c):
         return [{"op": "SCHEMA_UNRECOGNIZED", "gbps_mean": "", "gbps_min": "",
                  "gbps_max": "", "columns": ";".join(cols[:12])}]
-    out = []
+
+    rankc = pick(lambda k: k in ("rank", "rank_id"))
+    by_op = {}
     for r in rows:
-        out.append({"op": r.get(opc, ""), "gbps_mean": r.get(mean_c, ""),
-                    "gbps_min": r.get(min_c, "") if min_c else "",
-                    "gbps_max": r.get(max_c, "") if max_c else ""})
+        rk = (r.get(rankc) or "").strip() if rankc else ""
+        if not rk.isdigit():          # 跳过 `all` 聚合行
+            continue
+        try:
+            v = float(r.get(gbps_c, "") or "")
+        except (TypeError, ValueError):
+            continue
+        by_op.setdefault(r.get(opc, ""), []).append(v)
+    out = []
+    for op, vals in by_op.items():
+        if not vals:
+            continue
+        out.append({"op": op,
+                    "gbps_mean": "%.3f" % (sum(vals) / len(vals)),
+                    "gbps_min": "%.3f" % min(vals),
+                    "gbps_max": "%.3f" % max(vals)})
     return out
 
 
