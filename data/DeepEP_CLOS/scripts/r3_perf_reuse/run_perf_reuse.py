@@ -179,7 +179,10 @@ def deploy(plans):
     def one(host):
         subprocess.run(["scp", "-q", "-P", "56000", "-o", "BatchMode=yes"] + files +
                        ["root@" + host + ":/tmp/"], check=True, timeout=180)
-        inner = ("mkdir -p %s && " % REMOTE +
+        # 目标目录必须在「容器内」创建：宿主机 /work 与容器 /work 不是同一份
+        # （/work 是各机本地 xfs），只在宿主机 mkdir 会让 docker cp 报
+        # "Could not find the file /work/r3_perf_reuse in container ..."。
+        inner = ("docker exec %s mkdir -p %s && " % (CONTAINER, REMOTE) +
                  " && ".join("docker cp /tmp/%s %s:%s/%s" % (n, CONTAINER, REMOTE, n)
                              for n in ("reuse_worker.py", "plan_ep4.json", "plan_ep64.json")) +
                  " && echo OK")
@@ -342,21 +345,29 @@ def main():
                 continue
             att_plans = dict(plans)
             att_plans[ep] = dict(plans[ep], cases=remaining)
-            deploy(att_plans)
-            log("attempt=%d EP%d 启动：%d 例（补跑），节点=%s" %
-                (attempt, ep, len(remaining), EP_NODES[ep]))
-            write_status("running", attempt=attempt, ep=ep, run_id=att_run_id,
-                         remaining=len(remaining))
-            rcs = run_ep(ep, att_run_id, REUSE_LOG)
-            log("attempt=%d EP%d rcs=%s" % (attempt, ep, rcs))
-            rows = collect_ep(ep, att_run_id)
-            # 只写本 EP 未写过的 variant（checkpoint 幂等；旧 summary 残留也不会重复）
-            fresh = [r for r in rows if r["variant"] not in done]
-            if fresh:
-                append_csv(fresh)
-            log("attempt=%d EP%d 收集 %d 行，新增 %d 行（4 op/例）" %
-                (attempt, ep, len(rows), len(fresh)))
-            write_status("running", attempt=attempt, ep=ep, collected=len(fresh), rcs=rcs)
+            try:
+                deploy(att_plans)
+                log("attempt=%d EP%d 启动：%d 例（补跑），节点=%s" %
+                    (attempt, ep, len(remaining), EP_NODES[ep]))
+                write_status("running", attempt=attempt, ep=ep, run_id=att_run_id,
+                             remaining=len(remaining))
+                rcs = run_ep(ep, att_run_id, REUSE_LOG)
+                log("attempt=%d EP%d rcs=%s" % (attempt, ep, rcs))
+                rows = collect_ep(ep, att_run_id)
+                # 只写本 EP 未写过的 variant（checkpoint 幂等；旧 summary 残留也不会重复）
+                fresh = [r for r in rows if r["variant"] not in done]
+                if fresh:
+                    append_csv(fresh)
+                log("attempt=%d EP%d 收集 %d 行，新增 %d 行（4 op/例）" %
+                    (attempt, ep, len(rows), len(fresh)))
+                write_status("running", attempt=attempt, ep=ep,
+                             collected=len(fresh), rcs=rcs)
+            except Exception as exc:
+                # 单个 EP 的部署 / 运行异常不能把整个控制器带崩：记下后进入下一轮
+                # attempt，按 checkpoint 只补未写入的 variant。
+                log("attempt=%d EP%d 异常（保留现场，下一轮续跑）: %s" %
+                    (attempt, ep, str(exc)[:300]))
+                write_status("retry", attempt=attempt, ep=ep, error=str(exc)[:300])
         total = len(completed_variants())
         if total >= 36:
             write_status("completed", variants=total, attempts=attempt,
