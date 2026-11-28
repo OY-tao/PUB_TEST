@@ -32,3 +32,19 @@
 - .7 参与精度前必须先过 EP8 单例冒烟；冒烟只验"跑对"，不采信它的任何带宽数字。
 - 若冒烟失败 ⇒ 判定为"跑不稳"而非"跑得慢"，C 标"未执行（环境不可用）"，D 退 7 台分两波。
 
+—— 以下为 2026-11-28 15:05 用户补充，上面内容未改动 ——
+
+pull/37 已修复，不用注入 DEEPEP_CLOS_QP_PLANS，保持之前的自动。
+
+落地口径：
+- head 由 2828eae 前移到 0d1eca219d89f1f5e7120b48f01f1dd3654db4f8（80 commits / +5831 −1186，14:59 更新）。
+  其中 2828eae 为 *Remove manual QP reservation environment override*——源码已删掉 DEEPEP_CLOS_QP_PLANS 读取，
+  head 上 grep 零命中；ebc8267 把 SHMEM 初始化超时改为按 Buffer 配置、默认 10 min。
+- 因此本轮 QP 预留完全走 auto：不设该环境变量（也要清掉可能继承的旧值）、不传 udma_* 手动参数、
+  不调初始化超时。EP128 的前置只剩两条：解释器与模块路径一致（/work/env/bin/python）、重编 buffer.py sha 八台全等。
+- 原「EP128 必须注入 DEEPEP_CLOS_QP_PLANS」的要求作废（该结论基于 2828eae 之前的代码），
+  门禁 qp_plans_set 相应改为 qp_plans_unset（断言为空，留证"纯 auto"）。
+- 失败判据不变：若仍 aclshmemx_init_attr status=-7，先查 deep_ep.__file__ 是否落到 /opt/conda 旧包，
+  再加 timeout 无意义。
+
+
