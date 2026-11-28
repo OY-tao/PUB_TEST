@@ -285,26 +285,35 @@ def main():
     #   EP8 3、EP32 3），每格 3 reps = 54 次运行。
     #   这 18 格【全部】由「非 supp」perf_cases 网格覆盖；--supp 网格只有
     #   EP4/64 的 aiv 8/32，缺 EP64 aiv=64，会触发 load_cases_file 的
-    #   AssertionError（波一曾因此 rc=1）。故每个 EP 单独用非 supp 补跑。
-    #   按 EP 幂等：CSV 里已跑满 3 reps 的 EP 跳过，只补缺失/不完整 EP。
+    #   AssertionError。故每个 EP 单独用非 supp 串行跑。
+    #   ⚠ 守卫：先等所有 perf 相关进程退出。曾出现「上一波孤儿仍在写 CSV +
+    #   占卡」，编排器按 EP 幂等误判后抢跑，新波因节点被占 1s 全 FAIL，
+    #   两个进程混写 CSV。现在改为：等进程全退 → CSV 不完整就整体清掉 →
+    #   三 EP 串行、每个 EP 前等 8 机空闲。
     write_state("R3_retest")
     rt_csv = DATA / "round3_perf_retest.csv"
     cases_file = "scripts/retest_cases_20261128.json"
 
-    def ep_of_run(rid):
-        p = (rid or "").split("_")
-        return int(p[1][2:]) if len(p) > 1 and p[1].startswith("ep") and p[1][2:].isdigit() else None
+    perf_fragments = ("run_round3.py", "bench_v2_bandwidth.py")
 
-    def retest_ep_runs(path):
-        """每个 EP 已有的唯一 run_id 数（run_id=perf_ep<N>_r3_..._cNN_rM）。"""
-        out = {}
-        if not path.exists():
-            return out
-        for r in csv.DictReader(open(path)):
-            e = ep_of_run(r.get("run_id"))
-            if e is not None:
-                out.setdefault(e, set()).add(r["run_id"])
-        return {e: len(s) for e, s in out.items()}
+    def perf_procs():
+        out = []
+        for p in pathlib.Path("/proc").glob("[0-9]*"):
+            try:
+                s = b" ".join((p / "cmdline").read_bytes().split(bytes([0]))).decode(
+                    "utf-8", "replace")
+                if any(f in s for f in perf_fragments) and "auto_finish_r3" not in s:
+                    out.append((p.name, s[:100]))
+            except (OSError, ValueError):
+                pass
+        return out
+
+    wait_deadline = time.time() + 1800
+    while perf_procs() and time.time() < wait_deadline:
+        log("R3 重测: 等待残留 perf 进程退出 (%d 个)" % len(perf_procs()))
+        time.sleep(20)
+    if perf_procs():
+        log("警告: 仍有 %d 个 perf 进程，继续但可能抢卡" % len(perf_procs()))
 
     clist = json.loads((SCRIPTS / "retest_cases_20261128.json").read_text(
         encoding="utf-8"))["cases"]
@@ -312,31 +321,29 @@ def main():
     for c in clist:
         e = int(c["ep"])
         ep_expected[e] = ep_expected.get(e, 0) + 3        # 每格 3 reps
-    existing = retest_ep_runs(rt_csv)
-    missing = [e for e, n in sorted(ep_expected.items()) if existing.get(e, 0) < n]
-    log("R3 重测清单 %d 格, 期望 %d run_id; 现有 %s; 待补 EP %s"
-        % (len(clist), sum(ep_expected.values()), existing, missing))
-    if missing:
-        # 不完整 EP 的旧行先剔除，避免同一格出现两套 run_id 污染 3 次中位判定
-        partial = [e for e in missing if existing.get(e, 0) > 0]
-        if partial:
-            rows = list(csv.DictReader(rt_csv.open())) if rt_csv.exists() else []
-            cols = list(rows[0].keys()) if rows else []
-            kept = [r for r in rows if ep_of_run(r.get("run_id")) not in partial]
-            with rt_csv.open("w", newline="") as f:
-                w = csv.DictWriter(f, fieldnames=cols, lineterminator="\n")
-                w.writeheader()
-                w.writerows(kept)
-            log("剔除不完整 EP %s 的旧行，保留 %d 行" % (partial, len(kept)))
-        for ep in missing:
+    total_expected = sum(ep_expected.values())
+    have = csv_variants(rt_csv)
+    log("R3 重测清单 %d 格, 期望 %d run_id, 现有 %d" % (len(clist), total_expected, have))
+    if have >= total_expected:
+        log("R3 重测已完整，跳过补跑")
+    else:
+        # CSV 不完整（或混了多波）→ 整体清掉，三 EP 串行重跑，避免混入脏数据
+        if rt_csv.exists():
+            rt_csv.unlink()
+            log("清掉不完整的 round3_perf_retest.csv，三个 EP 串行重跑")
+        for ep in sorted(ep_expected):
+            if not wait_idle(HOSTS, 16, timeout=1800, interval=20):
+                log("警告: EP%d 前 8 机未全空闲，仍尝试（check_idle 会挡）" % ep)
             rc = run_cmd([PY, "-u", "scripts/run_round3.py", "perf", "--eps", str(ep),
                           "--cases-file", cases_file, "--reps", "3", "--csv-tag", "retest"],
                          DATA, 4 * 3600, "/tmp/r3_retest.log")
             log("R3 重测 EP%d rc=%s, 当前 CSV run_id 数=%d"
                 % (ep, rc, csv_variants(rt_csv)))
-    else:
-        log("R3 重测 18 格×3reps 已完整，跳过补跑")
-    # 判定脚本：3 次中位重判，生成 R3重测结果_<date>.md（每次都重跑，保证用完整数据）
+            # 等该 EP 的远端 worker 退出，避免与下一个 EP 抢卡/混写
+            wd = time.time() + 300
+            while perf_procs() and time.time() < wd:
+                time.sleep(10)
+    # 判定脚本：3 次中位重判，生成 R3重测结果_<date>.md
     rc = run_cmd([PY, "-u", "scripts/gen_retest_result.py", "--date", "20261129"],
                  DATA, 600, "/tmp/r3_retest_result.log")
     log("R3 重测判定 rc=%s" % rc)
