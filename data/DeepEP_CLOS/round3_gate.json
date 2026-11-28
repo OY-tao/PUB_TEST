@@ -1,0 +1,494 @@
+{
+  "ts": "2026-11-28 15:35:47",
+  "nodes": {
+    "30.104.128.4": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  386052096 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 0,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.5": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  89757696 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 0,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.6": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  214081536 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 16,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.7": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  67028992 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 16,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.8": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  1368989696 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 16,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.9": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  1483819008 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 16,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.10": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  27019264 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 16,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    },
+    "30.104.128.11": {
+      "container": "deepep_ep128_full_matrix_20261128_073617",
+      "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+      "git_where": "container",
+      "commit_detail": "0d1eca2 2026-11-28 14:59:08 +0800 Validate combine peer bounds for single-row sends",
+      "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "remote": "https://github.com/lueelu/DeepEP.git",
+      "dirty": [],
+      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "interpreter": "/work/env/bin/python",
+      "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
+      "version": "0.1.0.dev5",
+      "buffer_sha": "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb",
+      "qp_plans": "",
+      "build_info_sha": "a9850d8bd30e3cea4421ba949194e2d56effef370e481c981e3289998e31ad46",
+      "backends": [
+        "deep_ep.backends.direct.api",
+        "deep_ep.backends.direct.api"
+      ],
+      "mesh_clos": [],
+      "sos": {
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_config_store.so": "1e9904774a9f7015bf8df8415a38fe846595e4fd0d9853e39e14e642fdec94c6",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/aclshmem_bootstrap_uid.so": "9b1a8adbb999c025a706cbabb84dbfae6e6f705fa76571684f6fb5cad4944d19",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem.so": "5a19e2a991dad697aff0bac41eeb6e28a05a6fb7237cf917683644692ac29f04",
+        "/work/env/lib/python3.13/site-packages/deep_ep/.libs/libshmem_utils.so": "6364b629d39ae4b8d87b2c0403ef685d69a35a48e30412e13820791e03e6f0ca",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_C.cpython-313-x86_64-linux-gnu.so": "c6796b3c2511539dc289258ffabd5487ceabcb80a2635df94ecde3c480362b6c",
+        "/work/env/lib/python3.13/site-packages/deep_ep/_clos_C.cpython-313-x86_64-linux-gnu.so": "17f51e7e63d831aba8ffc0534e4b6b371c69f2f5b5210864084a493a6050025d",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_clos_kernels.so": "212248e356909eea940eb9a3d46bada2dbf9fce7567ced1a7baa3c588c1b42ee",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_instances.so": "a856af94f8e5483a29861c52f7bfbd903e854d4dd6a0a498fb2fe4348776e38a",
+        "/work/env/lib/python3.13/site-packages/deep_ep/libdeepep_kernels.so": "49b2b874a2710d021930355168b9da6f0d737cac14565c8735c803c1de2d1cf2"
+      },
+      "base_ancestor": "OK",
+      "image": "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674",
+      "container_bound": true,
+      "qp_plans_env": "",
+      "hugepages": [
+        "AnonHugePages:         0 kB",
+        "ShmemHugePages:        0 kB",
+        "FileHugePages:  79699968 kB",
+        "HugePages_Total:       0",
+        "HugePages_Free:        0",
+        "HugePages_Rsvd:        0",
+        "HugePages_Surp:        0",
+        "Hugepagesize:       2048 kB",
+        "Hugetlb:               0 kB"
+      ],
+      "idle_npus": 16,
+      "npu_head": [
+        "+------------------------------------------------------------------------------------------------------------------+",
+        "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
+        "+--------+------------------+---------------+----------------------------------------------------------------------+",
+        "| NPU ID | Name             | Health        | Power(W)              Temp(C)                  Hugepages-Usage(page) |"
+      ]
+    }
+  },
+  "checks": {
+    "all_nodes_reachable": true,
+    "remote_repo": true,
+    "remotes": [
+      "https://github.com/lueelu/DeepEP.git"
+    ],
+    "is_pr_head": true,
+    "commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+    "pr_head_expected": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+    "not_origin_main": true,
+    "origin_main": [
+      "5eab714f8cfc5efb8b550a4e35de013776514179"
+    ],
+    "base_ancestor": true,
+    "single_commit": true,
+    "same_container_image": true,
+    "image": [
+      "sha256:dff1aa4bce2db88947de11dac6116fbba33bdbb1d1216d89dd13fd9e07345674"
+    ],
+    "container_bound": true,
+    "same_interpreter": true,
+    "interpreters": [
+      "/work/env/bin/python"
+    ],
+    "deep_ep_module_path": true,
+    "deep_ep_buffer_sha": true,
+    "buffer_sha": [
+      "f825a67986286d8f8b852e57028090e8762111e508af1991351a94e948cfbbcb"
+    ],
+    "qp_plans_unset": true,
+    "so_identical": true,
+    "kernels_so_present": true,
+    "build_info_identical": true,
+    "build_info_state": "present",
+    "versions": [
+      "0.1.0.dev5"
+    ],
+    "no_mesh_clos": true,
+    "clean_worktree": true,
+    "cards_idle_all8": false,
+    "idle_npus": {
+      "30.104.128.4": 0,
+      "30.104.128.5": 0,
+      "30.104.128.6": 16,
+      "30.104.128.7": 16,
+      "30.104.128.8": 16,
+      "30.104.128.9": 16,
+      "30.104.128.10": 16,
+      "30.104.128.11": 16
+    }
+  },
+  "pass": false,
+  "code_pass": true,
+  "blocked_nodes": [
+    "30.104.128.4",
+    "30.104.128.5"
+  ]
+}

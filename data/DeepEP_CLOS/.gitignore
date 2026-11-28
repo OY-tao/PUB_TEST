@@ -5,6 +5,7 @@ round3_state.json
 round3_logs/
 round3_auto_c.json
 round3_supp_status.json
+round3_reuse_status.json
 # C 控制器（r3_c_ep128）运行时产物，不入库
 scripts/r3_c_ep128/status*.json
 scripts/r3_c_ep128/plan_attempt_*.json

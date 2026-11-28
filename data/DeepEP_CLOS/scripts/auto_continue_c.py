@@ -69,19 +69,28 @@ def all_idle():
 
 
 def controllers():
-    """本地正在跑的控制器命令行（排除本脚本自身）。"""
+    """本地正在跑的控制器命令行（排除本脚本自身）。
+
+    只看 argv[0] 的 basename 以 python 开头的进程：这样既能命中
+    `/usr/bin/python3 -u run_round3.py ...`（补测控制器是这个前缀，
+    旧的 startswith 白名单会漏掉它），又不会把 bash -c 包装器误判成控制器。
+    同时纳入 run_perf_reuse.py：复用版性能在跑时不许触发 C。
+    """
     out = []
     me = os.getpid()
+    scripts = (b"run_round3.py", b"run_retry.py", b"run_perf_reuse.py")
     for p in pathlib.Path("/proc").glob("[0-9]*"):
         try:
             pid = int(p.name)
             if pid == me:
                 continue
             s = b" ".join((p / "cmdline").read_bytes().split(bytes([0])))
-            if (b"run_round3.py" in s or b"run_retry.py" in s) and s.startswith(
-                    (b"python3", b"python", b"/opt/conda")):
+            if not any(name in s for name in scripts):
+                continue
+            head = s.split(None, 1)[0].rsplit(b"/", 1)[-1]
+            if head.startswith(b"python"):
                 out.append(s.decode("utf-8", "replace"))
-        except (OSError, ValueError, ProcessLookupError):
+        except (OSError, ValueError, ProcessLookupError, IndexError):
             pass
     return out
 
