@@ -105,6 +105,12 @@ PROXY = "http://star-proxy.oa.com:3128"  # 容器内默认无代理，git fetch 
 # 精度 bench 不在 lueelu/DeepEP main 仓里，是本目录的本地补丁：部署到 STAGE
 # 后以绝对路径运行（避免污染 git 工作区，gate 的 clean_worktree 才不会失败）
 PRECISION_BENCH_FILES = ("bench_v1_precision.py", "bench_v2_precision.py")
+# 精度补丁依赖的**旧版**辅助模块：PR #37 改写了 stage_metrics.py，
+# 新版已无 COMBINE_NOTIFY_ENV / L2CacheFlush / ProfileSamples 等符号，
+# 直接用 REPO/benchmarks/clos 会让补丁在 import 阶段就崩。这些是 64P 容器里
+# 与补丁配套的快照，部署到 STAGE 后由 PYTHONPATH（STAGE 在前）优先命中。
+PRECISION_DEPS_FILES = ("stage_metrics.py", "route_workloads.py",
+                        "bandwidth_multinode.py", "profiling.py")
 
 # 性能阶段 EP -> 节点（7 台集合，硬排除 node3/.7）：
 #   第 1 波 EP64(4) ‖ EP32(2) ‖ EP16(1) 占满 7 台；第 2 波 EP8(1) 复用 node7。
@@ -230,10 +236,10 @@ def deploy_bench_files(eps):
     因此部署到 STAGE 并以绝对路径运行。abnormal_worker_v2.py 也 import 它们。
     """
     idxs = sorted({i for ep in eps for i in EP_NODES_ACTIVE[ep]})
-    for name in PRECISION_BENCH_FILES:
+    for name in PRECISION_BENCH_FILES + PRECISION_DEPS_FILES:
         src = HERE / name
         if not src.exists():
-            raise RuntimeError("缺少精度 bench 补丁: %s" % src)
+            raise RuntimeError("缺少精度补丁/依赖: %s" % src)
         for i in idxs:
             deploy(node_by_idx(i), src, name)
     return idxs
