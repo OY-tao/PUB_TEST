@@ -118,7 +118,15 @@ def c_state():
 
 
 def wait_c(max_hours=10):
+    """纯监控 C 完成；绝不自行拉起 C 控制器。
+
+    C 的启动/重启一律由 auto_continue_c.py 守护负责（它带 gate full_pass 校验
+    与进程级重启）。曾经这里有个「守护与控制器都不在就拉起 run_retry.py」的
+    保底，但那会绕过 gate、且在我停守护做维护的间隙误触发一个不受守护管理的
+    C 进程，反而制造竞态，已移除。
+    """
     deadline = time.time() + max_hours * 3600
+    guard_missing = 0
     while time.time() < deadline:
         st = c_state()
         n = len(st.get("completed", {}))
@@ -127,16 +135,16 @@ def wait_c(max_hours=10):
         if state == "completed" and n >= total:
             log("C 完成: %d/%d" % (n, total))
             return True
-        # 保底：C 控制器进程消失且守护也不在 -> 重新拉起（自带 checkpoint 恢复）
-        if not proc_alive("r3_c_ep128/run_retry.py") and not proc_alive("auto_continue_c.py"):
-            log("C 控制器与守护均不在、state=%s completed=%d -> 重新拉起 run_retry.py --run"
-                % (state, n))
-            with open("/tmp/r3_c_ep128.log", "a") as f:
-                subprocess.Popen([PY, "-u", str(C_DIR / "run_retry.py"), "--run"],
-                                 cwd=str(C_DIR), stdout=f, stderr=subprocess.STDOUT,
-                                 start_new_session=True)
+        ctrl = proc_alive("r3_c_ep128/run_retry.py")
+        guard = proc_alive("auto_continue_c.py")
+        if not ctrl and not guard:
+            guard_missing += 1
+            log("注意: C 控制器与守护均不在（%d 次），等待守护重新接管，不自行拉起"
+                % guard_missing)
         else:
-            log("C 运行中: state=%s completed=%d/%d" % (state, n, total))
+            guard_missing = 0
+            log("C 运行中: state=%s completed=%d/%d ctrl=%s guard=%s"
+                % (state, n, total, ctrl, guard))
         time.sleep(60)
     log("C 等待超时（%dh）" % max_hours)
     return False
