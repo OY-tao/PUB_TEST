@@ -1,0 +1,231 @@
+{
+ "_comment": "R3 性能不达标重测清单，由 scripts/gen_retest_list.py 生成，勿手改",
+ "_generated_from": [
+  "round3_perf.csv",
+  "round3_perf_supp.csv",
+  "baseline/V2测试Case_20261128快照.txt"
+ ],
+ "_measured_commit": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
+ "_reps": 3,
+ "_rules": {
+  "R1 对外基线劣化": "-5% 以下",
+  "R2 同批塌陷": "-10% 以下（相对同 EP 同 T/H 的 AIV=32）",
+  "R3 测量不稳": "格内分散度 > 5%"
+ },
+ "_count": {
+  "cases": 30,
+  "runs": 90
+ },
+ "cases": [
+  {
+   "ep": 4,
+   "num_tokens": 4096,
+   "hidden": 2816,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 4096,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 4096,
+   "hidden": 6144,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 4096,
+   "hidden": 6144,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 4096,
+   "hidden": 7168,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 4096,
+   "hidden": 7168,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 8192,
+   "hidden": 6144,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 8192,
+   "hidden": 6144,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 8192,
+   "hidden": 7168,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 8192,
+   "hidden": 7168,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 16384,
+   "hidden": 6144,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 16384,
+   "hidden": 6144,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 16384,
+   "hidden": 7168,
+   "aiv": 8,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 4,
+   "num_tokens": 16384,
+   "hidden": 7168,
+   "aiv": 32,
+   "group": "P0-EP4AIV8"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P1-EP64COMB"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
+   "hidden": 6144,
+   "aiv": 32,
+   "group": "P1-EP64COMB"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
+   "hidden": 7168,
+   "aiv": 32,
+   "group": "P1-EP64COMB"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P1-EP64COMB"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 6144,
+   "aiv": 32,
+   "group": "P1-EP64COMB"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 7168,
+   "aiv": 32,
+   "group": "P1-EP64COMB"
+  },
+  {
+   "ep": 8,
+   "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P2-WEIGHTED"
+  },
+  {
+   "ep": 8,
+   "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 64,
+   "group": "P2-WEIGHTED"
+  },
+  {
+   "ep": 8,
+   "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P2-WEIGHTED"
+  },
+  {
+   "ep": 32,
+   "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P2-WEIGHTED"
+  },
+  {
+   "ep": 32,
+   "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 32,
+   "group": "P2-WEIGHTED"
+  },
+  {
+   "ep": 32,
+   "num_tokens": 16384,
+   "hidden": 7168,
+   "aiv": 64,
+   "group": "P2-WEIGHTED"
+  }
+ ]
+}

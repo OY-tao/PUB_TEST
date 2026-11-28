@@ -725,12 +725,47 @@ def append_csv(path, cols, rows):
             w.writerow({k: r.get(k, "") for k in cols})
 
 
+def load_cases_file(path, supp, eps):
+    """按显式 case 清单过滤（重测用）。清单可含多个 EP，本次只取 --eps 指定的那些。
+
+    清单每项只需 (ep, num_tokens, hidden, aiv)；网格外的四元组必须在本次范围内，
+    否则说明清单与 --supp 口径不匹配，直接报错而不是静默跳过。
+    """
+    spec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    if isinstance(spec, dict):
+        spec = spec.get("cases") or spec.get("retest") or []
+    want_all = {(int(c["ep"]), int(c["num_tokens"]), int(c["hidden"]), int(c["aiv"]))
+                for c in spec}
+    want = {k for k in want_all if k[0] in set(eps)}
+    if not want:
+        sys.exit("清单里没有 --eps %s 范围内的用例" % eps)
+    pool = perf_cases(sorted({k[0] for k in want}), supp=supp)
+    got = {(c["ep"], c["num_tokens"], c["hidden"], c["aiv"]) for c in pool}
+    missing = want - got
+    assert not missing, (
+        "清单里有 %d 项不在 perf_cases 网格内（先核对 --supp 是否用对）：%s"
+        % (len(missing), sorted(missing)[:6]))
+    cases = [c for c in pool if (c["ep"], c["num_tokens"], c["hidden"], c["aiv"]) in want]
+    skipped_eps = sorted({k[0] for k in want_all} - set(eps))
+    print("cases-file: 清单 %d 例，本次 --eps %s 取 %d 例%s"
+          % (len(want_all), eps, len(cases),
+             ("，跳过 EP%s（不在本次 --eps 内）" % skipped_eps) if skipped_eps else ""),
+          flush=True)
+    return cases
+
+
 def stage_perf(args):
     supp = getattr(args, "supp", False)
     set_phase("supp" if supp else "perf")   # 补测用空闲节点集；主 B 用 7 台集合
     gate = require_gate()
     commit = gate["checks"].get("commit")
-    cases = perf_cases([e for e in args.eps if e != 128], supp=supp)
+    tag = getattr(args, "csv_tag", "") or ""
+    cases_file = getattr(args, "cases_file", "") or ""
+    reps = max(1, int(getattr(args, "reps", 1) or 1))
+    if cases_file:
+        cases = load_cases_file(cases_file, supp, [e for e in args.eps if e != 128])
+    else:
+        cases = perf_cases([e for e in args.eps if e != 128], supp=supp)
     if args.only_ep:
         cases = [c for c in cases if c["ep"] in args.only_ep]
     cases = cases[args.start:]
@@ -739,18 +774,23 @@ def stage_perf(args):
     if not cases:
         sys.exit("没有可跑的用例")
     LOGDIR.mkdir(parents=True, exist_ok=True)
-    csv_path = DATA / ("round3_perf_supp.csv" if supp else "round3_perf.csv")
-    out_root = STAGE + ("/out/perf_supp" if supp else "/out/perf")
-    print("perf%s: %d 例，commit=%s，huge_pages=no，节点=%s" %
-          ("(补测)" if supp else "", len(cases), commit,
-           {ep: EP_NODES_ACTIVE[ep] for ep in sorted({c["ep"] for c in cases})}))
+    if tag:
+        csv_path = DATA / ("round3_perf_%s.csv" % tag)
+        out_root = STAGE + ("/out/perf_%s" % tag)
+    else:
+        csv_path = DATA / ("round3_perf_supp.csv" if supp else "round3_perf.csv")
+        out_root = STAGE + ("/out/perf_supp" if supp else "/out/perf")
+    print("perf%s: %d 例 × %d reps，commit=%s，huge_pages=no，节点=%s%s" %
+          ("(补测)" if supp else "", len(cases), reps, commit,
+           {ep: EP_NODES_ACTIVE[ep] for ep in sorted({c["ep"] for c in cases})},
+           ("，tag=%s" % tag) if tag else ""))
 
     for wave in perf_waves({c["ep"] for c in cases}):
         jobs = [(ep, [c for c in cases if c["ep"] == ep]) for ep in wave]
         jobs = [(ep, cs) for ep, cs in jobs if cs]
         print("\n== 波次 %s ==" % " + ".join("EP%d×%d" % (ep, len(cs)) for ep, cs in jobs))
         with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
-            futs = [pool.submit(run_perf_ep, ep, cs, commit, out_root, csv_path, args)
+            futs = [pool.submit(run_perf_ep, ep, cs, commit, out_root, csv_path, args, reps)
                     for ep, cs in jobs]
             for f in futs:
                 f.result()
@@ -758,15 +798,16 @@ def stage_perf(args):
     return 0
 
 
-def run_perf_ep(ep, cases, commit, out_root, csv_path, args):
+def run_perf_ep(ep, cases, commit, out_root, csv_path, args, reps=1):
     need = nnodes_of(ep)
     for i in EP_NODES_ACTIVE[ep]:
         check_idle(node_by_idx(i), ep // need)
-    tag_base = "perf_ep%d_r2_%s" % (ep, time.strftime("%Y%m%d_%H%M%S"))
-    print("-- EP%d：%d 例，%d 机 × %d 卡（node%s）" % (
-        ep, len(cases), need, ep // need, ",".join(map(str, EP_NODES_ACTIVE[ep]))), flush=True)
+    tag_base = "perf_ep%d_r3_%s" % (ep, time.strftime("%Y%m%d_%H%M%S"))
+    print("-- EP%d：%d 例 × %d reps，%d 机 × %d 卡（node%s）" % (
+        ep, len(cases), reps, need, ep // need, ",".join(map(str, EP_NODES_ACTIVE[ep]))), flush=True)
     for c in cases:
-        run_id = "%s_c%02d" % (tag_base, c["idx"])
+      for rep in range(reps):
+        run_id = "%s_c%02d" % (tag_base, c["idx"]) + ("" if reps == 1 else "_r%d" % (rep + 1))
         argv = perf_argv(c, out_root, run_id)
         t0 = time.time()
         rcs = run_on_nodes(ep, argv, PORTS["perf"], run_id, timeout=args.timeout)
@@ -1164,6 +1205,14 @@ def main():
                     help="显式绑定容器，格式 host=name,... 必须 8 台；默认 8 台同名新容器")
     ap.add_argument("--start", type=int, default=0)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--cases-file", default="",
+                    help="显式 case 清单 JSON（重测用），每项含 ep/num_tokens/hidden/aiv；"
+                         "给定时只跑清单内的格子，配合 --supp 决定网格口径")
+    ap.add_argument("--reps", type=int, default=1,
+                    help="每个 case 重复次数（重测默认 3，用 3 次中位判定稳定性）")
+    ap.add_argument("--csv-tag", default="",
+                    help="结果写 round3_perf_<tag>.csv、产物写 out/perf_<tag>；"
+                         "重测用 retest，避免污染主批 CSV")
     ap.add_argument("--timeout", type=int, default=3600, help="单个 case 超时秒")
     ap.add_argument("--jobs", type=int, default=4, help="异常阶段并发数")
     ap.add_argument("--capacity", type=int, default=16384,
