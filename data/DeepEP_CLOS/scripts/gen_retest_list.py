@@ -42,10 +42,10 @@ OP_CN = {"dispatch": "dispatch", "cached-dispatch": "cached",
 
 # 分组：优先级 + 名称 + 该组要回答的问题
 GROUPS = {
-    "P1-EP64GRID": dict(
-        prio="P1", title="EP64 原始 12 例（AIV 32/64 全网格）",
-        ask="AIV=32 的 6 格 combine_un 对基线 −5.3~−29.5%，是基线表 rows 口径偏高还是真退化？"
-            "AIV=64 的 6 格本轮从未测过，补齐后 EP64 才算有与基线同口径的完整结论。"),
+    "P1-EP64COMB": dict(
+        prio="P1", title="EP64 的 combine 劣化（原始 12 例中的 AIV=32 六格）",
+        ask="6 格 combine_un 对基线 −5.3~−29.5%（4 格 weighted 同步 ≤−10%），"
+            "是基线表 rows 口径偏高还是本轮真退化？3 次稳定在 −5% 以下 ⇒ 口径；明显回升 ⇒ 首测受环境影响。"),
     "P2-WEIGHTED": dict(
         prio="P2", title="EP≤32 的 combine_weighted 短板",
         ask="同格 unweighted 领先基线 +1.4~+21% 而 weighted 落后 −5~−12%，"
@@ -56,11 +56,13 @@ RETEST_REPS = 3          # 每格重复次数
 
 # ---- 本轮范围（用户 2026-11-29 定）----
 # 1) 不看 EP4：18 格（AIV8 9 + AIV32 9）整体排除，含原 P0 组；
-# 2) EP64 不按「命中格」取，改跑原始 12 例（T 8192/16384 × H×3 × AIV 32/64），
-#    与基线快照同口径 —— 其中 AIV=32 的 6 格是复测（首测已不达标），
-#    AIV=64 的 6 格是首次测量（R3 只跑过 supp 网格的 AIV 8/32）。
+# 2) EP64 按「原始 12 例」的口径取，但**只跑其中已确认性能劣化的格**：
+#    12 例 = T 8192/16384 × H 2816/6144/7168 × AIV 32/64（与基线快照同口径）；
+#    AIV=32 的 6 格首测 combine_un 全部 ≤ −5%（−5.3~−29.5%）⇒ 纳入；
+#    AIV=64 的 6 格**从未测过**（R3 只跑过 supp 网格的 AIV 8/32）⇒ 无实测值，
+#    谈不上「劣化」，本轮不跑；若要判它是否劣化，需先补首测（把 EP64_FULL_GRID 置 True）。
 SCOPE_EPS = {8, 16, 32, 64}
-EP64_FULL_GRID = True
+EP64_FULL_GRID = False   # True = 连 AIV=64 的 6 格一起补齐（首测）；False = 只跑已劣化的格
 EXCLUDED_NOTE = {
     4: "EP4 全 18 格（AIV8 9 + AIV32 9）：用户 2026-11-29 指示本轮不看 EP4",
 }
@@ -129,7 +131,7 @@ def main():
             dv = rec[k]["delta"].get(op)
             if dv is None or dv > R1_DROP:
                 continue
-            grp = "P1-EP64GRID" if k[0] == 64 else "P2-WEIGHTED"
+            grp = "P1-EP64COMB" if k[0] == 64 else "P2-WEIGHTED"
             add(k, op, "R1", "对外基线劣化 %.1f%%" % dv)
             rows[-1]["group"] = grp
             hit_cases.setdefault(k, set()).add(grp)
@@ -145,7 +147,7 @@ def main():
         if dv > R2_DROP:
             continue
         add(k, "dispatch", "R2", "相对同批 AIV=32 %.1f%%" % dv, delta=dv)
-        rows[-1]["group"] = "P2-WEIGHTED" if k[0] != 64 else "P1-EP64GRID"
+        rows[-1]["group"] = "P2-WEIGHTED" if k[0] != 64 else "P1-EP64COMB"
         hit_cases.setdefault(k, set()).add(rows[-1]["group"])
         # 该格其它明显同步塌陷的 op 一并记（只记录，不改判据）
         for op in ("cached-dispatch", "combine_unweighted", "combine_weighted"):
@@ -154,7 +156,7 @@ def main():
             d2 = G.pct(M[k][op]["mean"], M[k32][op]["mean"])
             if d2 <= R2_DROP:
                 add(k, op, "R2", "相对同批 AIV=32 %.1f%%" % d2, delta=d2)
-                rows[-1]["group"] = "P2-WEIGHTED" if k[0] != 64 else "P1-EP64GRID"
+                rows[-1]["group"] = "P2-WEIGHTED" if k[0] != 64 else "P1-EP64COMB"
                 hit_cases.setdefault(k, set()).add(rows[-1]["group"])
 
     # R3：测量不稳。已被 R1/R2 命中的格不单列（分散度已在各 op 的 spread 列里）
@@ -167,11 +169,11 @@ def main():
             continue
         op = max(sp, key=sp.get)
         add(k, "*", "R3", "格内分散度 %.1f%%（%s），单次不可信" % (worst, op))
-        rows[-1]["group"] = "P1-EP64GRID" if k[0] == 64 else "P2-WEIGHTED"
+        rows[-1]["group"] = "P1-EP64COMB" if k[0] == 64 else "P2-WEIGHTED"
         hit_cases.setdefault(k, set()).add(rows[-1]["group"])
 
     # 一支格命中多个组时，归到优先级最高的组（P1 > P2）
-    order = {"P1-EP64GRID": 0, "P2-WEIGHTED": 1}
+    order = {"P1-EP64COMB": 0, "P2-WEIGHTED": 1}
     for r in rows:
         gs = [g for g in r["group"].split(",") if g]
         r["group"] = sorted(gs, key=lambda g: order.get(g, 9))[0]
@@ -183,13 +185,13 @@ def main():
         k = (r["ep"], r["num_tokens"], r["hidden"], r["aiv"])
         retest_keys.setdefault(k, set()).add(r["group"])
 
-    # EP64 展开到原始 12 例：命中的 6 格（AIV=32）只是子集，
-    # AIV=64 的 6 格本轮从未测过，按用户指示一并补齐，形成与基线同口径的完整网格。
+    # EP64 可选展开到原始 12 例（EP64_FULL_GRID=True）：命中的 6 格（AIV=32）是子集，
+    # AIV=64 的 6 格从未测过 —— 展开即「顺带补首测」，但与「只跑劣化的」口径不符，默认关闭。
     if EP64_FULL_GRID:
         retest_ep64 = set(retest_keys)
         retest_keys = {k: v for k, v in retest_keys.items() if k[0] != 64}
         for k in ep64_grid():
-            retest_keys.setdefault(k, set()).add("P1-EP64GRID")
+            retest_keys.setdefault(k, set()).add("P1-EP64COMB")
 
     # 记录每格在重测里的角色：nonconform=首测已不达标、first=从未测过、grid=其余回归格
     role_of = {}
@@ -290,26 +292,27 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("| 项 | 首测口径 | 本轮重测口径 |")
     A("|---|---|---|")
     A("| EP4 | 18 格（AIV8 9 + AIV32 9），含原 P0 的 AIV=8 塌陷 | **整档不看**（用户指示）；其 9 格 AIV=8 的 −39.7~−71.8% 记录保留在首测报告，不进本轮结论 |")
-    A("| EP64 | 只跑过 supp 网格（T4096/8192/16384 × AIV **8/32**），与基线不可比 | **改跑原始 12 例**：T 8192/16384 × H 2816/6144/7168 × AIV **32/64**，与基线快照同口径 |")
+    A("| EP64 | 只跑过 supp 网格（T4096/8192/16384 × AIV **8/32**），与基线不可比 | **按原始 12 例的口径取，但只跑已劣化的 6 格**：T 8192/16384 × H 2816/6144/7168 × AIV **32**（combine_un 全部 ≤ −5%） |")
     A("| EP8/EP32 | combine_weighted 6 格不达标 | 不变，仍纳入 |")
     A("")
-    A("> EP64 的 12 例里：**AIV=32 的 6 格是复测**（首测已不达标），**AIV=64 的 6 格是首次测量**")
-    A("> （R3 从未跑过 EP64×AIV64）。补齐后 EP64 才有与基线同口径的完整 12/12 结论。")
+    A("> EP64 原始 12 例 = 上面的 6 格（AIV=32）+ 另 6 格（AIV=64）。**AIV=64 的 6 格本轮不跑**：")
+    A("> R3 从未测过 EP64×AIV=64（supp 网格只有 AIV 8/32），没有实测值就谈不上「劣化」；")
+    A("> 基线快照里这 6 格的对照值是齐的，缺的只是我方一侧 —— 若后续要判它，用")
+    A("> `EP64_FULL_GRID=True` 重跑本脚本即展开成 12 格。")
     A("")
     A("## 一句话")
     A("")
     A("**%d 格纳入重测**，每格重复 **%d 次**，共 **%d 次运行**（首测 %d 格，范围外 %d 格）。"
       % (n_rt, RETEST_REPS, n_runs, n_case, len([k for k in M if k[0] not in SCOPE_EPS])))
     A("")
-    A("| 组 | 格数 | 不达标 | 首测缺 | 现象 | 重测要回答什么 |")
-    A("|---|---|---|---|---|---|")
+    A("| 组 | 格数 | 不达标 | 现象 | 重测要回答什么 |")
+    A("|---|---|---|---|---|")
     for g in sorted(by_group, key=lambda x: order[x]):
         ks = by_group[g]
         gi = GROUPS[g]
         nc = len([k for k in ks if role_of[k] == "nonconform"])
-        nf = len([k for k in ks if role_of[k] == "first"])
-        A("| **%s** %s | %d | %d | %d | %s | %s |" % (
-            gi["prio"], gi["title"], len(ks), nc, nf, _phenomenon(g, ks, M, rec), gi["ask"]))
+        A("| **%s** %s | %d | %d | %s | %s |" % (
+            gi["prio"], gi["title"], len(ks), nc, _phenomenon(g, ks, M, rec), gi["ask"]))
     A("")
     A("合计 **%d 格 / %d 次运行**。" % (n_rt, n_runs))
     A("")
@@ -339,28 +342,9 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
         A("### %s %s —— 重测 %d 格（其中 %d 格首测不达标 / %d 点）" % (
             gi["prio"], gi["title"], len(by_group[g]), nc, len(sub)))
         A("")
-        if g == "P1-EP64GRID":
-            A("**12 格全网格**（与 `baseline/V2测试Case_20261128快照.txt` 的 EP64 行一一对应）：")
-            A("")
-            A("| Tokens | Hidden | AIV | 角色 | dispatch 首测 | 基线 | Δ | combine_un 首测 | 基线 | Δ |")
-            A("|---|---|---|---|---|---|---|---|---|---|")
-            for k in sorted(by_group[g], key=lambda k: (k[1], k[2], k[3])):
-                role_cn = {"nonconform": "**复测（不达标）**", "first": "**首测补全**",
-                           "grid": "回归"}[role_of[k]]
-                def cell(op):
-                    if k not in M or op not in M[k]:
-                        return ("—", "—", "—")
-                    m = M[k][op]["mean"]
-                    b = SNAP[k][SNAP_TAG[op]] if (k in SNAP and SNAP_TAG[op] in SNAP[k]) else None
-                    return ("%.1f" % m, ("%.1f" % b) if b else "—",
-                            ("%+.1f%%" % G.pct(m, b)) if b else "—")
-                d = cell("dispatch")
-                u = cell("combine_unweighted")
-                A("| %d | %d | %d | %s | %s | %s | %s | %s | %s | %s |" % (
-                    k[1], k[2], k[3], role_cn, d[0], d[1], d[2], u[0], u[1], u[2]))
-            A("")
-            A("> `首测 —` 的 6 格是 **EP64×AIV=64，R3 从未跑过**（supp 网格只有 AIV 8/32），属补全而非回归。")
-            A("> 12 格里 6 格 AIV=32 与基线完全可比；AIV=64 的基线也在快照里（12/12 有对照）。")
+        if g == "P1-EP64COMB":
+            A("**取自 EP64 原始 12 例中已实测且劣化的 6 格**（AIV=32；与 `baseline/V2测试Case_20261128快照.txt`")
+            A("的 EP64 行同口径）。另 6 格 AIV=64 从未测过，无实测值可判劣化，本轮不跑（见 §明确不纳入）。")
             A("")
         A("**不达标点明细**（%d 点）：" % len(sub))
         A("")
@@ -401,7 +385,7 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("| 组 | EP | 节点 | 机×卡 | 例数×reps | 次数 | 单例（实测） | 该组预计 |")
     A("|---|---|---|---|---|---|---|---|")
     plan = [
-        ("P1-EP64GRID", "EP64", "node2,4,5,6 = .6/.8/.9/.10", "4机×16卡", 4.3),
+        ("P1-EP64COMB", "EP64", "node2,4,5,6 = .6/.8/.9/.10", "4机×16卡", 4.3),
         ("P2-WEIGHTED", "EP32", "node0,1 = .4/.5", "2机×16卡", 2.6),
         ("P2-WEIGHTED", "EP8", "node7 = .11", "1机×8卡", 1.4),
     ]
@@ -419,16 +403,16 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("> 单波并行 ⇒ 总时长取最慢的一组（EP64）**~%d min**；加门禁与部署 15 min，"
       "**总计约 %.1f 小时**。" % (max(times or [0]), (max(times or [0]) + 15) / 60.0))
     A("> EP64 单例按 4.3 min 是 11-28 补测批的实测均值（18 例 / 72 min）。")
-    A("> **省时选项**：6 个首测格（AIV=64）若只想要一次结果，把 `--reps` 降到 1 可省约 1 h，")
-    A("> 但会失去这三格的 run-to-run 分散度（格内 30 iter 的 min/max 仍在，不算完全没有）。")
+    A("> 12 格都是**首测已不达标的格**（无首测补全项）⇒ 每格 3 次是判「是否稳定复现」的最小样本，")
+    A("> 不建议再压到 1 次。")
     A("")
     A("**前置条件**：")
     A("")
     A("1. **C 阶段（EP128 精度）跑完并释放 8 台**——EP128 独占全部节点，与性能批互斥。")
     A("2. `python scripts/run_round3.py gate` 复检 `pass=true`（8 台 16/16 空闲、commit `0d1eca2`、")
     A("   `buffer.py` sha `f825a679…`、`qp_plans` 为空）。")
-    A("3. 三组要 **7 台同时空闲**（`.4/.5` 若被别人占则整批起不来；届时把 EP32 挪到 `.9/.10`、")
-    A("   EP64 换 `node0,1,2,4`，脚本里改 `RETEST_EP_NODES` 一处即可）。")
+    A("3. 三组要 **7 台同时空闲**（`.4/.5` 若被别人占则整批起不来；届时不改代码、把 EP32 排到")
+    A("   EP64 之后串行（复用 node5,6），或改 `RETEST_EP_NODES` 换一组与 EP64 不重叠的机器）。")
     A("4. 容器显式绑 8 台（`--containers`），不要靠子串猜（历史上误取旧容器）。")
     A("")
 
@@ -439,7 +423,7 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("# 1) 门禁")
     A("python3 scripts/run_round3.py gate")
     A("")
-    A("# 2) 一次跑完 18 格（EP64 12 + EP32 3 + EP8 3），单波并行")
+    A("# 2) 一次跑完 12 格（EP64 6 + EP32 3 + EP8 3），单波并行")
     A("#    走主网格（perf_cases_v2.json，AIV 32/64），不是 --supp 的 1128 网格")
     A("python3 scripts/run_round3.py perf --eps 8,32,64 \\")
     A("    --cases-file scripts/retest_cases_20261128.json \\")
@@ -454,7 +438,7 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("> `--csv-tag retest` 写 `round3_perf_retest.csv`，不污染主批 `round3_perf.csv`。")
     A("")
     A("> 判定表由 `scripts/gen_retest_result.py` 按本文规则机械生成，四类：确认劣化 / 边界噪声 /")
-    A("> 达标 / 作废。EP64 的 AIV=32 与 AIV=64 **都有基线**（快照 12/12 覆盖），一律走 R1。")
+    A("> 达标 / 作废。12 格**都有基线**（全在快照覆盖内），一律走 R1，本批不会出现「无基线」行。")
     A("")
     A("## 重测后的判定规则（先定规则，避免事后找理由）")
     A("")
@@ -480,7 +464,8 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("| 类别 | 数量 | 理由 |")
     A("|---|---|---|")
     A("| **EP4 全档** | **18 格** | 用户 2026-11-29 指示本轮不看 EP4。首测里 EP4+AIV8 相对同批 AIV32 掉 −39.7~−71.8%（9 格）记录仍在 `R3性能实测分析` §5.1，**不进本轮结论** |")
-    A("| EP64 的 AIV=8 | 9 格 | 不在原始 12 例里（属 supp 网格的 1128 口径），与基线不可比；AIV=32/64 已覆盖 EP64 结论 |")
+    A("| **EP64 的 AIV=64** | **6 格** | 原始 12 例里的一半，但 R3 从未测过（supp 网格只有 AIV 8/32）⇒ **无实测值，判不出劣化**。基线侧有对照、缺的是我方数据；需要时 `EP64_FULL_GRID=True` 展开 |")
+    A("| EP64 的 AIV=8 | 9 格 | 不在原始 12 例里（属 supp 网格的 1128 口径），与基线不可比；AIV=32 已覆盖 EP64 结论 |")
     A("| 劣化在 −5%% ~ 0 之间 | **%d 点** | 低于 bench 噪声 + 基线四舍五入的量级，重测也判不出方向 |" % len(neg_small))
     if neg_small:
         A("| └ 明细 | %d 点 | 全部是 `combine_weighted`：%s |" % (
@@ -505,13 +490,15 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
 
 def _phenomenon(g, ks, M, rec):
     """一句话现象（按组算实际范围，不写死）。"""
-    if g == "P1-EP64GRID":
+    if g == "P1-EP64COMB":
         v = [rec[k]["delta"]["combine_unweighted"] for k in ks
              if k in rec and "combine_unweighted" in rec[k]["delta"]]
-        n_first = len([k for k in ks if k not in M])
+        w = [rec[k]["delta"]["combine_weighted"] for k in ks
+             if k in rec and "combine_weighted" in rec[k]["delta"]]
         if v:
-            return ("AIV=32 的 %d 格 combine_un 对基线 **%+.1f%% ~ %+.1f%%**；"
-                    "AIV=64 的 %d 格本轮首测" % (len(v), min(v), max(v), n_first))
+            return ("combine_un 对基线 **%+.1f%% ~ %+.1f%%**（%d 格，均 ≤−5%%）；"
+                    "其中 %d 格 weighted 同步 ≤−10%%" % (
+                        min(v), max(v), len(v), len([x for x in w if x <= R2_DROP])))
     if g == "P2-WEIGHTED":
         v = [rec[k]["delta"]["combine_weighted"] for k in ks
              if "combine_weighted" in rec[k]["delta"]]
