@@ -14,9 +14,10 @@
   因此不会与 C 守护抢卡；若 .4/.5 释放，C 守护仍可能在补测占用
   .6~.11 时判定 8 台不全空闲而继续等待，属预期（C 需 128 卡整齐）。
 
-补测本身用 run_round3.py perf --eps 4,64 --supp，24 例（各 12 例），一波并行：
+补测本身用 run_round3.py perf --eps 4,64 --supp，36 例（各 18 例，来源
+EP4-128_通信带宽_20261128.txt 实测原表），一波并行：
 EP64 四机与 EP4 单机节点不重叠。被 kill / 出错时按 60s 间隔重启，直到
-round3_perf_supp.csv 出现 24 个不同 run_id（每个 case 4 个 op 行）。
+round3_perf_supp.csv 出现 36 个不同 run_id（每个 case 4 个 op 行）。
 
 用法： python3 -u auto_start_supp.py [--interval 60] [--max-wait 7200]
 """
@@ -119,20 +120,20 @@ def main():
     ap.add_argument("--max-wait", type=int, default=7200)
     o = ap.parse_args()
     deadline = time.time() + o.max_wait
-    log("补测自动启动器：等 B 退出 + .6/.8/.9/.10/.11 全空闲 → 跑 EP4/EP64 各 12 例")
+    log("补测自动启动器：等 B 退出 + .6/.8/.9/.10/.11 全空闲 → 跑 EP4/EP64 各 18 例")
     write_status("waiting", started=time.strftime("%F %T"),
                  supp_nodes=SUPP_HOSTS,
-                 note="EP64=[2,4,5,6]=.6/.8/.9/.10, EP4=[7]=.11; 排除 .4/.5 与 .7")
+                 note="EP64=[2,4,5,6]=.6/.8/.9/.10, EP4=[7]=.11; 排除 .4/.5 与 .7; 18例/EP")
 
     proc = None
     relaunches = 0
     while time.time() < deadline:
         try:
             done = completed_cases()
-            if done >= 24:
+            if done >= 36:
                 write_status("completed", cases=done, relaunches=relaunches,
-                             note="EP4+EP64 各 12 例已写入 round3_perf_supp.csv")
-                log("DONE: 补测完成 %d/24 例（重启 %d 次）" % (done, relaunches))
+                             note="EP4+EP64 各 18 例已写入 round3_perf_supp.csv")
+                log("DONE: 补测完成 %d/36 例（重启 %d 次）" % (done, relaunches))
                 return 0
             idle = supp_idle()
             n_idle = sum(1 for v in idle.values() if v >= 16)
@@ -140,7 +141,7 @@ def main():
             sr = supp_running()
             if proc is None:
                 ready = (n_idle == 5 and not b and not sr)
-                log("空闲 %d/5，B=%s，补测控制器=%s，已完成 %d/24，ready=%s，节点=%s" %
+                log("空闲 %d/5，B=%s，补测控制器=%s，已完成 %d/36，ready=%s，节点=%s" %
                     (n_idle, b, sr, done, ready, idle))
                 if ready:
                     proc = launch_supp()
@@ -154,7 +155,7 @@ def main():
                 rc = proc.poll()
                 if rc is not None:
                     relaunches += 1
-                    log("补测控制器退出 rc=%s 已完成 %d/24 → 重启第 %d 次"
+                    log("补测控制器退出 rc=%s 已完成 %d/36 → 重启第 %d 次"
                         % (rc, done, relaunches))
                     proc = launch_supp()
                     write_status("running", supp_pid=proc.pid, cases=done,
@@ -162,7 +163,7 @@ def main():
                 else:
                     write_status("running", supp_pid=proc.pid, cases=done,
                                  relaunches=relaunches)
-                    log("补测运行中 已完成 %d/24 relaunches=%d" % (done, relaunches))
+                    log("补测运行中 已完成 %d/36 relaunches=%d" % (done, relaunches))
         except Exception as exc:
             log("轮询异常（继续）: %s" % str(exc)[:200])
         time.sleep(o.interval)

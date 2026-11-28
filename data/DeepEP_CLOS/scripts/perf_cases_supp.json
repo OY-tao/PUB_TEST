@@ -1,0 +1,30 @@
+{
+  "_comment": "R3 补测 EP4/EP64 规格，来源 baseline/EP4-128_通信带宽_20261128.txt（1128 实测原表，用户 2026-11-28 指定）。与 perf_cases_v2.json（基线快照，EP8-128 × 2T × 2aiv）不是同一批数据，勿混用。",
+  "_source": "data/DeepEP_CLOS/baseline/EP4-128_通信带宽_20261128.txt",
+  "_source_sha256_note": "原表 sha256 3686052758c48988a367555eef336203f21902de991d6dd10b0078ab60e20e8e（见原表头部）",
+  "_semantics": "每 EP 18 例 = 3 Tokens/rank × 3 Hidden × 2 AIV；Experts 恒 256；TopK=8；GB/s/rank 仅计通信 kernel。EP4–64 原表走 e077a43，本轮在 PR#37 head 0d1eca2 下重测。",
+  "axes": {
+    "ep_size": [4, 64],
+    "num_tokens": [4096, 8192, 16384],
+    "hidden": [2816, 6144, 7168],
+    "aiv": [8, 32]
+  },
+  "experts": 256,
+  "fixed": {
+    "num_topk": 8,
+    "warmup": 10,
+    "iterations": 30,
+    "seed": 20260823,
+    "route_mode": "uniform",
+    "dtypes": ["bf16"],
+    "expand": [1]
+  },
+  "topology": {
+    "4": {"nnodes": 1, "local": 4},
+    "64": {"nnodes": 4, "local": 16}
+  },
+  "_expected": {
+    "cases_per_ep": 18,
+    "total": 36
+  }
+}

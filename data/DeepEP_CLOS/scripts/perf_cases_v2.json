@@ -1,5 +1,5 @@
 {
-  "_comment": "DeepEP CLOS V2 性能用例规格，参照 OY-tao/Ascned_Test 的 V2测试Case.txt 生成。60 个形状组合。 | R3 补测: EP4 按同规格派生(12例,epr=64), axes.ep_size 不含 4 以保持 60 例基线不变",
+  "_comment": "DeepEP CLOS V2 性能用例规格，参照 OY-tao/Ascned_Test 的 V2测试Case.txt 生成。60 个形状组合。",
   "_source": {
     "file": "V2测试Case.txt",
     "repo": "https://github.com/OY-tao/Ascned_Test",
@@ -57,8 +57,7 @@
     "16": 256,
     "32": 256,
     "64": 256,
-    "128": 512,
-    "4": 256
+    "128": 512
   },
   "topology": {
     "_comment": "每节点最多 16 卡（bench 硬约束 local_world_size ∈ 1..16）",
@@ -81,10 +80,6 @@
     "128": {
       "nnodes": 8,
       "local": 16
-    },
-    "4": {
-      "nnodes": 1,
-      "local": 4
     }
   },
   "_expected": 60

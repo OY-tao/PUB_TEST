@@ -267,15 +267,20 @@ def check_idle(node, need_cards):
 # --------------------------------------------------------------------------- #
 # 用例集
 # --------------------------------------------------------------------------- #
-def perf_cases(eps):
-    """12 例/EP：2 tokens × 3 hidden × 2 aiv，形状对齐 V2测试Case.txt。"""
-    spec_path = HERE / "perf_cases_v2.json"
+def perf_cases(eps, supp=False):
+    """性能用例。
+
+    主 B：12 例/EP（2 tokens × 3 hidden × 2 aiv），对齐 baseline/V2测试Case_20261128快照.txt。
+    补测 --supp：18 例/EP（3 tokens × 3 hidden × 2 aiv，Experts 恒 256），
+      对齐 baseline/EP4-128_通信带宽_20261128.txt（1128 实测原表，两表勿混用）。
+    """
+    spec_path = HERE / ("perf_cases_supp.json" if supp else "perf_cases_v2.json")
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     ax = spec["axes"]
     fx = spec["fixed"]
     out = []
     for ep in eps:
-        experts = spec["experts_map"][str(ep)]
+        experts = spec["experts"] if supp else spec["experts_map"][str(ep)]
         epr = experts // ep
         idx = 0
         for tokens in ax["num_tokens"]:
@@ -725,7 +730,7 @@ def stage_perf(args):
     set_phase("supp" if supp else "perf")   # 补测用空闲节点集；主 B 用 7 台集合
     gate = require_gate()
     commit = gate["checks"].get("commit")
-    cases = perf_cases([e for e in args.eps if e != 128])
+    cases = perf_cases([e for e in args.eps if e != 128], supp=supp)
     if args.only_ep:
         cases = [c for c in cases if c["ep"] in args.only_ep]
     cases = cases[args.start:]
@@ -1030,9 +1035,12 @@ def stage_plan(args):
 
     supp = getattr(args, "supp", False)
     plan_eps = [e for e in args.eps if e != 128]
-    perf = perf_cases(plan_eps)
-    print("%s：%d 例（每 EP 12 例：2 tokens × 3 hidden × 2 aiv）" %
-          ("补测 EP4/EP64（空闲 5 台）" if supp else "阶段 B 性能（7 台）", len(perf)))
+    perf = perf_cases(plan_eps, supp=supp)
+    print("%s：%d 例（%s）" %
+          ("补测 EP4/EP64（实测原表 18 例/EP，空闲 5 台）" if supp else "阶段 B 性能（7 台）",
+           len(perf),
+           "每 EP 18 例：3 tokens × 3 hidden × 2 aiv" if supp
+           else "每 EP 12 例：2 tokens × 3 hidden × 2 aiv"))
     set_phase("supp" if supp else "perf")
     print("  %-4s %-5s %-6s %s" % ("EP", "例数", "拓扑", "节点分配"))
     for ep in plan_eps:
