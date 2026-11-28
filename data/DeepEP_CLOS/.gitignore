@@ -3,5 +3,11 @@ round2_state.json
 round2_logs/
 round3_state.json
 round3_logs/
+round3_auto_c.json
+# C 控制器（r3_c_ep128）运行时产物，不入库
+scripts/r3_c_ep128/status*.json
+scripts/r3_c_ep128/plan_attempt_*.json
+scripts/r3_c_ep128/run_attempt_*.log
+scripts/r3_c_ep128/results_attempt_*/
 scripts/__pycache__/
 __pycache__/

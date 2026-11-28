@@ -1,0 +1,327 @@
+{
+  "ep_size": 128,
+  "nnodes": 8,
+  "local_ranks_per_node": 16,
+  "hosts": [
+    "30.104.128.4",
+    "30.104.128.5",
+    "30.104.128.6",
+    "30.104.128.7",
+    "30.104.128.8",
+    "30.104.128.9",
+    "30.104.128.10",
+    "30.104.128.11"
+  ],
+  "case_count_total": 8,
+  "epr_tiers": [
+    "main",
+    "probe"
+  ],
+  "precision_only": true,
+  "buffer_reuse": "one persistent 8-node/128-rank process group; V1 one Buffer; V2 grouped by (hidden,num_topk,dtype,huge_pages); same group reuses the initialized Buffer, no per-case rebuild",
+  "max_local_mem_bytes": 42949672960,
+  "guard_bytes": 40802189312,
+  "workspace_source": "EP32/EP64 calibrated CPU formula, num_ranks=128",
+  "reference": "PUB_TEST/data/DeepEP_CLOS/第三轮测试执行指南_20261128.md §五",
+  "remaining": [
+    {
+      "api": "v1",
+      "dtype": "bf16",
+      "expand": 0,
+      "variant": "main_ep128_v1_A_t1_h512_bf16_e0",
+      "source_id": "A_t1_h512_bf16_e0",
+      "group": "A",
+      "epr_tier": "main",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 512,
+        "num_topk": 8,
+        "experts_per_rank": 4,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v1",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 164864
+      }
+    },
+    {
+      "api": "v1",
+      "dtype": "fp8",
+      "expand": 0,
+      "variant": "main_ep128_v1_A_t1_h2048_fp8_e0",
+      "source_id": "A_t1_h2048_fp8_e0",
+      "group": "A",
+      "epr_tier": "main",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 2048,
+        "num_topk": 8,
+        "experts_per_rank": 4,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v1",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 164864
+      }
+    },
+    {
+      "api": "v2",
+      "dtype": "bf16",
+      "expand": 0,
+      "variant": "main_ep128_v2_A_t1_h512_bf16_e0",
+      "source_id": "A_t1_h512_bf16_e0",
+      "group": "A",
+      "epr_tier": "main",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 512,
+        "num_topk": 8,
+        "experts_per_rank": 4,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v2",
+          512,
+          8,
+          "bf16",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 2298882048
+      }
+    },
+    {
+      "api": "v2",
+      "dtype": "fp8",
+      "expand": 0,
+      "variant": "main_ep128_v2_A_t1_h2048_fp8_e0",
+      "source_id": "A_t1_h2048_fp8_e0",
+      "group": "A",
+      "epr_tier": "main",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 2048,
+        "num_topk": 8,
+        "experts_per_rank": 4,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v2",
+          2048,
+          8,
+          "fp8",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 8657381376
+      }
+    },
+    {
+      "api": "v1",
+      "dtype": "bf16",
+      "expand": 0,
+      "variant": "probe_ep128_v1_A_t1_h512_bf16_e0",
+      "source_id": "A_t1_h512_bf16_e0",
+      "group": "A",
+      "epr_tier": "probe",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 512,
+        "num_topk": 8,
+        "experts_per_rank": 32,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v1",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 164864
+      }
+    },
+    {
+      "api": "v1",
+      "dtype": "fp8",
+      "expand": 0,
+      "variant": "probe_ep128_v1_A_t1_h2048_fp8_e0",
+      "source_id": "A_t1_h2048_fp8_e0",
+      "group": "A",
+      "epr_tier": "probe",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 2048,
+        "num_topk": 8,
+        "experts_per_rank": 32,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v1",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 164864
+      }
+    },
+    {
+      "api": "v2",
+      "dtype": "bf16",
+      "expand": 0,
+      "variant": "probe_ep128_v2_A_t1_h512_bf16_e0",
+      "source_id": "A_t1_h512_bf16_e0",
+      "group": "A",
+      "epr_tier": "probe",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 512,
+        "num_topk": 8,
+        "experts_per_rank": 32,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v2",
+          512,
+          8,
+          "bf16",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 2298882048
+      }
+    },
+    {
+      "api": "v2",
+      "dtype": "fp8",
+      "expand": 0,
+      "variant": "probe_ep128_v2_A_t1_h2048_fp8_e0",
+      "source_id": "A_t1_h2048_fp8_e0",
+      "group": "A",
+      "epr_tier": "probe",
+      "parameters": {
+        "num_tokens": 1,
+        "hidden": 2048,
+        "num_topk": 8,
+        "experts_per_rank": 32,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v2",
+          2048,
+          8,
+          "fp8",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 8657381376
+      }
+    }
+  ],
+  "buffer_groups": [
+    {
+      "key": [
+        "v1",
+        false
+      ],
+      "max_tokens": 16384,
+      "workspace_bytes": 164864,
+      "case_count": 100
+    },
+    {
+      "key": [
+        "v2",
+        2048,
+        8,
+        "fp8",
+        false
+      ],
+      "max_tokens": 16384,
+      "workspace_bytes": 8657381376,
+      "case_count": 8
+    },
+    {
+      "key": [
+        "v2",
+        512,
+        8,
+        "bf16",
+        false
+      ],
+      "max_tokens": 16384,
+      "workspace_bytes": 2298882048,
+      "case_count": 8
+    }
+  ],
+  "expected_buffer_initializations_per_rank": 3,
+  "expected_process_group_initializations_per_rank": 1,
+  "source_spec_sha256": "276858c2ebb9e7212956d244477408e22a34b624193848b8b969a71590a5480f",
+  "note": "R3 C smoke: 2 cases per tier per API"
+}

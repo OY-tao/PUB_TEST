@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
-"""等 .4/.5 释放后自动接续 R3 阶段 C（EP128 泛化精度）。
+"""等 .4/.5 释放后自动接续 R3 阶段 C（EP128 泛化精度），并监控重启。
 
-设计（用户 2026-11-28 指令「在 .4/.5 释放后自动接续 C(EP128)」）：
+用户 2026-11-28 指令：「在 .4/.5 释放后自动接续 C(EP128)」+
+「C 也带『被kill/出错继续重试』，注意精度复用统一buffer」。
 
-  * 只做「等待 + 触发」，本身不占 NPU、不改用例、不动脚本；
-  * 三个条件全部满足才开跑：
-      1. B 阶段 perf 控制器已退出（避免与 C 抢 .6~.11 的卡）；
-      2. 8 台 NPU 全部 16/16 空闲（C 需要 128 卡整齐，指南 §八/§九）；
-      3. 没有别的 run_round3 控制器在跑（防重复触发）。
-  * 满足后：先重跑 `gate` 要求 **full_pass=True**（8 台全空闲），再启动
-    `precision --eps 128 --epr-tiers main --api v1,v2`（C 阶段）。
-  * 触发后写 round3_auto_c.json 并退出；C 自身的进度由控制器日志/CSV 跟踪。
-  * 出错不退出，按间隔继续等（用户既定「不中断、出错继续」口径）。
+C 的执行体是 `r3_c_ep128/run_retry.py`（持久 8 机/128 rank 单进程组 +
+compatibility_key 分组复用 Buffer + checkpoint + 40 次 attempt 自动重试），
+不再是逐 case 独立 torchrun 的 run_round3.py precision。
 
-用法：
-    python3 -u auto_continue_c.py [--interval 60] [--max-wait 7200]
+两层重试：
+  * 内层（run_retry.py）：每次 attempt 后 collect_and_judge 结算已通过用例，
+    只重跑 remaining；worker 被 kill / 超时 / 异常都自动进入下一 attempt。
+  * 外层（本脚本）：监控控制器进程本身，若被 kill / 异常退出且 status.json
+    未 completed，则重新拉起 `run_retry.py --run`（启动会 recover_completed
+    从容器磁盘恢复），直到完成或 max_wait。
+
+触发条件三者全满足才开跑：
+  1. B 阶段 perf 控制器已退出（避免与 C 抢 .6~.11 的卡）；
+  2. 8 台 NPU 全部 16/16 空闲（C 需要 128 卡整齐，指南 §八/§九）；
+  3. 没有别的 run_round3 / run_retry 控制器在跑（防重复触发）。
+满足后先重跑 gate 要求 full_pass=True（8 台全空闲），再启动 C。
+
+用法： python3 -u auto_continue_c.py [--interval 60] [--max-wait 7200]
 """
 import argparse
 import concurrent.futures
@@ -29,6 +36,9 @@ HERE = pathlib.Path(__file__).resolve().parent
 DATA = HERE.parent
 STATUS = DATA / "round3_auto_c.json"
 GATE = DATA / "round3_gate.json"
+C_DIR = HERE / "r3_c_ep128"
+C_STATUS = C_DIR / "status.json"
+C_LOG = "/tmp/r3_c_ep128.log"
 HOSTS = ["30.104.128.%d" % i for i in range(4, 12)]
 SSH = ["ssh", "-T", "-p", "56000", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10"]
 CONT = "deepep_ep128_full_matrix_20261128_073617"
@@ -39,12 +49,8 @@ def log(msg):
 
 
 def idle_count(host):
-    """返回该机空闲 NPU 数；不可达返回 -1（不误判为全空闲）。
-
-    注意 `grep -c` 无匹配时退出码是 1、但 stdout 仍是有效数字 `0`
-    （卡被占满）。所以只看 stdout 是否为数字，不能要求 returncode==0，
-    否则「占满」会被误写成「不可达」。
-    """
+    """返回该机空闲 NPU 数；不可达返回 -1。`grep -c` 无匹配时退出码 1 但
+    stdout 仍是有效数字 0（占满），只看 stdout 是否为数字。"""
     try:
         p = subprocess.run(
             SSH + ["root@" + host, "npu-smi info 2>/dev/null | grep -c 'No running processes found in NPU'"],
@@ -63,7 +69,7 @@ def all_idle():
 
 
 def controllers():
-    """本地正在跑的 run_round3 控制器命令行列表（排除本脚本自身）。"""
+    """本地正在跑的控制器命令行（排除本脚本自身）。"""
     out = []
     me = os.getpid()
     for p in pathlib.Path("/proc").glob("[0-9]*"):
@@ -72,7 +78,8 @@ def controllers():
             if pid == me:
                 continue
             s = b" ".join((p / "cmdline").read_bytes().split(bytes([0])))
-            if b"run_round3.py" in s and s.startswith((b"python3", b"python", b"/opt/conda")):
+            if (b"run_round3.py" in s or b"run_retry.py" in s) and s.startswith(
+                    (b"python3", b"python", b"/opt/conda")):
                 out.append(s.decode("utf-8", "replace"))
         except (OSError, ValueError, ProcessLookupError):
             pass
@@ -80,7 +87,7 @@ def controllers():
 
 
 def b_still_running():
-    return any(" run_round3.py " in c and " perf" in c for c in controllers())
+    return any("run_round3.py" in c and " perf" in c for c in controllers())
 
 
 def other_controllers():
@@ -93,7 +100,7 @@ def run_gate():
     p = subprocess.run([sys.executable, "-u", str(HERE / "run_round3.py"), "gate"],
                        cwd=str(HERE), capture_output=True, text=True, timeout=600)
     log("gate rc=%s" % p.returncode)
-    for ln in (p.stdout or "").splitlines()[-6:]:
+    for ln in (p.stdout or "").splitlines()[-5:]:
         log("  gate| " + ln)
     try:
         g = json.loads(GATE.read_text(encoding="utf-8"))
@@ -105,16 +112,63 @@ def run_gate():
     return bool(g.get("pass")) and p.returncode == 0
 
 
+def c_status():
+    try:
+        return json.loads(C_STATUS.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
 def launch_c():
-    """启动 C 阶段（后台），返回 PID。"""
-    log_path = "/tmp/r3_c_ep128.log"
-    lf = open(log_path, "w")
-    cmd = [sys.executable, "-u", str(HERE / "run_round3.py"), "precision",
-           "--eps", "128", "--epr-tiers", "main", "--api", "v1,v2"]
-    p = subprocess.Popen(cmd, cwd=str(HERE), stdout=lf, stderr=subprocess.STDOUT,
+    """拉起 C 控制器（持久进程组 + Buffer 复用 + checkpoint 重试），返回 Popen。"""
+    lf = open(C_LOG, "a")
+    cmd = [sys.executable, "-u", str(C_DIR / "run_retry.py"), "--run"]
+    p = subprocess.Popen(cmd, cwd=str(C_DIR), stdout=lf, stderr=subprocess.STDOUT,
                          start_new_session=True)
-    log("C 已启动: pid=%s  log=%s  cmd=%s" % (p.pid, log_path, " ".join(cmd)))
-    return p.pid
+    log("C 控制器已启动 pid=%s log=%s cmd=%s" % (p.pid, C_LOG, " ".join(cmd)))
+    return p
+
+
+def write_status(state, **kw):
+    d = {"state": state, "ts": time.strftime("%F %T")}
+    d.update(kw)
+    STATUS.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def supervise_c(proc, interval, deadline):
+    """外层监控：控制器进程被 kill / 异常退出 → 重启，直到 completed。"""
+    relaunches = 0
+    while time.time() < deadline:
+        time.sleep(interval)
+        st = c_status()
+        completed = len(st.get("completed", {}))
+        total = st.get("total_cases", 200)
+        state = st.get("state", "unknown")
+        rc = proc.poll()
+        if state == "completed":
+            write_status("c_completed", c_state=state, completed=completed,
+                         total=total, relaunches=relaunches,
+                         note="C(EP128) 全量完成；Buffer 分组复用 + checkpoint 重试")
+            log("DONE: C completed %d/%d（外层重启 %d 次）" %
+                (completed, total, relaunches))
+            return 0
+        if rc is not None:
+            relaunches += 1
+            log("C 控制器退出 rc=%s state=%s completed=%d/%d → 外层重启第 %d 次"
+                "（run_retry 启动会 recover_completed 恢复）" %
+                (rc, state, completed, total, relaunches))
+            proc = launch_c()
+            write_status("c_running", c_state="relaunched", completed=completed,
+                         total=total, relaunches=relaunches, c_pid=proc.pid)
+        else:
+            write_status("c_running", c_state=state, completed=completed,
+                         total=total, relaunches=relaunches, c_pid=proc.pid)
+            log("C 运行中 state=%s completed=%d/%d relaunches=%d" %
+                (state, completed, total, relaunches))
+    write_status("timeout", c_state=c_status().get("state"),
+                 relaunches=relaunches, note="超过 max_wait，C 未完成")
+    log("TIMEOUT: C 未完成")
+    return 1
 
 
 def main():
@@ -123,14 +177,15 @@ def main():
     ap.add_argument("--max-wait", type=int, default=7200, help="最长等待秒")
     o = ap.parse_args()
     t0 = time.time()
-    log("自动接续 C 启动：等待 .4/.5 释放 + B 阶段结束 + 8 台全空闲")
-    STATUS.write_text(json.dumps({
-        "state": "waiting", "started": time.strftime("%F %T"),
-        "hosts": HOSTS, "interval": o.interval, "max_wait": o.max_wait,
-        "condition": "B控制器退出 + 8台16/16空闲 + 无其它控制器",
-    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    deadline = t0 + o.max_wait
+    log("自动接续 C 启动：等 .4/.5 释放 + B 结束 + 8 台全空闲；之后监控重启直到完成")
+    write_status("waiting", started=time.strftime("%F %T"), hosts=HOSTS,
+                 interval=o.interval, max_wait=o.max_wait,
+                 c_controller=str(C_DIR / "run_retry.py"),
+                 retry_layers="inner: 40 attempts+checkpoint; outer: process relaunch",
+                 buffer_reuse="one process group, compatibility_key grouped Buffer")
 
-    while time.time() - t0 < o.max_wait:
+    while time.time() < deadline:
         try:
             idle = all_idle()
             b = b_still_running()
@@ -143,29 +198,20 @@ def main():
             if ready:
                 log("8 台全空闲、B 已结束、无其它控制器 → 准备触发 C")
                 if run_gate():
-                    pid = launch_c()
-                    STATUS.write_text(json.dumps({
-                        "state": "triggered", "triggered_at": time.strftime("%F %T"),
-                        "gate_full_pass": True, "c_pid": pid,
-                        "c_log": "/tmp/r3_c_ep128.log",
-                        "note": "C(EP128 precision --eps 128 --epr-tiers main --api v1,v2)",
-                    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-                    log("DONE: C 已自动接续")
-                    return 0
+                    proc = launch_c()
+                    write_status("c_running", triggered_at=time.strftime("%F %T"),
+                                 gate_full_pass=True, c_pid=proc.pid,
+                                 c_log=C_LOG, relaunches=0,
+                                 note="C = r3_c_ep128/run_retry.py --run")
+                    return supervise_c(proc, o.interval, deadline)
                 log("gate 未达 full_pass（可能又有任务占卡），继续等待")
-            STATUS.write_text(json.dumps({
-                "state": "waiting", "ts": time.strftime("%F %T"),
-                "idle_npus": idle, "b_running": b, "other_controllers": others,
-                "ready": ready,
-            }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            write_status("waiting", idle_npus=idle, b_running=b,
+                         other_controllers=others, ready=ready)
         except Exception as exc:
             log("轮询异常（继续等）: %s" % str(exc)[:200])
         time.sleep(o.interval)
 
-    STATUS.write_text(json.dumps({
-        "state": "timeout", "ended": time.strftime("%F %T"),
-        "note": "超过 max_wait 仍未满足条件，C 未触发",
-    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    write_status("timeout", note="超过 max_wait 仍未满足条件，C 未触发")
     log("TIMEOUT: C 未触发")
     return 1
 
