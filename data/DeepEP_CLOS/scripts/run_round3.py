@@ -118,10 +118,16 @@ PRECISION_DEPS_FILES = ("stage_metrics.py", "route_workloads.py",
 #   含被别人占的 .4/.5，改为 [2,4,5,6]=.6/.8/.9/.10；EP4 用 [7]=.11 单机 4 卡。
 #   两组节点不重叠，可一波并行；均不含 .7 与 .4/.5。
 # 精度阶段另用 PREC_EP_NODES（§六：EP8 放 node3/.7，一波打满 8 台）。
-EP_NODES = {4: [7], 8: [7], 16: [7], 32: [5, 6], 64: [2, 4, 5, 6], 128: list(range(8))}
+# 主 B 的 EP64 必须与 EP32/EP16 不重叠（第 1 波三组并行）⇒ 保持原 [0,1,2,4]；
+# 「.4/.5 被占」时的替代映射放在 SUPP_EP_NODES / RETEST_EP_NODES，不要改这张表。
+EP_NODES = {4: [7], 8: [7], 16: [7], 32: [5, 6], 64: [0, 1, 2, 4], 128: list(range(8))}
 PREC_EP_NODES = {8: [3], 16: [7], 32: [5, 6], 64: [0, 1, 2, 4], 128: list(range(8))}
 # 补测专用节点（覆盖 EP_NODES 的 4/64）：避开 .4/.5 被占、避开 .7 性能禁区
 SUPP_EP_NODES = {4: [7], 64: [2, 4, 5, 6]}
+# 重测批（--cases-file，2026-11-29）：EP64 原始 12 例 + EP32/EP8 的 weighted 6 格。
+# 三组节点互不重叠，合计正好 7 台（0,1,2,4,5,6,7），可单波并行；
+# 若 .4/.5 被别人占，只需改这里（如 EP32=[5,6] + EP64=[0,1,2,4]）。
+RETEST_EP_NODES = {8: [7], 16: [7], 32: [0, 1], 64: [2, 4, 5, 6]}
 PORTS = {"perf": 29860, "precision": 29880, "abnormal": 29900}
 
 # 当前阶段生效的节点映射：性能用 EP_NODES（7 台、去 .7），精度用 PREC_EP_NODES
@@ -133,6 +139,8 @@ def set_phase(phase):
     global EP_NODES_ACTIVE
     if phase == "supp":
         EP_NODES_ACTIVE = dict(SUPP_EP_NODES)
+    elif phase == "retest":
+        EP_NODES_ACTIVE = dict(RETEST_EP_NODES)
     else:
         EP_NODES_ACTIVE = dict(EP_NODES if phase == "perf" else PREC_EP_NODES)
     STATE["phase"] = phase
@@ -756,11 +764,13 @@ def load_cases_file(path, supp, eps):
 
 def stage_perf(args):
     supp = getattr(args, "supp", False)
-    set_phase("supp" if supp else "perf")   # 补测用空闲节点集；主 B 用 7 台集合
+    cases_file = getattr(args, "cases_file", "") or ""
+    # 重测批（--cases-file 且非 --supp）用专门的节点表：三组 EP 互不重叠，单波并行
+    phase = "supp" if supp else ("retest" if cases_file else "perf")
+    set_phase(phase)
     gate = require_gate()
     commit = gate["checks"].get("commit")
     tag = getattr(args, "csv_tag", "") or ""
-    cases_file = getattr(args, "cases_file", "") or ""
     reps = max(1, int(getattr(args, "reps", 1) or 1))
     if cases_file:
         cases = load_cases_file(cases_file, supp, [e for e in args.eps if e != 128])
@@ -780,10 +790,15 @@ def stage_perf(args):
     else:
         csv_path = DATA / ("round3_perf_supp.csv" if supp else "round3_perf.csv")
         out_root = STAGE + ("/out/perf_supp" if supp else "/out/perf")
+    # 节点组必须互不重叠，否则同波并行的两个 EP 会抢同一台机器
+    used = {ep: EP_NODES_ACTIVE[ep] for ep in sorted({c["ep"] for c in cases})}
+    flat = [i for v in used.values() for i in v]
+    dup = sorted({i for i in flat if flat.count(i) > 1})
+    if dup:
+        sys.exit("节点冲突：EP 组之间共用 node%s；本次映射 %s，请改 RETEST_EP_NODES" % (dup, used))
     print("perf%s: %d 例 × %d reps，commit=%s，huge_pages=no，节点=%s%s" %
-          ("(补测)" if supp else "", len(cases), reps, commit,
-           {ep: EP_NODES_ACTIVE[ep] for ep in sorted({c["ep"] for c in cases})},
-           ("，tag=%s" % tag) if tag else ""))
+          ("(%s)" % phase if phase != "perf" else "", len(cases), reps, commit,
+           used, ("，tag=%s" % tag) if tag else ""))
 
     for wave in perf_waves({c["ep"] for c in cases}):
         jobs = [(ep, [c for c in cases if c["ep"] == ep]) for ep in wave]
@@ -1168,6 +1183,11 @@ def perf_waves(eps):
     if phase == "supp":
         # 补测 EP4/EP64：节点不重叠（EP64=.6/.8/.9/.10, EP4=.11），一波并行。
         one = [e for e in (64, 4) if e in rest]
+        if one:
+            waves.append(one)
+    elif phase == "retest":
+        # 重测批：三组节点互不重叠（见 RETEST_EP_NODES），一波打完
+        one = [e for e in (64, 32, 16, 8) if e in rest]
         if one:
             waves.append(one)
     elif phase == "perf":

@@ -1,5 +1,17 @@
 {
  "_comment": "R3 性能不达标重测清单，由 scripts/gen_retest_list.py 生成，勿手改",
+ "_scope": {
+  "eps": [
+   8,
+   16,
+   32,
+   64
+  ],
+  "excluded_eps": {
+   "4": "EP4 全 18 格（AIV8 9 + AIV32 9）：用户 2026-11-29 指示本轮不看 EP4"
+  },
+  "ep64_full_grid": true
+ },
  "_generated_from": [
   "round3_perf.csv",
   "round3_perf_supp.csv",
@@ -13,219 +25,153 @@
   "R3 测量不稳": "格内分散度 > 5%"
  },
  "_count": {
-  "cases": 30,
-  "runs": 90
+  "cases": 18,
+  "runs": 54
  },
  "cases": [
   {
-   "ep": 4,
-   "num_tokens": 4096,
-   "hidden": 2816,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 4096,
-   "hidden": 2816,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 4096,
-   "hidden": 6144,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 4096,
-   "hidden": 6144,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 4096,
-   "hidden": 7168,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 4096,
-   "hidden": 7168,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 8192,
-   "hidden": 2816,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
+   "ep": 64,
    "num_tokens": 8192,
    "hidden": 2816,
    "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 8192,
-   "hidden": 6144,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 8192,
-   "hidden": 6144,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 8192,
-   "hidden": 7168,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 8192,
-   "hidden": 7168,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 16384,
-   "hidden": 2816,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 16384,
-   "hidden": 2816,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 16384,
-   "hidden": 6144,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 16384,
-   "hidden": 6144,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 16384,
-   "hidden": 7168,
-   "aiv": 8,
-   "group": "P0-EP4AIV8"
-  },
-  {
-   "ep": 4,
-   "num_tokens": 16384,
-   "hidden": 7168,
-   "aiv": 32,
-   "group": "P0-EP4AIV8"
+   "group": "P1-EP64GRID",
+   "role": "nonconform"
   },
   {
    "ep": 64,
    "num_tokens": 8192,
    "hidden": 2816,
-   "aiv": 32,
-   "group": "P1-EP64COMB"
+   "aiv": 64,
+   "group": "P1-EP64GRID",
+   "role": "first"
   },
   {
    "ep": 64,
    "num_tokens": 8192,
    "hidden": 6144,
    "aiv": 32,
-   "group": "P1-EP64COMB"
+   "group": "P1-EP64GRID",
+   "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
+   "hidden": 6144,
+   "aiv": 64,
+   "group": "P1-EP64GRID",
+   "role": "first"
   },
   {
    "ep": 64,
    "num_tokens": 8192,
    "hidden": 7168,
    "aiv": 32,
-   "group": "P1-EP64COMB"
+   "group": "P1-EP64GRID",
+   "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
+   "hidden": 7168,
+   "aiv": 64,
+   "group": "P1-EP64GRID",
+   "role": "first"
   },
   {
    "ep": 64,
    "num_tokens": 16384,
    "hidden": 2816,
    "aiv": 32,
-   "group": "P1-EP64COMB"
+   "group": "P1-EP64GRID",
+   "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 64,
+   "group": "P1-EP64GRID",
+   "role": "first"
   },
   {
    "ep": 64,
    "num_tokens": 16384,
    "hidden": 6144,
    "aiv": 32,
-   "group": "P1-EP64COMB"
+   "group": "P1-EP64GRID",
+   "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 6144,
+   "aiv": 64,
+   "group": "P1-EP64GRID",
+   "role": "first"
   },
   {
    "ep": 64,
    "num_tokens": 16384,
    "hidden": 7168,
    "aiv": 32,
-   "group": "P1-EP64COMB"
+   "group": "P1-EP64GRID",
+   "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 7168,
+   "aiv": 64,
+   "group": "P1-EP64GRID",
+   "role": "first"
   },
   {
    "ep": 8,
    "num_tokens": 8192,
    "hidden": 2816,
    "aiv": 32,
-   "group": "P2-WEIGHTED"
+   "group": "P2-WEIGHTED",
+   "role": "nonconform"
   },
   {
    "ep": 8,
    "num_tokens": 8192,
    "hidden": 2816,
    "aiv": 64,
-   "group": "P2-WEIGHTED"
+   "group": "P2-WEIGHTED",
+   "role": "nonconform"
   },
   {
    "ep": 8,
    "num_tokens": 16384,
    "hidden": 2816,
    "aiv": 32,
-   "group": "P2-WEIGHTED"
+   "group": "P2-WEIGHTED",
+   "role": "nonconform"
   },
   {
    "ep": 32,
    "num_tokens": 8192,
    "hidden": 2816,
    "aiv": 32,
-   "group": "P2-WEIGHTED"
+   "group": "P2-WEIGHTED",
+   "role": "nonconform"
   },
   {
    "ep": 32,
    "num_tokens": 16384,
    "hidden": 2816,
    "aiv": 32,
-   "group": "P2-WEIGHTED"
+   "group": "P2-WEIGHTED",
+   "role": "nonconform"
   },
   {
    "ep": 32,
    "num_tokens": 16384,
    "hidden": 7168,
    "aiv": 64,
-   "group": "P2-WEIGHTED"
+   "group": "P2-WEIGHTED",
+   "role": "nonconform"
   }
  ]
 }
