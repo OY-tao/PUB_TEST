@@ -82,12 +82,14 @@ python run_round3.py abnormal --eps 8,16 --api v1,v2       # E: E4/E5
 
 ```bash
 # 清单 JSON 由 gen_retest_list.py 生成；--reps 3 = 每格 3 次，判据取中位
-python run_round3.py perf --eps 4,64 --supp \
-    --cases-file retest_cases_20261128.json --reps 3 --csv-tag retest
-python run_round3.py perf --eps 8,32 \
+# 18 格单波并行（EP64=node2,4,5,6 / EP32=node0,1 / EP8=node7，自动切 RETEST_EP_NODES）
+python run_round3.py perf --eps 8,32,64 \
     --cases-file retest_cases_20261128.json --reps 3 --csv-tag retest
 python gen_retest_result.py --date 20261129     # 出判定表，不手算
 ```
+
+- 清单**不含 EP4**（11-29 定：EP4 整档本轮不看）。若以后要跑 EP4 的格，需要加 `--supp`
+  （AIV 8/32 的 1128 网格），否则 `load_cases_file` 会因网格不匹配 assert 报错。
 
 - `--cases-file`：按 `(ep,num_tokens,hidden,aiv)` 四元组过滤，只跑清单内的格子；
   清单可含多 EP，实际只取 `--eps` 范围内的那些（跨网格缺项不会误报）。
