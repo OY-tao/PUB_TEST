@@ -385,13 +385,32 @@ def main():
     remaining = [c for c in all_cases if c['variant'] not in completed]
     base_attempt = next_attempt_no()
     attempt_no = 0
+    # 外部任务占用某台 NPU 时，preflight() 会抛 busy/unhealthy。这类失败不是
+    # 本批用例的问题，不该消耗 40 次 attempt 预算（否则 5 分钟就空转耗尽）；
+    # 改为等待直到 8 机全空闲再继续，attempt 不计数。等待受 run_timeout 约束。
+    wait_deadline = time.time() + RUN_TIMEOUT
     while remaining and attempt_no < MAX_ATTEMPTS:
         attempt_no += 1
         attempt = base_attempt + attempt_no - 1
         try:
             cleanup_all()
-            preflight()
+            try:
+                preflight()
+            except Exception as busy_exc:
+                msg = str(busy_exc)
+                if 'NPUs busy/unhealthy' in msg or 'driver mismatch' in msg:
+                    # 不消耗 attempt，等外部任务释放
+                    attempt_no -= 1
+                    STATE['preflight_wait'] = msg[:200]
+                    save()
+                    print('PREFLIGHT_WAIT (attempt 不计数, 等 60s): %s' % msg[:160], flush=True)
+                    if time.time() > wait_deadline:
+                        raise RuntimeError('preflight 等待 8 机空闲超过 run_timeout') from busy_exc
+                    time.sleep(60)
+                    continue
+                raise
             res = run_attempt(attempt, remaining, plan_all, smoke=o.smoke)
+            STATE.pop('preflight_wait', None)
             for v in res['passed']:
                 completed[v] = res['out_root']
             remaining = [c for c in remaining if c['variant'] not in res['passed']]
