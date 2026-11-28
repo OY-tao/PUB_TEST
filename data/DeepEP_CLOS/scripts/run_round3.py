@@ -701,8 +701,8 @@ def require_gate():
     if blocked:
         # 不整轮否决：各阶段 run_perf_ep / run_prec_ep / stage_abnormal 开头都有
         # check_idle(参与节点)，会在被占机器上硬挡，绝不与别人的任务抢卡。
-        print("GATE NOTE: %d 台被占 %s；仅跑不涉及这些节点的 EP，"
-              "其余（含 EP128/EP64）由 check_idle 挡住" % (len(blocked), blocked), flush=True)
+        print("GATE NOTE: %d 台被占 %s；各阶段只对参与节点 check_idle 硬挡，"
+              "被占机器不会被本任务触碰" % (len(blocked), blocked), flush=True)
     return g
 
 
