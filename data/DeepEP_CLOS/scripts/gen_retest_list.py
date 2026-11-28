@@ -302,7 +302,7 @@ def build_md(M, SNAP, rec, rows, control, by_group, retest_keys, order, role_of)
     A("")
     A("## 一句话")
     A("")
-    A("**%d 格纳入重测**，每格重复 **%d 次**，共 **%d 次运行**（首测 %d 格，范围外 %d 格）。"
+    A("**%d 格纳入重测**，每格重复 **%d 次**，共 **%d 次运行**（首测共 %d 格，其中 EP4 的 %d 格整档不计）。"
       % (n_rt, RETEST_REPS, n_runs, n_case, len([k for k in M if k[0] not in SCOPE_EPS])))
     A("")
     A("| 组 | 格数 | 不达标 | 现象 | 重测要回答什么 |")
