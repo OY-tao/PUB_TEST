@@ -182,6 +182,7 @@ def main():
     A("")
     drift = [r for r in rows if r["d_first"] is not None and r["d_med"] is not None
              and abs(r["d_med"] - r["d_first"]) > 3.0]
+    n_first = len({r["k"] for r in rows if r["d_first"] is None})
     if drift:
         A("| EP | Tokens | Hidden | AIV | 指标 | 首测 Δ | 重测 Δ | 差 |")
         A("|---|---|---|---|---|---|---|---|")
@@ -190,8 +191,15 @@ def main():
             A("| %d | %d | %d | %d | %s | %+.1f%% | %+.1f%% | %+.1f pp |" % (
                 k[0], k[1], k[2], k[3], OP_CN.get(r["op"], r["op"]),
                 r["d_first"], r["d_med"], r["d_med"] - r["d_first"]))
+    elif n_first:
+        A("无可比项：本批只有 **%d 格是首测**（R3 从未测过，无首测值可比），" % n_first)
+        A("其余格子的首测/重测偏差都在 3 个百分点以内 ⇒ 首测数据可信。")
     else:
         A("无：重测与首测的偏差都在 3 个百分点以内 ⇒ 首测数据可信。")
+    if n_first:
+        A("")
+        A("> **%d 格首测格**（R3 从未测过，无首测值）只与基线比；判定等同「首次测量」，" % n_first)
+        A("> 不存在「首测异常」这一类，重测值即为结论。")
     A("")
 
     out = args.out or os.path.join(BASE, "R3重测结果_%s.md" % date)

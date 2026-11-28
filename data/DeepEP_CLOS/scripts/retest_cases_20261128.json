@@ -10,7 +10,7 @@
   "excluded_eps": {
    "4": "EP4 全 18 格（AIV8 9 + AIV32 9）：用户 2026-11-29 指示本轮不看 EP4"
   },
-  "ep64_full_grid": false
+  "ep64_full_grid": true
  },
  "_generated_from": [
   "round3_perf.csv",
@@ -25,8 +25,8 @@
   "R3 测量不稳": "格内分散度 > 5%"
  },
  "_count": {
-  "cases": 12,
-  "runs": 36
+  "cases": 18,
+  "runs": 54
  },
  "cases": [
   {
@@ -40,6 +40,14 @@
   {
    "ep": 64,
    "num_tokens": 8192,
+   "hidden": 2816,
+   "aiv": 64,
+   "group": "P1-EP64COMB",
+   "role": "first"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
    "hidden": 6144,
    "aiv": 32,
    "group": "P1-EP64COMB",
@@ -48,10 +56,26 @@
   {
    "ep": 64,
    "num_tokens": 8192,
+   "hidden": 6144,
+   "aiv": 64,
+   "group": "P1-EP64COMB",
+   "role": "first"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
    "hidden": 7168,
    "aiv": 32,
    "group": "P1-EP64COMB",
    "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 8192,
+   "hidden": 7168,
+   "aiv": 64,
+   "group": "P1-EP64COMB",
+   "role": "first"
   },
   {
    "ep": 64,
@@ -64,6 +88,14 @@
   {
    "ep": 64,
    "num_tokens": 16384,
+   "hidden": 2816,
+   "aiv": 64,
+   "group": "P1-EP64COMB",
+   "role": "first"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
    "hidden": 6144,
    "aiv": 32,
    "group": "P1-EP64COMB",
@@ -72,10 +104,26 @@
   {
    "ep": 64,
    "num_tokens": 16384,
+   "hidden": 6144,
+   "aiv": 64,
+   "group": "P1-EP64COMB",
+   "role": "first"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
    "hidden": 7168,
    "aiv": 32,
    "group": "P1-EP64COMB",
    "role": "nonconform"
+  },
+  {
+   "ep": 64,
+   "num_tokens": 16384,
+   "hidden": 7168,
+   "aiv": 64,
+   "group": "P1-EP64COMB",
+   "role": "first"
   },
   {
    "ep": 8,

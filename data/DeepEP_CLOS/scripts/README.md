@@ -82,7 +82,7 @@ python run_round3.py abnormal --eps 8,16 --api v1,v2       # E: E4/E5
 
 ```bash
 # 清单 JSON 由 gen_retest_list.py 生成；--reps 3 = 每格 3 次，判据取中位
-# 12 格单波并行（EP64=node2,4,5,6 / EP32=node0,1 / EP8=node7，自动切 RETEST_EP_NODES）
+# 18 格单波并行（EP64=node2,4,5,6 / EP32=node0,1 / EP8=node7，自动切 RETEST_EP_NODES）
 python run_round3.py perf --eps 8,32,64 \
     --cases-file retest_cases_20261128.json --reps 3 --csv-tag retest
 python gen_retest_result.py --date 20261129     # 出判定表，不手算
