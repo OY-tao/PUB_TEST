@@ -1,8 +1,9 @@
 """R3 阶段 C: EP128 persistent precision batch, buffer reuse + auto retry.
 
-One persistent 8-node/128-rank process group runs the 200-case R3 C plan with
-17 Buffer groups (50 cases x 2 epr tiers x 2 API). Same group reuses the
-initialized Buffer. If a group is
+One persistent 8-node/128-rank process group runs the R3 C plan
+(currently 400 cases = 100 spec x 2 epr tiers x 2 API, 19 Buffer groups;
+ the exact count is read from plan.json `case_count_total`, not hardcoded).
+Same group reuses the initialized Buffer. If a group is
 killed, times out, errors, or fails validation, the controller collects whatever
 artifacts were written, marks the fully passed variants as completed, and
 resumes ONLY the remaining variants in a fresh attempt (new output root +
@@ -345,7 +346,8 @@ def main():
     plan_all = json.loads((BASE / plan_name).read_text())
     all_cases = plan_all['remaining']
     total = len(all_cases)
-    assert total == (8 if o.smoke else 200)
+    expected = 8 if o.smoke else int(plan_all.get('case_count_total', total))
+    assert total == expected, "plan cases %d != expected %d" % (total, expected)
     if not o.run:
         smoke = json.loads((BASE / 'plan_smoke.json').read_text())
         print(json.dumps({

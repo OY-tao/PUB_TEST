@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """R3 阶段 C：EP128 泛化精度 plan 生成（CPU only，不碰 NPU / 不 ssh）。
 
-用例来源：`gen_precision_cases.py --eps 128` 的 50 条规格（指南 §五·C3），
+用例来源（用户 2026-11-28 指示「EP128 精度 400 例」）：
+  - 基础 50 条：`gen_precision_cases.py --eps 128` / `precision_cases_2to16p.json`
+    （指南 §五·C3 规格，原样保留，便于与既有 200 例口径对比）
+  - 扩展 50 条：同 spec 的 A 形状 / B 专家轴上的**真实不同组合**（见
+    `extra_spec_cases()`），不引入新 hidden/topk/dtype 轴值，不改公共生成器
+  ⇒ 100 spec × 2 epr 档 × 2 API = **400 例**。
 按 §五·C2 的 epr 双档投影：
   - 主档 main  : epr=4  (E=512，与性能/基线同口径)
   - 探针 probe : epr=32 (E=4096，大 E 泛化，沿用 R2 spec)
@@ -84,13 +89,59 @@ def load_spec():
     return gpc, json.loads(SPEC.read_text(encoding="utf-8"))
 
 
+def extra_spec_cases(gpc, spec):
+    """在公共 50 条规格之外，补 50 条真实不同的泛化形状（仅复用已有轴值）。
+
+    不修改 gen_precision_cases.py / precision_cases_2to16p.json，避免污染
+    R2 / D 阶段口径。返回 [(group, params_dict, tag), ...]，共 50 条：
+      * A 形状 38 条：A 轴 4(tokens)×4(hidden)×2(dtype)×2(expand)=64 组合中
+        去掉基础已选的 20 条，取剩余组合（按 axis 顺序）。
+      * B 专家 12 条：B 轴 pairs 固定，expand 翻转（0↔1）得到 12 条不同组合。
+    """
+    base = list(gpc.build(spec, EP))
+    A = spec["groups"]["A"]
+    toks, hids = A["axes"]["num_tokens"], A["axes"]["hidden"]
+    dtypes, expands = A["axes"]["dtypes"], A["axes"]["expand"]
+
+    used = set()
+    for c in base:
+        if c.group == "A":
+            p = c.params
+            used.add((p["num-tokens"], p["hidden"], p["dtypes"], p["expand"]))
+    all_a = [(t, h, dt, ex) for t in toks for h in hids for dt in dtypes for ex in expands]
+    free_a = [x for x in all_a if x not in used]
+    assert len(free_a) >= 38, "A 轴剩余组合不足 38: %d" % len(free_a)
+
+    out = []
+    for t, h, dt, ex in free_a[:38]:
+        out.append(("A", {
+            "num-tokens": t, "hidden": h,
+            "num-topk": A["fixed"]["num_topk"],
+            "experts-per-rank": A["fixed"]["experts_per_rank"],
+            "dtypes": dt, "expand": ex,
+            "route-mode": "uniform",
+        }, "AX_t%d_h%d_%s_e%d" % (t, h, dt, ex)))
+    # B：复用基础 B 的参数，仅翻转 expand
+    b_base = [c for c in base if c.group == "B"]
+    assert len(b_base) == 12, "基础 B 组不是 12 条: %d" % len(b_base)
+    for c in b_base:
+        p = dict(c.params)
+        p["expand"] = 1 - int(p.get("expand", 0))
+        out.append(("B", p, c.tag + "_bx"))
+    assert len(out) == 50, len(out)
+    return out
+
+
 def build_cases(epr_tiers=("main",)):
     gpc, spec = load_spec()
+    specs = [(c.group, dict(c.params), c.tag) for c in gpc.build(spec, EP)]
+    specs += extra_spec_cases(gpc, spec)
+    assert len(specs) == 100, "spec 数应为 100，实际 %d" % len(specs)
     out = []
     for tier in epr_tiers:
         cap = {"main": 4, "probe": 32}[tier]
-        for c in gpc.build(spec, EP):
-            p = dict(c.params)                       # kebab-case keys
+        for group, raw, tag in specs:
+            p = dict(raw)                            # kebab-case keys
             epr = min(int(p.get("experts-per-rank", 32)), cap)
             k = min(int(p.get("num-topk", 8)), gpc.topk_cap(EP, epr))
             params = {
@@ -113,23 +164,29 @@ def build_cases(epr_tiers=("main",)):
                     "api": api,
                     "dtype": str(p.get("dtypes", "bf16")),
                     "expand": int(p.get("expand", 0)),
-                    "variant": "%s_ep%d_%s_%s" % (tier, EP, api, c.tag),
-                    "source_id": c.tag,
-                    "group": c.group,
+                    "variant": "%s_ep%d_%s_%s" % (tier, EP, api, tag),
+                    "source_id": tag,
+                    "group": group,
                     "epr_tier": tier,
                     "parameters": params,
                 })
     return out
 
 
-def allocate(cases):
-    capacity = official_capacity()
+def group_cases(cases):
+    """按 buffer 组 key 分桶（纯 CPU，不读容量表）——两种模式共用。"""
     buckets = {}
     for c in cases:
         p = c["parameters"]
         key = (("v1", p["huge_pages"]) if c["api"] == "v1"
                else ("v2", p["hidden"], p["num_topk"], c["dtype"], p["huge_pages"]))
         buckets.setdefault(key, []).append(c)
+    return buckets
+
+
+def allocate(cases):
+    capacity = official_capacity()
+    buckets = group_cases(cases)
     groups = []
     for key, members in sorted(buckets.items(), key=lambda kv: repr(kv[0])):
         max_tokens = max(m["parameters"]["num_tokens"] for m in members)
@@ -144,13 +201,50 @@ def allocate(cases):
     return cases, groups
 
 
+def emit_groups(path):
+    """输出分组清单（不读容量表），供容器内 wheel 官方 size-hint API 实算容量表。
+
+    解决循环依赖：容量表按 400 例规格算 → 但 plan 生成又依赖容量表。
+    本模式只跑 build_cases + group_cases，把每组的 key / max_tokens / case_count /
+    成员形状写到 JSON；容器脚本读它算容量，写回 capacity_official.json。
+    """
+    import argparse
+    cases = build_cases(("main", "probe"))
+    buckets = group_cases(cases)
+    out = {}
+    for key, members in sorted(buckets.items(), key=lambda kv: repr(kv[0])):
+        max_tokens = max(m["parameters"]["num_tokens"] for m in members)
+        out[json.dumps(list(key))] = {
+            "key": list(key),
+            "max_tokens": max_tokens,
+            "case_count": len(members),
+            "members": [{"hidden": m["parameters"]["hidden"],
+                         "num_tokens": m["parameters"]["num_tokens"],
+                         "num_topk": m["parameters"]["num_topk"],
+                         "dtype": m["dtype"]} for m in members],
+        }
+    p = pathlib.Path(path)
+    p.write_text(json.dumps({"num_ranks": EP, "groups": out}, indent=2) + "\n")
+    print("emit-groups: %d cases, %d buffer groups -> %s" % (len(cases), len(out), p))
+
+
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--emit-groups", metavar="PATH",
+                    help="只输出分组清单（不读容量表），供容器官方 API 算容量")
+    o = ap.parse_args()
+    if o.emit_groups:
+        emit_groups(o.emit_groups)
+        return
     cases = build_cases(("main", "probe"))
     cases, groups = allocate(cases)
     plan = {
         "ep_size": EP, "nnodes": NNODES, "local_ranks_per_node": LOCAL,
         "hosts": ["30.104.128.%d" % i for i in range(4, 12)],
         "case_count_total": len(cases),
+        "spec_count": 100,
+        "case_formula": "100 spec (50 base + 50 generalization) × 2 epr tiers × 2 API",
         "epr_tiers": ["main", "probe"],
         "precision_only": True,
         "buffer_reuse": ("one persistent 8-node/128-rank process group; V1 one Buffer; "

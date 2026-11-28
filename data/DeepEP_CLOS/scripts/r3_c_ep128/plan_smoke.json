@@ -13,6 +13,8 @@
     "30.104.128.11"
   ],
   "case_count_total": 8,
+  "spec_count": 100,
+  "case_formula": "100 spec (50 base + 50 generalization) × 2 epr tiers × 2 API",
   "epr_tiers": [
     "main",
     "probe"
@@ -293,7 +295,7 @@
       ],
       "max_tokens": 16384,
       "workspace_bytes": 34378612736,
-      "case_count": 100
+      "case_count": 200
     },
     {
       "key": [
@@ -305,7 +307,7 @@
       ],
       "max_tokens": 16384,
       "workspace_bytes": 8659140608,
-      "case_count": 8
+      "case_count": 14
     },
     {
       "key": [
@@ -317,7 +319,7 @@
       ],
       "max_tokens": 16384,
       "workspace_bytes": 2359296000,
-      "case_count": 8
+      "case_count": 16
     }
   ],
   "expected_buffer_initializations_per_rank": 3,
