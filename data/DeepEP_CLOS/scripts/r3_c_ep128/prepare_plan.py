@@ -145,12 +145,16 @@ def build_cases(epr_tiers=("main",)):
             epr = min(int(p.get("experts-per-rank", 32)), cap)
             k = min(int(p.get("num-topk", 8)), gpc.topk_cap(EP, epr))
             aiv = int(p.get("aiv", 32))
-            # PR#37 wheel 的 Config.__post_init__ 要求 num_aiv 为 0(默认) 或
-            # 偶数且 >=8；spec 里 C 组的 aiv=2 会直接抛
-            # "communication num_aiv must be at least 8"。保留该用例（variant
-            # 集合不变，checkpoint 可对上），把非法值折成 0 走默认配置。
+            # 两个约束的交集：
+            #  * bench_v2_precision.arguments 的 --aiv choices=range(2,65,2)
+            #    （只接受 2..64 偶数，0 不接受）
+            #  * PR#37 wheel 的 Config.__post_init__ 要求 num_aiv 为 0(默认) 或
+            #    「偶数且 >=8」，aiv=2/4 会抛
+            #    "communication num_aiv must be at least 8"
+            # ⇒ spec C 组原有的 aiv=2 折成同时合法的最小值 8。保留用例
+            # （variant 集合不变，checkpoint 可对上），不引入新 Buffer 组。
             if 0 < aiv < 8:
-                aiv = 0
+                aiv = 8
             params = {
                 "num_tokens": int(p.get("num-tokens", 1)),
                 "hidden": int(p.get("hidden", 512)),
