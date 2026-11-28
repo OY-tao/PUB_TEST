@@ -6,9 +6,10 @@ C 由 auto_continue_c.py 守护 + r3_c_ep128/run_retry.py --run 执行；本脚�
 **独立**监控 status.json（不依赖守护的 8h max_wait），C 完成后按序执行：
 
   1.  C 结果汇总 -> round3_precision_ep128.csv（从 status.completed + 容器 digest）
-  1.5 R3 重测（用户指示插在 D 之前）：不达标 30 格 × 3 reps = 90 次运行，
-      两波 --cases-file retest_cases_20261128.json --csv-tag retest
-      -> round3_perf_retest.csv + gen_retest_result.py 判定 md
+  1.5 R3 重测（用户指示插在 D 之前）：清单 18 格 × 3 reps = 54 次运行，
+      按 EP 幂等、每 EP 单独 --cases-file ... --csv-tag retest（全走非 supp
+      网格，--supp 缺 EP64 aiv=64）-> round3_perf_retest.csv
+      + gen_retest_result.py 判定 md
   2.  D 精度 200 例（EP8/16/32/64 各 50 × v1/v2）-> round3_precision.csv
   3.  E 异常 E4/E5 严格重测 -> round3_abnormal.csv
   4.  复用版性能第 2 套按 checkpoint 续跑补齐 36 例 -> round3_perf_supp_reuse.csv
@@ -280,40 +281,69 @@ def main():
     write_state("summarize_c_done", c_rows=csv_variants(DATA / "round3_precision_ep128.csv"))
 
     # 1.5 R3 重测（用户指示：D 精度 200 之前插入）
-    #   清单 R3重测清单_20261128.md：30 格 × 3 reps = 90 次运行，
-    #   两波命令写同一个 round3_perf_retest.csv（append），再跑判定脚本。
-    #   全部命令 cwd=DATA，路径基于各脚本 __file__ 绝对定位，不依赖 cwd。
+    #   清单 retest_cases_20261128.json 实为 18 格（EP64 12 含 aiv 32/64、
+    #   EP8 3、EP32 3），每格 3 reps = 54 次运行。
+    #   这 18 格【全部】由「非 supp」perf_cases 网格覆盖；--supp 网格只有
+    #   EP4/64 的 aiv 8/32，缺 EP64 aiv=64，会触发 load_cases_file 的
+    #   AssertionError（波一曾因此 rc=1）。故每个 EP 单独用非 supp 补跑。
+    #   按 EP 幂等：CSV 里已跑满 3 reps 的 EP 跳过，只补缺失/不完整 EP。
     write_state("R3_retest")
     rt_csv = DATA / "round3_perf_retest.csv"
-    if rt_csv.exists() and csv_variants(rt_csv) >= 90:
-        log("R3 重测已达标（>=90 run_id），跳过两波")
-    else:
-        # 若上次跑到一半留了不完整的 CSV，清掉重跑（--reps 3 必须完整）
-        if rt_csv.exists():
-            rt_csv.unlink()
-            log("清理不完整的旧 round3_perf_retest.csv，重跑两波")
-        cases_file = "scripts/retest_cases_20261128.json"
-        waves = [
-            ("波一 EP4+EP64(supp)", ["perf", "--eps", "4,64", "--supp",
-                                     "--cases-file", cases_file,
-                                     "--reps", "3", "--csv-tag", "retest"]),
-            ("波二 EP8+EP32", ["perf", "--eps", "8,32",
-                               "--cases-file", cases_file,
-                               "--reps", "3", "--csv-tag", "retest"]),
-        ]
-        for label, tail in waves:
-            rc = run_cmd([PY, "-u", "scripts/run_round3.py"] + tail,
+    cases_file = "scripts/retest_cases_20261128.json"
+
+    def ep_of_run(rid):
+        p = (rid or "").split("_")
+        return int(p[1][2:]) if len(p) > 1 and p[1].startswith("ep") and p[1][2:].isdigit() else None
+
+    def retest_ep_runs(path):
+        """每个 EP 已有的唯一 run_id 数（run_id=perf_ep<N>_r3_..._cNN_rM）。"""
+        out = {}
+        if not path.exists():
+            return out
+        for r in csv.DictReader(open(path)):
+            e = ep_of_run(r.get("run_id"))
+            if e is not None:
+                out.setdefault(e, set()).add(r["run_id"])
+        return {e: len(s) for e, s in out.items()}
+
+    clist = json.loads((SCRIPTS / "retest_cases_20261128.json").read_text(
+        encoding="utf-8"))["cases"]
+    ep_expected = {}
+    for c in clist:
+        e = int(c["ep"])
+        ep_expected[e] = ep_expected.get(e, 0) + 3        # 每格 3 reps
+    existing = retest_ep_runs(rt_csv)
+    missing = [e for e, n in sorted(ep_expected.items()) if existing.get(e, 0) < n]
+    log("R3 重测清单 %d 格, 期望 %d run_id; 现有 %s; 待补 EP %s"
+        % (len(clist), sum(ep_expected.values()), existing, missing))
+    if missing:
+        # 不完整 EP 的旧行先剔除，避免同一格出现两套 run_id 污染 3 次中位判定
+        partial = [e for e in missing if existing.get(e, 0) > 0]
+        if partial:
+            rows = list(csv.DictReader(rt_csv.open())) if rt_csv.exists() else []
+            cols = list(rows[0].keys()) if rows else []
+            kept = [r for r in rows if ep_of_run(r.get("run_id")) not in partial]
+            with rt_csv.open("w", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=cols, lineterminator="\n")
+                w.writeheader()
+                w.writerows(kept)
+            log("剔除不完整 EP %s 的旧行，保留 %d 行" % (partial, len(kept)))
+        for ep in missing:
+            rc = run_cmd([PY, "-u", "scripts/run_round3.py", "perf", "--eps", str(ep),
+                          "--cases-file", cases_file, "--reps", "3", "--csv-tag", "retest"],
                          DATA, 4 * 3600, "/tmp/r3_retest.log")
-            log("R3 重测 %s rc=%s, 当前 CSV run_id 数=%d"
-                % (label, rc, csv_variants(rt_csv)))
-        # 判定脚本：3 次中位重判，生成 R3重测结果_<date>.md
-        rc = run_cmd([PY, "-u", "scripts/gen_retest_result.py", "--date", "20261129"],
-                     DATA, 600, "/tmp/r3_retest_result.log")
-        log("R3 重测判定 rc=%s" % rc)
+            log("R3 重测 EP%d rc=%s, 当前 CSV run_id 数=%d"
+                % (ep, rc, csv_variants(rt_csv)))
+    else:
+        log("R3 重测 18 格×3reps 已完整，跳过补跑")
+    # 判定脚本：3 次中位重判，生成 R3重测结果_<date>.md（每次都重跑，保证用完整数据）
+    rc = run_cmd([PY, "-u", "scripts/gen_retest_result.py", "--date", "20261129"],
+                 DATA, 600, "/tmp/r3_retest_result.log")
+    log("R3 重测判定 rc=%s" % rc)
     git_upload([
         "data/DeepEP_CLOS/round3_perf_retest.csv",
         "data/DeepEP_CLOS/R3重测结果_20261129.md",
-    ], "test(DeepEP_CLOS): R3重测30格×3reps结果(不达标case复测判定)")
+    ], "test(DeepEP_CLOS): R3重测18格×3reps结果(不达标case复测判定)")
     write_state("R3_retest_done", retest_runs=csv_variants(rt_csv))
 
     # 2. D 精度 200
