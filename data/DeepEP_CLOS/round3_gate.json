@@ -1,5 +1,5 @@
 {
-  "ts": "2026-11-28 15:35:47",
+  "ts": "2026-11-28 18:10:27",
   "nodes": {
     "30.104.128.4": {
       "container": "deepep_ep128_full_matrix_20261128_073617",
@@ -9,7 +9,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -39,7 +39,7 @@
       "hugepages": [
         "AnonHugePages:         0 kB",
         "ShmemHugePages:        0 kB",
-        "FileHugePages:  386052096 kB",
+        "FileHugePages:  19947520 kB",
         "HugePages_Total:       0",
         "HugePages_Free:        0",
         "HugePages_Rsvd:        0",
@@ -47,7 +47,7 @@
         "Hugepagesize:       2048 kB",
         "Hugetlb:               0 kB"
       ],
-      "idle_npus": 0,
+      "idle_npus": 16,
       "npu_head": [
         "+------------------------------------------------------------------------------------------------------------------+",
         "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
@@ -63,7 +63,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -93,7 +93,7 @@
       "hugepages": [
         "AnonHugePages:         0 kB",
         "ShmemHugePages:        0 kB",
-        "FileHugePages:  89757696 kB",
+        "FileHugePages:  87773184 kB",
         "HugePages_Total:       0",
         "HugePages_Free:        0",
         "HugePages_Rsvd:        0",
@@ -101,7 +101,7 @@
         "Hugepagesize:       2048 kB",
         "Hugetlb:               0 kB"
       ],
-      "idle_npus": 0,
+      "idle_npus": 16,
       "npu_head": [
         "+------------------------------------------------------------------------------------------------------------------+",
         "| npu-smi 25.8.rc10                                Version: 25.8.rc10                                              |",
@@ -117,7 +117,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -147,7 +147,7 @@
       "hugepages": [
         "AnonHugePages:         0 kB",
         "ShmemHugePages:        0 kB",
-        "FileHugePages:  214081536 kB",
+        "FileHugePages:  214083584 kB",
         "HugePages_Total:       0",
         "HugePages_Free:        0",
         "HugePages_Rsvd:        0",
@@ -171,7 +171,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -201,7 +201,7 @@
       "hugepages": [
         "AnonHugePages:         0 kB",
         "ShmemHugePages:        0 kB",
-        "FileHugePages:  67028992 kB",
+        "FileHugePages:  67031040 kB",
         "HugePages_Total:       0",
         "HugePages_Free:        0",
         "HugePages_Rsvd:        0",
@@ -225,7 +225,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -279,7 +279,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -333,7 +333,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -387,7 +387,7 @@
       "origin_main": "5eab714f8cfc5efb8b550a4e35de013776514179",
       "remote": "https://github.com/lueelu/DeepEP.git",
       "dirty": [],
-      "origin_main_fetched": "5eab714f8cfc5efb8b550a4e35de013776514179",
+      "origin_main_fetched": "19eadebe3529f7af1a04319b5bc20ee545afeaae",
       "interpreter": "/work/env/bin/python",
       "deep_ep": "/work/env/lib/python3.13/site-packages/deep_ep",
       "version": "0.1.0.dev5",
@@ -445,7 +445,7 @@
     "pr_head_expected": "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8",
     "not_origin_main": true,
     "origin_main": [
-      "5eab714f8cfc5efb8b550a4e35de013776514179"
+      "19eadebe3529f7af1a04319b5bc20ee545afeaae"
     ],
     "base_ancestor": true,
     "single_commit": true,
@@ -473,10 +473,10 @@
     ],
     "no_mesh_clos": true,
     "clean_worktree": true,
-    "cards_idle_all8": false,
+    "cards_idle_all8": true,
     "idle_npus": {
-      "30.104.128.4": 0,
-      "30.104.128.5": 0,
+      "30.104.128.4": 16,
+      "30.104.128.5": 16,
       "30.104.128.6": 16,
       "30.104.128.7": 16,
       "30.104.128.8": 16,
@@ -485,10 +485,7 @@
       "30.104.128.11": 16
     }
   },
-  "pass": false,
+  "pass": true,
   "code_pass": true,
-  "blocked_nodes": [
-    "30.104.128.4",
-    "30.104.128.5"
-  ]
+  "blocked_nodes": []
 }
