@@ -50,6 +50,9 @@ scripts/
 | 工具 | 何时用 | 输入 | 输出 | 覆盖 |
 |---|---|---|---|---|
 | `run_round3.py` | 换代码后整轮 | R3 需求原文 + 指南 | 4 个 CSV + gate/state JSON | R3：PR#37 门禁 + C(EP128) + B(48 性能) + D(200 精度) + E(E4/E5) |
+| `gen_case_compare.py` | 性能跑完后 | 两个 perf CSV + 基线快照 + 1125 | `../R3逐case对比_20261128.md` | 72 例逐格展开，机械生成不手抄 |
+| `gen_retest_list.py` | 首测出结果后 | 两个 perf CSV + 基线快照 | `../R3重测清单_20261128.md` + `../retest_fail_cases_20261128.csv` + `retest_cases_20261128.json` | 抽「不达标且劣化 >5%」的点，出重测清单 |
+| `gen_retest_result.py` | 重测跑完后 | `round3_perf_retest.csv` | `../R3重测结果_<日期>.md` | 按 3 次中位重判，四类定性 |
 | `check_main_delta.py` | 每次上游更新后**先跑** | 基线 sha（默认 `83252a5`） | 变更归属表 | 判定 dispatch/combine/bench 是否真的变了 |
 | `gen_perf_cases.py` | 跑测**前** | `perf_cases_v2.json` | 60 条命令，按 EP 分脚本 | 性能 60 例 |
 | `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条命令 + shell 批次 | 泛化 1148 例 |
@@ -74,6 +77,23 @@ python run_round3.py perf --eps 8,16,32,64                 # B: 48 例性能（7
 python run_round3.py precision --eps 8,16,32,64            # D: 200 例精度（8 台）
 python run_round3.py abnormal --eps 8,16 --api v1,v2       # E: E4/E5
 ```
+
+只重测若干不达标格（2026-11-28 新增，用于 `../R3重测清单_20261128.md`）：
+
+```bash
+# 清单 JSON 由 gen_retest_list.py 生成；--reps 3 = 每格 3 次，判据取中位
+python run_round3.py perf --eps 4,64 --supp \
+    --cases-file retest_cases_20261128.json --reps 3 --csv-tag retest
+python run_round3.py perf --eps 8,32 \
+    --cases-file retest_cases_20261128.json --reps 3 --csv-tag retest
+python gen_retest_result.py --date 20261129     # 出判定表，不手算
+```
+
+- `--cases-file`：按 `(ep,num_tokens,hidden,aiv)` 四元组过滤，只跑清单内的格子；
+  清单可含多 EP，实际只取 `--eps` 范围内的那些（跨网格缺项不会误报）。
+- `--csv-tag retest`：结果写 `round3_perf_retest.csv`、产物写 `out/perf_retest`，
+  **不污染主批 CSV**；`run_id` 前缀 `perf_ep<N>_r3_<时间戳>_c<idx>_r<rep>`。
+- `--reps N`：每格重复 N 次；N>1 时 `run_id` 带 `_r1.._rN`，供取中位/极差。
 
 执行顺序 **gate → C → B → D → E**（EP128 最稀缺，需 8 台整齐，故最优先）。设计约束：
 
