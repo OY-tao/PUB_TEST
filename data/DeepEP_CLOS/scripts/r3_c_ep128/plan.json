@@ -21,7 +21,7 @@
   "buffer_reuse": "one persistent 8-node/128-rank process group; V1 one Buffer; V2 grouped by (hidden,num_topk,dtype,huge_pages); same group reuses the initialized Buffer, no per-case rebuild",
   "max_local_mem_bytes": 42949672960,
   "guard_bytes": 40802189312,
-  "workspace_source": "EP32/EP64 calibrated CPU formula, num_ranks=128",
+  "workspace_source": "PR#37 wheel size-hint API (Config.get_nvl_buffer_size_hint / ElasticBuffer.get_buffer_size_hint), num_ranks=128; see capacity_official.json",
   "reference": "PUB_TEST/data/DeepEP_CLOS/第三轮测试执行指南_20261128.md §五",
   "remaining": [
     {
@@ -52,7 +52,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -86,7 +86,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -117,7 +117,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -151,7 +151,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -182,7 +182,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -216,7 +216,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -247,7 +247,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -281,7 +281,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -312,7 +312,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -346,7 +346,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -377,7 +377,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -411,7 +411,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -442,7 +442,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -476,7 +476,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -507,7 +507,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -541,7 +541,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -572,7 +572,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -606,7 +606,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -637,7 +637,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -671,7 +671,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -702,7 +702,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -736,7 +736,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -767,7 +767,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -801,7 +801,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -832,7 +832,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -866,7 +866,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -897,7 +897,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -931,7 +931,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -962,7 +962,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -996,7 +996,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -1027,7 +1027,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1061,7 +1061,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -1092,7 +1092,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1126,7 +1126,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2214930432
+        "workspace_bytes": 2367684608
       }
     },
     {
@@ -1157,7 +1157,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1191,7 +1191,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -1222,7 +1222,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1256,7 +1256,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2214930432
+        "workspace_bytes": 2367684608
       }
     },
     {
@@ -1287,7 +1287,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1321,7 +1321,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -1352,7 +1352,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1386,7 +1386,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -1417,7 +1417,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1451,7 +1451,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -1482,7 +1482,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1516,7 +1516,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -1547,7 +1547,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1581,7 +1581,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 551550976
       }
     },
     {
@@ -1612,7 +1612,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1646,7 +1646,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 555100160
+        "workspace_bytes": 564133888
       }
     },
     {
@@ -1677,7 +1677,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1711,7 +1711,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 555100160
+        "workspace_bytes": 564133888
       }
     },
     {
@@ -1742,7 +1742,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1776,7 +1776,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 571877376
+        "workspace_bytes": 589299712
       }
     },
     {
@@ -1807,7 +1807,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1841,7 +1841,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -1872,7 +1872,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1906,7 +1906,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -1937,7 +1937,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -1971,7 +1971,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 551550976
       }
     },
     {
@@ -2002,7 +2002,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2036,7 +2036,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -2067,7 +2067,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2101,7 +2101,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 555100160
+        "workspace_bytes": 564133888
       }
     },
     {
@@ -2132,7 +2132,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2166,7 +2166,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2197,7 +2197,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2231,7 +2231,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1485121536
+        "workspace_bytes": 1486880768
       }
     },
     {
@@ -2262,7 +2262,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2296,7 +2296,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2327,7 +2327,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2361,7 +2361,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1485121536
+        "workspace_bytes": 1486880768
       }
     },
     {
@@ -2392,7 +2392,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2426,7 +2426,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2457,7 +2457,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2491,7 +2491,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1485121536
+        "workspace_bytes": 1486880768
       }
     },
     {
@@ -2522,7 +2522,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2556,7 +2556,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2587,7 +2587,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2621,7 +2621,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2653,7 +2653,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2688,7 +2688,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2720,7 +2720,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2755,7 +2755,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2787,7 +2787,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2822,7 +2822,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2854,7 +2854,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2889,7 +2889,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2921,7 +2921,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -2956,7 +2956,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -2988,7 +2988,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3023,7 +3023,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -3054,7 +3054,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3088,7 +3088,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 38086656
+        "workspace_bytes": 98566144
       }
     },
     {
@@ -3119,7 +3119,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3153,7 +3153,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 272967680
+        "workspace_bytes": 274726912
       }
     },
     {
@@ -3184,7 +3184,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3218,7 +3218,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 1078274048
+        "workspace_bytes": 1080033280
       }
     },
     {
@@ -3249,7 +3249,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3283,7 +3283,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -3314,7 +3314,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3348,7 +3348,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -3379,7 +3379,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3413,7 +3413,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -3444,7 +3444,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3478,7 +3478,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -3509,7 +3509,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3543,7 +3543,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -3574,7 +3574,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3608,7 +3608,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -3639,7 +3639,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3673,7 +3673,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -3704,7 +3704,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3738,7 +3738,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -3769,7 +3769,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3803,7 +3803,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -3834,7 +3834,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3868,7 +3868,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -3899,7 +3899,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3933,7 +3933,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -3964,7 +3964,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -3998,7 +3998,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -4029,7 +4029,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4063,7 +4063,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -4094,7 +4094,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4128,7 +4128,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -4159,7 +4159,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4193,7 +4193,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -4224,7 +4224,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4258,7 +4258,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 19478751232
+        "workspace_bytes": 19539165184
       }
     },
     {
@@ -4289,7 +4289,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4323,7 +4323,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -4354,7 +4354,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4388,7 +4388,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2214930432
+        "workspace_bytes": 2367684608
       }
     },
     {
@@ -4419,7 +4419,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4453,7 +4453,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -4484,7 +4484,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4518,7 +4518,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2214930432
+        "workspace_bytes": 2367684608
       }
     },
     {
@@ -4549,7 +4549,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4583,7 +4583,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     },
     {
@@ -4614,7 +4614,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4648,7 +4648,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -4679,7 +4679,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4713,7 +4713,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -4744,7 +4744,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4778,7 +4778,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -4809,7 +4809,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4843,7 +4843,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 551550976
       }
     },
     {
@@ -4874,7 +4874,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4908,7 +4908,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 555100160
+        "workspace_bytes": 564133888
       }
     },
     {
@@ -4939,7 +4939,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -4973,7 +4973,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 555100160
+        "workspace_bytes": 564133888
       }
     },
     {
@@ -5004,7 +5004,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5038,7 +5038,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 571877376
+        "workspace_bytes": 589299712
       }
     },
     {
@@ -5069,7 +5069,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5103,7 +5103,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -5134,7 +5134,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5168,7 +5168,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -5199,7 +5199,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5233,7 +5233,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 551550976
       }
     },
     {
@@ -5264,7 +5264,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5298,7 +5298,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 546711552
+        "workspace_bytes": 547356672
       }
     },
     {
@@ -5329,7 +5329,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5363,7 +5363,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 555100160
+        "workspace_bytes": 564133888
       }
     },
     {
@@ -5394,7 +5394,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5428,7 +5428,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -5459,7 +5459,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5493,7 +5493,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1485121536
+        "workspace_bytes": 1486880768
       }
     },
     {
@@ -5524,7 +5524,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5558,7 +5558,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -5589,7 +5589,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5623,7 +5623,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1485121536
+        "workspace_bytes": 1486880768
       }
     },
     {
@@ -5654,7 +5654,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5688,7 +5688,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -5719,7 +5719,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5753,7 +5753,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1485121536
+        "workspace_bytes": 1486880768
       }
     },
     {
@@ -5784,7 +5784,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5818,7 +5818,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -5849,7 +5849,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5883,7 +5883,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -5915,7 +5915,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -5950,7 +5950,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -5982,7 +5982,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6017,7 +6017,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -6049,7 +6049,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6084,7 +6084,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -6116,7 +6116,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6151,7 +6151,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -6183,7 +6183,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6218,7 +6218,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -6250,7 +6250,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6285,7 +6285,7 @@
           false
         ],
         "max_tokens": 2048,
-        "workspace_bytes": 1495672832
+        "workspace_bytes": 1503657984
       }
     },
     {
@@ -6316,7 +6316,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6350,7 +6350,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 38086656
+        "workspace_bytes": 98566144
       }
     },
     {
@@ -6381,7 +6381,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6415,7 +6415,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 272967680
+        "workspace_bytes": 274726912
       }
     },
     {
@@ -6446,7 +6446,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6480,7 +6480,7 @@
           false
         ],
         "max_tokens": 1024,
-        "workspace_bytes": 1078274048
+        "workspace_bytes": 1080033280
       }
     },
     {
@@ -6511,7 +6511,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -6545,7 +6545,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 30132217856
+        "workspace_bytes": 30133977088
       }
     }
   ],
@@ -6556,7 +6556,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 164864,
+      "workspace_bytes": 34378612736,
       "case_count": 100
     },
     {
@@ -6568,7 +6568,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 272967680,
+      "workspace_bytes": 274726912,
       "case_count": 2
     },
     {
@@ -6580,7 +6580,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 38086656,
+      "workspace_bytes": 98566144,
       "case_count": 2
     },
     {
@@ -6592,7 +6592,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 546711552,
+      "workspace_bytes": 547356672,
       "case_count": 4
     },
     {
@@ -6604,7 +6604,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 555100160,
+      "workspace_bytes": 564133888,
       "case_count": 6
     },
     {
@@ -6616,7 +6616,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 546711552,
+      "workspace_bytes": 547356672,
       "case_count": 4
     },
     {
@@ -6628,7 +6628,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 571877376,
+      "workspace_bytes": 589299712,
       "case_count": 2
     },
     {
@@ -6640,7 +6640,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 546711552,
+      "workspace_bytes": 547356672,
       "case_count": 4
     },
     {
@@ -6652,7 +6652,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 546711552,
+      "workspace_bytes": 551550976,
       "case_count": 4
     },
     {
@@ -6664,7 +6664,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 8657381376,
+      "workspace_bytes": 8659140608,
       "case_count": 8
     },
     {
@@ -6676,7 +6676,7 @@
         false
       ],
       "max_tokens": 2048,
-      "workspace_bytes": 1495672832,
+      "workspace_bytes": 1503657984,
       "case_count": 22
     },
     {
@@ -6688,7 +6688,7 @@
         false
       ],
       "max_tokens": 2048,
-      "workspace_bytes": 1485121536,
+      "workspace_bytes": 1486880768,
       "case_count": 6
     },
     {
@@ -6700,7 +6700,7 @@
         false
       ],
       "max_tokens": 1024,
-      "workspace_bytes": 1078274048,
+      "workspace_bytes": 1080033280,
       "case_count": 2
     },
     {
@@ -6712,7 +6712,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 19478751232,
+      "workspace_bytes": 19539165184,
       "case_count": 8
     },
     {
@@ -6724,7 +6724,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 2298882048,
+      "workspace_bytes": 2359296000,
       "case_count": 8
     },
     {
@@ -6736,7 +6736,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 2214930432,
+      "workspace_bytes": 2367684608,
       "case_count": 4
     },
     {
@@ -6748,7 +6748,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 30132217856,
+      "workspace_bytes": 30133977088,
       "case_count": 14
     }
   ],

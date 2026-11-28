@@ -1,0 +1,111 @@
+{
+  "generated": "2026-11-28 18:49:14",
+  "source": "PR#37 wheel 0d1eca2 \u5b98\u65b9 size-hint API\uff08\u5bb9\u5668\u5185\u5b9e\u7b97\uff0c\u975e\u8fd1\u4f3c\u516c\u5f0f\uff09",
+  "num_ranks": 128,
+  "shmem_hard_limit_bytes": 42949672960,
+  "guard_bytes": 40802189312,
+  "groups": {
+    "[\"v1\", false]": {
+      "workspace_bytes": 34378612736,
+      "max_tokens": 16384,
+      "case_count": 100,
+      "api": "Config.get_nvl_buffer_size_hint(hidden*2, 128, num_tokens), max over group"
+    },
+    "[\"v2\", 1024, 8, \"fp8\", false]": {
+      "workspace_bytes": 274726912,
+      "max_tokens": 1024,
+      "case_count": 2,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 128, 8, \"fp8\", false]": {
+      "workspace_bytes": 98566144,
+      "max_tokens": 1024,
+      "case_count": 2,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 1, \"bf16\", false]": {
+      "workspace_bytes": 547356672,
+      "max_tokens": 1024,
+      "case_count": 4,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 16, \"bf16\", false]": {
+      "workspace_bytes": 564133888,
+      "max_tokens": 1024,
+      "case_count": 6,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 2, \"bf16\", false]": {
+      "workspace_bytes": 547356672,
+      "max_tokens": 1024,
+      "case_count": 4,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 32, \"bf16\", false]": {
+      "workspace_bytes": 589299712,
+      "max_tokens": 1024,
+      "case_count": 2,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 4, \"bf16\", false]": {
+      "workspace_bytes": 547356672,
+      "max_tokens": 1024,
+      "case_count": 4,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 8, \"bf16\", false]": {
+      "workspace_bytes": 551550976,
+      "max_tokens": 1024,
+      "case_count": 4,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2048, 8, \"fp8\", false]": {
+      "workspace_bytes": 8659140608,
+      "max_tokens": 16384,
+      "case_count": 8,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2816, 8, \"bf16\", false]": {
+      "workspace_bytes": 1503657984,
+      "max_tokens": 2048,
+      "case_count": 22,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 2816, 8, \"fp8\", false]": {
+      "workspace_bytes": 1486880768,
+      "max_tokens": 2048,
+      "case_count": 6,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 4096, 8, \"fp8\", false]": {
+      "workspace_bytes": 1080033280,
+      "max_tokens": 1024,
+      "case_count": 2,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 4608, 8, \"bf16\", false]": {
+      "workspace_bytes": 19539165184,
+      "max_tokens": 16384,
+      "case_count": 8,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 512, 8, \"bf16\", false]": {
+      "workspace_bytes": 2359296000,
+      "max_tokens": 16384,
+      "case_count": 8,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 512, 8, \"fp8\", false]": {
+      "workspace_bytes": 2367684608,
+      "max_tokens": 16384,
+      "case_count": 4,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    },
+    "[\"v2\", 7168, 8, \"fp8\", false]": {
+      "workspace_bytes": 30133977088,
+      "max_tokens": 16384,
+      "case_count": 14,
+      "api": "ElasticBuffer.get_buffer_size_hint(group128, max_tokens, hidden, topk, fp8)"
+    }
+  }
+}

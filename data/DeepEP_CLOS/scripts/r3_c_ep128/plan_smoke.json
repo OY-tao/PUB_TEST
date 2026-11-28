@@ -21,7 +21,7 @@
   "buffer_reuse": "one persistent 8-node/128-rank process group; V1 one Buffer; V2 grouped by (hidden,num_topk,dtype,huge_pages); same group reuses the initialized Buffer, no per-case rebuild",
   "max_local_mem_bytes": 42949672960,
   "guard_bytes": 40802189312,
-  "workspace_source": "EP32/EP64 calibrated CPU formula, num_ranks=128",
+  "workspace_source": "PR#37 wheel size-hint API (Config.get_nvl_buffer_size_hint / ElasticBuffer.get_buffer_size_hint), num_ranks=128; see capacity_official.json",
   "reference": "PUB_TEST/data/DeepEP_CLOS/第三轮测试执行指南_20261128.md §五",
   "remaining": [
     {
@@ -52,7 +52,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -83,7 +83,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -117,7 +117,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -151,7 +151,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     },
     {
@@ -182,7 +182,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -213,7 +213,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 164864
+        "workspace_bytes": 34378612736
       }
     },
     {
@@ -247,7 +247,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 2298882048
+        "workspace_bytes": 2359296000
       }
     },
     {
@@ -281,7 +281,7 @@
           false
         ],
         "max_tokens": 16384,
-        "workspace_bytes": 8657381376
+        "workspace_bytes": 8659140608
       }
     }
   ],
@@ -292,7 +292,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 164864,
+      "workspace_bytes": 34378612736,
       "case_count": 100
     },
     {
@@ -304,7 +304,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 8657381376,
+      "workspace_bytes": 8659140608,
       "case_count": 8
     },
     {
@@ -316,7 +316,7 @@
         false
       ],
       "max_tokens": 16384,
-      "workspace_bytes": 2298882048,
+      "workspace_bytes": 2359296000,
       "case_count": 8
     }
   ],

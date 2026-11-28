@@ -41,33 +41,40 @@ def align(x, a):
     return ((x + a - 1) // a) * a
 
 
-def v1_hint(hidden_bytes, num_ranks, num_tokens, num_aiv=32):
-    """V1 Buffer：num_nvl_bytes 的对称容量上界。"""
-    hb = align(hidden_bytes, 32)
-    nc = max(num_aiv, 1)
-    nb = align(num_ranks * nc * IB + num_ranks * MS * FB, NW)
-    nb = align(nb + num_tokens * MS * FB, WA)
-    return align(nb, SA)
+def official_capacity():
+    """读取 wheel 官方 size-hint API 实算的权威容量表（capacity_official.json）。
+
+    该表由容器内 `Config.get_nvl_buffer_size_hint()` / `ElasticBuffer.get_buffer_size_hint()`
+    对全部 buffer 组逐一实算生成（见 R3_C阶段精度方案_20261128.md §8）。
+    旧的自写近似公式 v1_hint/v2_hint 已废弃：v1_hint 漏掉
+    `recv_tokens * hidden_bytes` 主导项，17 组容量全部低估，导致
+    `dispatch requires ... bytes of symmetric workspace` 首例即挂。
+    """
+    path = BASE / "capacity_official.json"
+    if not path.exists():
+        raise RuntimeError("缺少 %s：必须先用 wheel 官方 size-hint API 生成容量表" % path.name)
+    table = json.loads(path.read_text(encoding="utf-8"))
+    if table.get("num_ranks") != EP:
+        raise RuntimeError("容量表 num_ranks=%r 与 plan EP=%d 不符" % (table.get("num_ranks"), EP))
+    return table["groups"]
 
 
-def v2_hint(num_ranks, max_tokens, hidden, num_topk, fp8):
-    """V2 ElasticBuffer：num_bytes 的对称容量上界。"""
-    eff = num_topk
-    hb = align(hidden * (1 if fp8 else 2), 32)
-    tib, twb = align(eff * TI, 32), align(eff * FB, 32)
-    scb = align(MS * FB, 32) if fp8 else 0
-    nc = MAXAIV
-    rs, cs, es = align(num_ranks, CA), align(nc, CA), align(num_ranks * ME, CA)
-    ne = num_ranks * num_ranks + num_ranks * cs + rs + es + nc * rs
-    nb = align(ne * IB, NW)
-    rslots = max_tokens * num_ranks
-    drb = hb + IB + tib + twb + scb
-    dbody = num_ranks * (nc * IB) + rslots * drb + max_tokens * scb
-    ctrl = num_ranks * UD
-    cslots = max_tokens * num_ranks
-    cpr = align(hidden * BF, 32) + twb
-    cbody = cslots * cpr
-    return align(ctrl + nb + max(dbody, cbody), SA)
+def size_of_group(capacity, key, max_tokens, members):
+    """按 buffer 组 key 查官方容量；查不到直接报错，绝不回退到近似公式。"""
+    lookup = json.dumps(list(key))
+    if lookup not in capacity:
+        raise RuntimeError("容量表缺少组 %s（请重新生成 capacity_official.json）" % lookup)
+    entry = capacity[lookup]
+    size = int(entry["workspace_bytes"])
+    if size < 2 * 1024 ** 2:
+        raise RuntimeError("组 %s 官方容量 %d B 异常偏小" % (lookup, size))
+    # 表是按当前 spec 实算的：组内 max_tokens 与 case 数必须一致，防止 spec 改了表没更新
+    if int(entry["max_tokens"]) != max_tokens or int(entry["case_count"]) != len(members):
+        raise RuntimeError("组 %s 与容量表不一致（表: max_tokens=%s cases=%s；现: %d/%d），"
+                           "请重新生成 capacity_official.json" %
+                           (lookup, entry.get("max_tokens"), entry.get("case_count"),
+                            max_tokens, len(members)))
+    return size
 
 
 def load_spec():
@@ -116,6 +123,7 @@ def build_cases(epr_tiers=("main",)):
 
 
 def allocate(cases):
+    capacity = official_capacity()
     buckets = {}
     for c in cases:
         p = c["parameters"]
@@ -125,13 +133,7 @@ def allocate(cases):
     groups = []
     for key, members in sorted(buckets.items(), key=lambda kv: repr(kv[0])):
         max_tokens = max(m["parameters"]["num_tokens"] for m in members)
-        if key[0] == "v1":
-            size = max(v1_hint(m["parameters"]["hidden"] * 2, EP,
-                               m["parameters"]["num_tokens"]) for m in members)
-        else:
-            p = members[0]["parameters"]
-            size = v2_hint(EP, max_tokens, p["hidden"], p["num_topk"],
-                           members[0]["dtype"] == "fp8")
+        size = size_of_group(capacity, key, max_tokens, members)
         if size > GUARD:
             raise RuntimeError("group %s workspace %.2f GiB > guard %.2f GiB" %
                                (key, size / 1024 ** 3, GUARD / 1024 ** 3))
@@ -156,7 +158,9 @@ def main():
                          "same group reuses the initialized Buffer, no per-case rebuild"),
         "max_local_mem_bytes": MAX_LOCAL_MEM,
         "guard_bytes": GUARD,
-        "workspace_source": "EP32/EP64 calibrated CPU formula, num_ranks=128",
+        "workspace_source": "PR#37 wheel size-hint API (Config.get_nvl_buffer_size_hint / "
+                            "ElasticBuffer.get_buffer_size_hint), num_ranks=128; "
+                            "see capacity_official.json",
         "reference": "PUB_TEST/data/DeepEP_CLOS/第三轮测试执行指南_20261128.md §五",
         "remaining": cases,
         "buffer_groups": groups,
