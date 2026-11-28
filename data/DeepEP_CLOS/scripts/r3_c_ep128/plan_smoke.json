@@ -30,12 +30,43 @@
       "api": "v1",
       "dtype": "bf16",
       "expand": 0,
-      "variant": "main_ep128_v1_A_t1_h512_bf16_e0",
-      "source_id": "A_t1_h512_bf16_e0",
+      "variant": "main_ep128_v1_AX_t16384_h2048_bf16_e0",
+      "source_id": "AX_t16384_h2048_bf16_e0",
       "group": "A",
       "epr_tier": "main",
       "parameters": {
-        "num_tokens": 1,
+        "num_tokens": 16384,
+        "hidden": 2048,
+        "num_topk": 8,
+        "experts_per_rank": 4,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v1",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 34378612736
+      }
+    },
+    {
+      "api": "v1",
+      "dtype": "bf16",
+      "expand": 1,
+      "variant": "main_ep128_v1_AX_t16384_h512_bf16_e1",
+      "source_id": "AX_t16384_h512_bf16_e1",
+      "group": "A",
+      "epr_tier": "main",
+      "parameters": {
+        "num_tokens": 16384,
         "hidden": 512,
         "num_topk": 8,
         "experts_per_rank": 4,
@@ -59,17 +90,48 @@
     },
     {
       "api": "v1",
-      "dtype": "fp8",
+      "dtype": "bf16",
       "expand": 0,
-      "variant": "main_ep128_v1_A_t1_h2048_fp8_e0",
-      "source_id": "A_t1_h2048_fp8_e0",
+      "variant": "probe_ep128_v1_AX_t16384_h2048_bf16_e0",
+      "source_id": "AX_t16384_h2048_bf16_e0",
       "group": "A",
-      "epr_tier": "main",
+      "epr_tier": "probe",
       "parameters": {
-        "num_tokens": 1,
+        "num_tokens": 16384,
         "hidden": 2048,
         "num_topk": 8,
-        "experts_per_rank": 4,
+        "experts_per_rank": 32,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v1",
+          false
+        ],
+        "max_tokens": 16384,
+        "workspace_bytes": 34378612736
+      }
+    },
+    {
+      "api": "v1",
+      "dtype": "bf16",
+      "expand": 1,
+      "variant": "probe_ep128_v1_AX_t16384_h512_bf16_e1",
+      "source_id": "AX_t16384_h512_bf16_e1",
+      "group": "A",
+      "epr_tier": "probe",
+      "parameters": {
+        "num_tokens": 16384,
+        "hidden": 512,
+        "num_topk": 8,
+        "experts_per_rank": 32,
         "aiv": 32,
         "warmup": 10,
         "iterations": 30,
@@ -90,49 +152,15 @@
     },
     {
       "api": "v2",
-      "dtype": "bf16",
-      "expand": 0,
-      "variant": "main_ep128_v2_A_t1_h512_bf16_e0",
-      "source_id": "A_t1_h512_bf16_e0",
-      "group": "A",
-      "epr_tier": "main",
-      "parameters": {
-        "num_tokens": 1,
-        "hidden": 512,
-        "num_topk": 8,
-        "experts_per_rank": 4,
-        "aiv": 32,
-        "warmup": 10,
-        "iterations": 30,
-        "seed": 20260823,
-        "route_mode": "uniform",
-        "route_group_size": 64,
-        "huge_pages": false,
-        "rendezvous_timeout": 900
-      },
-      "buffer_config": {
-        "key": [
-          "v2",
-          512,
-          8,
-          "bf16",
-          false
-        ],
-        "max_tokens": 16384,
-        "workspace_bytes": 2359296000
-      }
-    },
-    {
-      "api": "v2",
       "dtype": "fp8",
-      "expand": 0,
-      "variant": "main_ep128_v2_A_t1_h2048_fp8_e0",
-      "source_id": "A_t1_h2048_fp8_e0",
-      "group": "A",
+      "expand": 1,
+      "variant": "main_ep128_v2_E_fp8_h1024_e1",
+      "source_id": "E_fp8_h1024_e1",
+      "group": "E",
       "epr_tier": "main",
       "parameters": {
-        "num_tokens": 1,
-        "hidden": 2048,
+        "num_tokens": 1024,
+        "hidden": 1024,
         "num_topk": 8,
         "experts_per_rank": 4,
         "aiv": 32,
@@ -147,88 +175,26 @@
       "buffer_config": {
         "key": [
           "v2",
-          2048,
+          1024,
           8,
           "fp8",
           false
         ],
-        "max_tokens": 16384,
-        "workspace_bytes": 8659140608
-      }
-    },
-    {
-      "api": "v1",
-      "dtype": "bf16",
-      "expand": 0,
-      "variant": "probe_ep128_v1_A_t1_h512_bf16_e0",
-      "source_id": "A_t1_h512_bf16_e0",
-      "group": "A",
-      "epr_tier": "probe",
-      "parameters": {
-        "num_tokens": 1,
-        "hidden": 512,
-        "num_topk": 8,
-        "experts_per_rank": 32,
-        "aiv": 32,
-        "warmup": 10,
-        "iterations": 30,
-        "seed": 20260823,
-        "route_mode": "uniform",
-        "route_group_size": 64,
-        "huge_pages": false,
-        "rendezvous_timeout": 900
-      },
-      "buffer_config": {
-        "key": [
-          "v1",
-          false
-        ],
-        "max_tokens": 16384,
-        "workspace_bytes": 34378612736
-      }
-    },
-    {
-      "api": "v1",
-      "dtype": "fp8",
-      "expand": 0,
-      "variant": "probe_ep128_v1_A_t1_h2048_fp8_e0",
-      "source_id": "A_t1_h2048_fp8_e0",
-      "group": "A",
-      "epr_tier": "probe",
-      "parameters": {
-        "num_tokens": 1,
-        "hidden": 2048,
-        "num_topk": 8,
-        "experts_per_rank": 32,
-        "aiv": 32,
-        "warmup": 10,
-        "iterations": 30,
-        "seed": 20260823,
-        "route_mode": "uniform",
-        "route_group_size": 64,
-        "huge_pages": false,
-        "rendezvous_timeout": 900
-      },
-      "buffer_config": {
-        "key": [
-          "v1",
-          false
-        ],
-        "max_tokens": 16384,
-        "workspace_bytes": 34378612736
+        "max_tokens": 1024,
+        "workspace_bytes": 274726912
       }
     },
     {
       "api": "v2",
-      "dtype": "bf16",
-      "expand": 0,
-      "variant": "probe_ep128_v2_A_t1_h512_bf16_e0",
-      "source_id": "A_t1_h512_bf16_e0",
-      "group": "A",
+      "dtype": "fp8",
+      "expand": 1,
+      "variant": "probe_ep128_v2_E_fp8_h1024_e1",
+      "source_id": "E_fp8_h1024_e1",
+      "group": "E",
       "epr_tier": "probe",
       "parameters": {
-        "num_tokens": 1,
-        "hidden": 512,
+        "num_tokens": 1024,
+        "hidden": 1024,
         "num_topk": 8,
         "experts_per_rank": 32,
         "aiv": 32,
@@ -243,47 +209,81 @@
       "buffer_config": {
         "key": [
           "v2",
-          512,
-          8,
-          "bf16",
-          false
-        ],
-        "max_tokens": 16384,
-        "workspace_bytes": 2359296000
-      }
-    },
-    {
-      "api": "v2",
-      "dtype": "fp8",
-      "expand": 0,
-      "variant": "probe_ep128_v2_A_t1_h2048_fp8_e0",
-      "source_id": "A_t1_h2048_fp8_e0",
-      "group": "A",
-      "epr_tier": "probe",
-      "parameters": {
-        "num_tokens": 1,
-        "hidden": 2048,
-        "num_topk": 8,
-        "experts_per_rank": 32,
-        "aiv": 32,
-        "warmup": 10,
-        "iterations": 30,
-        "seed": 20260823,
-        "route_mode": "uniform",
-        "route_group_size": 64,
-        "huge_pages": false,
-        "rendezvous_timeout": 900
-      },
-      "buffer_config": {
-        "key": [
-          "v2",
-          2048,
+          1024,
           8,
           "fp8",
           false
         ],
-        "max_tokens": 16384,
-        "workspace_bytes": 8659140608
+        "max_tokens": 1024,
+        "workspace_bytes": 274726912
+      }
+    },
+    {
+      "api": "v2",
+      "dtype": "fp8",
+      "expand": 0,
+      "variant": "main_ep128_v2_E_fp8_h128_e0",
+      "source_id": "E_fp8_h128_e0",
+      "group": "E",
+      "epr_tier": "main",
+      "parameters": {
+        "num_tokens": 1024,
+        "hidden": 128,
+        "num_topk": 8,
+        "experts_per_rank": 4,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v2",
+          128,
+          8,
+          "fp8",
+          false
+        ],
+        "max_tokens": 1024,
+        "workspace_bytes": 98566144
+      }
+    },
+    {
+      "api": "v2",
+      "dtype": "fp8",
+      "expand": 0,
+      "variant": "probe_ep128_v2_E_fp8_h128_e0",
+      "source_id": "E_fp8_h128_e0",
+      "group": "E",
+      "epr_tier": "probe",
+      "parameters": {
+        "num_tokens": 1024,
+        "hidden": 128,
+        "num_topk": 8,
+        "experts_per_rank": 32,
+        "aiv": 32,
+        "warmup": 10,
+        "iterations": 30,
+        "seed": 20260823,
+        "route_mode": "uniform",
+        "route_group_size": 64,
+        "huge_pages": false,
+        "rendezvous_timeout": 900
+      },
+      "buffer_config": {
+        "key": [
+          "v2",
+          128,
+          8,
+          "fp8",
+          false
+        ],
+        "max_tokens": 1024,
+        "workspace_bytes": 98566144
       }
     }
   ],
@@ -300,26 +300,26 @@
     {
       "key": [
         "v2",
-        2048,
+        1024,
         8,
         "fp8",
         false
       ],
-      "max_tokens": 16384,
-      "workspace_bytes": 8659140608,
-      "case_count": 14
+      "max_tokens": 1024,
+      "workspace_bytes": 274726912,
+      "case_count": 2
     },
     {
       "key": [
         "v2",
-        512,
+        128,
         8,
-        "bf16",
+        "fp8",
         false
       ],
-      "max_tokens": 16384,
-      "workspace_bytes": 2359296000,
-      "case_count": 16
+      "max_tokens": 1024,
+      "workspace_bytes": 98566144,
+      "case_count": 2
     }
   ],
   "expected_buffer_initializations_per_rank": 3,

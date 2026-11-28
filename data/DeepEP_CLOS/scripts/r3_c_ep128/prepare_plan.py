@@ -239,6 +239,10 @@ def main():
         return
     cases = build_cases(("main", "probe"))
     cases, groups = allocate(cases)
+    # 关键：按 compatibility_key 排序让同组 case 连续，否则 v1/v2 交替会导致
+    # 每例都 destroy+重建 Buffer（组切换 400 次），违背「复用统一 Buffer」口径，
+    # 且反复建链触发 Hccl::NetworkApiException / HrtRaGetAsyncReqResult 崩溃。
+    cases.sort(key=lambda c: (json.dumps(c["buffer_config"]["key"]), c["variant"]))
     plan = {
         "ep_size": EP, "nnodes": NNODES, "local_ranks_per_node": LOCAL,
         "hosts": ["30.104.128.%d" % i for i in range(4, 12)],
@@ -269,6 +273,8 @@ def main():
         for api in ("v1", "v2"):
             picked = [c for c in cases if c["epr_tier"] == tier and c["api"] == api][:2]
             smoke_cases.extend(copy.deepcopy(picked))
+    # 同组连续，避免 smoke 也每例重建 Buffer
+    smoke_cases.sort(key=lambda c: (json.dumps(c["buffer_config"]["key"]), c["variant"]))
     smoke = dict(plan, remaining=smoke_cases,
                  buffer_groups=[g for g in groups if any(
                      m["buffer_config"]["key"] == g["key"] for m in smoke_cases)],
