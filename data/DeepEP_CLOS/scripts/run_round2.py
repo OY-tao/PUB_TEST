@@ -12,32 +12,43 @@
 （用户 2026-11-27 16:26：「main 还不是最新，等通知」），所以**开跑前先跑
 `check_main_delta.py`** 重新判一遍"新在哪"，别沿用上次结论。
 
-`gate` 除四机一致性外，还会校验：remote 指向 `lueelu/DeepEP`、HEAD 与 fetch 后的
-`origin/main` 同一提交、`_C.so` 与 `libdeepep_kernels.so` 都在包里、四机
-`_build_info.json` 一致。只看 `single_commit` 会漏掉"四机一起停在旧 commit"
+`gate` 除八机一致性外，还会校验：remote 指向 `lueelu/DeepEP`、HEAD 与 fetch 后的
+`origin/main` 同一提交、`_C.so` 与 `libdeepep_kernels.so` 都在包里、八机
+`_build_info.json` 一致。只看 `single_commit` 会漏掉"八机一起停在旧 commit"
 和"装了新 commit 但库还是旧的"这两种假通过。
 
 设计约束
 --------
 * **门禁优先**：`gate` 不通过，`perf` / `precision` 直接拒绝执行。否则会把
   "版本没换"的结果当成"新代码结果"，这是本轮最容易犯的错。
-* **波次只为占满四机，不改任何用例参数**：EP64 独占四机（必须同时启动）；
-  EP8/16/32 分居 node3 / node2 / node0+1 并行，四台机器都不空转。
+* **波次只为占满参与节点，不改任何用例参数**：EP64 独占 4 机（必须同时启动）；
+  EP8/16/32 分居 node3 / node2 / node0+1 并行，这四台机器都不空转。
+  R2 用例最多 EP64=4 机，故只用 node0..node3；node4..node7 只参与 gate 校验。
 * **不开大页**：命令行显式禁止出现 `--huge-pages`，并在产物里记录 `huge_pages=no`。
 * **每 case 一次进程组**（与上轮同口径，便于逐条对比），中断可用 `--start/--limit` 续跑。
 * `plan` 子命令完全离线，不 ssh、不碰设备，用于评审用例与拓扑。
 
-拓扑（上轮实测验证过）
-----------------------
-node0..node3 = 30.104.128.4 / .5 / .6 / .7，各 16 卡；ssh 端口 56000；
-容器内源码 `/workspace/deepep`、运行库 `/workspace/runtime`；
+拓扑（2026-11-28 统一到 128P 的 8 机容器）
+------------------------------------------
+node0..node7 = 30.104.128.4 ... .11，各 16 卡；ssh 端口 56000；
+容器统一为 `deepep_ep128_full_matrix_20261128_073617`（8 机同名）；
+容器内源码 `/work/DeepEP_lueelu`（lueelu/DeepEP main），deep_ep 装在 conda
+`site-packages`（**没有** `/workspace/deepep` / `/workspace/runtime`）；
+`/work` 是各机本地 xfs、不共享，脚本用 scp + docker cp 逐机部署到 `/work/round2`。
+R2 用例最多 EP64=4 机，故 EP_NODES 仍只用 node0..node3；node4..node7 参与
+gate 的八机一致性校验，但不参与跑测（保持上轮"充分利用 4 机"的语义）。
+
+精度 bench（`bench_v1_precision.py` / `bench_v2_precision.py`）**不在**
+lueelu/DeepEP main 仓里，是本目录的本地补丁：脚本部署到各节点 `/work/round2`
+后用绝对路径运行，PYTHONPATH 补 `/work/DeepEP_lueelu/tests/clos` 提供 golden。
+
 bench 自带 torchrun 编排（`bench_*:172` 起拼 `torch.distributed.run`），
 所以每节点只需普通 `python bench_*.py --node-rank=N`，**不要外面再套 torchrun**。
 
 用法
 ----
     python run_round2.py plan                       # 离线看计划（默认）
-    python run_round2.py gate                       # 四机门禁：commit/.so/空闲/大页
+    python run_round2.py gate                       # 八机门禁：commit/.so/空闲/大页
     python run_round2.py perf  --eps 8,16,32,64     # 48 例性能
     python run_round2.py precision --eps 8,16,32,64 # 200 例精度
     python run_round2.py abnormal --eps 8,16 --api v1,v2
@@ -68,22 +79,24 @@ SSH_BASE = ["ssh", "-T", "-p", str(SSH_PORT), "-o", "BatchMode=yes",
             "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=30",
             "-o", "ServerAliveCountMax=6"]
 
-NODES = [
-    {"node": 0, "host": "30.104.128.4"},
-    {"node": 1, "host": "30.104.128.5"},
-    {"node": 2, "host": "30.104.128.6"},
-    {"node": 3, "host": "30.104.128.7"},
-]
+NODES = [{"node": i, "host": "30.104.128.%d" % (4 + i)} for i in range(8)]
 MASTER = NODES[0]["host"]
 
-REPO = "/workspace/deepep"
+REPO = "/work/DeepEP_lueelu"       # 8 机容器内 clone 的 lueelu/DeepEP main
 BENCH_DIR = REPO + "/benchmarks/clos"
-RUNTIME = "/workspace/runtime"
-STAGE = "/workspace/round2"
-CONTAINER_HINT = "deepep"          # docker ps 名字过滤
+GOLDEN_DIR = REPO + "/tests/clos"
+RUNTIME = ""                       # deep_ep 在 conda site-packages，无独立 runtime 目录
+STAGE = "/work/round2"
+CONTAINER_HINT = "deepep_ep128_full_matrix_20261128_073617"   # 8 机统一容器名
+PROXY = "http://star-proxy.oa.com:3128"  # 容器内默认无代理，git fetch 需要
+
+# 精度 bench 不在 lueelu/DeepEP main 仓里，是本目录的本地补丁：部署到 STAGE
+# 后以绝对路径运行（避免污染 git 工作区，gate 的 clean_worktree 才不会失败）
+PRECISION_BENCH_FILES = ("bench_v1_precision.py", "bench_v2_precision.py")
 
 # EP -> 节点编号。8/16/32 互不重叠，故可与 64 之外的彼此并行；
-# 64 需要四机全占，只能独占一波。
+# 64 需要四机全占，只能独占一波。R2 最多 4 机，只用 node0..node3；
+# node4..node7 参与 gate 八机一致性校验但不跑测。
 EP_NODES = {8: [3], 16: [2], 32: [0, 1], 64: [0, 1, 2, 3]}
 PORTS = {"perf": 29860, "precision": 29880, "abnormal": 29900}
 
@@ -149,8 +162,13 @@ def docker_exec(node, inner, timeout=600, log=None):
 
 
 def env_prefix():
-    """与上轮相同的环境基线；PYTHONPATH 追加而不是覆盖。"""
-    pp = ":".join([STAGE, BENCH_DIR, RUNTIME, "$PYTHONPATH"])
+    """环境基线；PYTHONPATH 追加而不是覆盖（8 机容器无 /workspace/runtime）。
+
+    STAGE 放部署的脚本（含精度 bench 补丁）；BENCH_DIR 放 main 仓的 bench
+    依赖；GOLDEN_DIR 补给 golden common.py（补丁 bench 的 REPO 会算成 /）。
+    """
+    paths = [STAGE, BENCH_DIR, GOLDEN_DIR, RUNTIME, "$PYTHONPATH"]
+    pp = ":".join(x for x in paths if x)
     return ("source /usr/local/Ascend/ascend-toolkit/set_env.sh && "
             "unset SHMEM_UID_SESSION_ID ASCEND_RT_VISIBLE_DEVICES && "
             "export SHMEM_UDMA_CONNECT_TIMEOUT_MS=300000 OMP_NUM_THREADS=1 "
@@ -167,7 +185,7 @@ def join_argv(argv):
 
 
 def deploy(node, local_path, name):
-    """本地 -> 宿主机 /tmp -> 容器 /workspace/round2，不依赖宿主机挂载路径。"""
+    """本地 -> 宿主机 /tmp -> 容器 /work/round2，不依赖宿主机挂载路径。"""
     host = node["host"]
     tmp = "/tmp/round2_" + name
     subprocess.run(["scp", "-q", "-P", str(SSH_PORT), "-o", "BatchMode=yes",
@@ -177,6 +195,23 @@ def deploy(node, local_path, name):
     r = run_ssh(host, "docker cp %s %s:%s/%s" % (tmp, c, STAGE, name), timeout=120)
     if r.returncode:
         raise RuntimeError("docker cp 失败 %s: %s" % (host, (r.stderr or "")[-200:]))
+
+
+def deploy_bench_files(eps):
+    """把精度 bench 本地补丁部署到参与节点。
+
+    lueelu/DeepEP main 仓的 benchmarks/clos 里没有 bench_v*_precision.py，
+    且不能塞进 REPO（会污染 git 工作区，gate 的 clean_worktree 会失败），
+    因此部署到 STAGE 并以绝对路径运行。abnormal_worker_v2.py 也 import 它们。
+    """
+    idxs = sorted({i for ep in eps for i in EP_NODES[ep]})
+    for name in PRECISION_BENCH_FILES:
+        src = HERE / name
+        if not src.exists():
+            raise RuntimeError("缺少精度 bench 补丁: %s" % src)
+        for i in idxs:
+            deploy(node_by_idx(i), src, name)
+    return idxs
 
 
 def check_idle(node, need_cards):
@@ -327,7 +362,8 @@ def perf_argv(case, out_root, run_id):
 
 
 def precision_argv(case, out_root, run_id, api):
-    bench = "bench_%s_precision.py" % api
+    # 精度 bench 是部署到 STAGE 的本地补丁（main 仓没有），必须用绝对路径
+    bench = STAGE + "/bench_%s_precision.py" % api
     p = case["params"]
     a = ["python", bench, "--precision-only",
          "--ep-size=%d" % case["ep"], "--nnodes=%d" % case["nnodes"]]
@@ -405,8 +441,12 @@ print(json.dumps({
 
 
 def git_in(node, args, timeout=90):
-    """在**容器内**取 git 信息（容器里的那份才是真正被编译/运行的），失败回退宿主机。"""
-    inner = "git -C %s %s" % (REPO, args)
+    """在**容器内**取 git 信息（容器里的那份才是真正被编译/运行的），失败回退宿主机。
+
+    8 机容器默认无代理，gate 里的 `fetch origin main` 必须显式带代理。
+    """
+    inner = "export http_proxy=%s https_proxy=%s && git -C %s %s" % (
+        PROXY, PROXY, REPO, args)
     try:
         r = docker_exec(node, inner, timeout=timeout)
         if not r.returncode:
@@ -505,7 +545,7 @@ def require_gate():
     p = DATA / "round2_gate.json"
     if not p.exists():
         sys.exit("没有 round2_gate.json：先跑 `python run_round2.py gate`。"
-                 "本轮换了代码，必须先用门禁确认四机同一 commit、同一 .so。")
+                 "本轮换了代码，必须先用门禁确认八机同一 commit、同一 .so。")
     g = json.loads(p.read_text(encoding="utf-8"))
     if not g.get("pass"):
         sys.exit("gate 未通过（见 round2_gate.json），拒绝执行性能/精度，"
@@ -662,6 +702,7 @@ def stage_precision(args):
     if not cases:
         sys.exit("没有可跑的用例")
     LOGDIR.mkdir(parents=True, exist_ok=True)
+    deploy_bench_files({c["ep"] for c in cases})
     csv_path = DATA / "round2_precision.csv"
     out_root = STAGE + "/out/prec"
     apis = args.api
@@ -736,6 +777,7 @@ def stage_abnormal(args):
     # v1 的 abnormal_worker.py 原样保留，它对应上轮已实测的越界 expert id 口径。
     worker = HERE / "abnormal_worker_v2.py"
     LOGDIR.mkdir(parents=True, exist_ok=True)
+    deploy_bench_files(args.eps)   # abnormal_worker_v2.py 也 import bench_v2_precision
     eps = args.eps
     sids = args.scenarios
     jobs = []
