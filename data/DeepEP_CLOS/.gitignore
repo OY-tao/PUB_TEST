@@ -1,5 +1,7 @@
-# R2 跑批运行时产物，不入库
+# R2 / R3 跑批运行时产物，不入库（结果 CSV / gate.json 属交付产物，需入库）
 round2_state.json
 round2_logs/
+round3_state.json
+round3_logs/
 scripts/__pycache__/
 __pycache__/

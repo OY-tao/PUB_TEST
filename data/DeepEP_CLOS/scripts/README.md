@@ -1,9 +1,10 @@
 # DeepEP CLOS 配套脚本
 
 配套文档：[`../泛化用例测试设计V2.md`](../泛化用例测试设计V2.md)
-第二轮（换代码后重测）见 [`../第二轮测试执行指南_20261127.md`](../第二轮测试执行指南_20261127.md)。
+第二轮（换代码后重测，未执行）见 [`../第二轮测试执行指南_20261127.md`](../第二轮测试执行指南_20261127.md)。
 **第三轮（PR #37，8 机、跳 .7、EP128 精度）见 [`../第三轮测试执行指南_20261128.md`](../第三轮测试执行指南_20261128.md)**——
-该轮尚未生成 `run_round3.py`，改法见那份文档的「十·五」节，别复制 `run_round2.py` 造第二份。
+编排脚本 `run_round3.py` 已由 `run_round2.py` **git mv 重命名后按指南「十·五」9 处改法就地生成**，
+仓库只保留这一份，没有复制第二份实现。
 
 被测对象是 DeepEP 的 CLOS 组网带宽基准
 （`benchmarks/clos/bench_v1_bandwidth.py`、`bench_v2_bandwidth.py`）。
@@ -13,7 +14,7 @@
 
 ```
 scripts/
-├── run_round2.py             ★ R2 编排：门禁 + 性能 48 + 精度 200 + 异常 E4/E5
+├── run_round3.py             ★ R3 编排：PR#37 门禁 + C(EP128 精度) + B(性能48) + D(精度200) + E(E4/E5)
 ├── check_main_delta.py       ★ 核对上游 main「新在哪」（GitHub API，不碰设备）
 ├── gen_perf_cases.py         ★ 60 例性能用例（对齐 V2测试Case.txt）
 ├── perf_cases_v2.json        ★ 60 例性能规格
@@ -48,7 +49,7 @@ scripts/
 
 | 工具 | 何时用 | 输入 | 输出 | 覆盖 |
 |---|---|---|---|---|
-| `run_round2.py` | 换代码后整轮 | 需求原文 | 4 个 CSV + gate/state JSON | R2：门禁 + 48 性能 + 200 精度 + E4/E5 |
+| `run_round3.py` | 换代码后整轮 | R3 需求原文 + 指南 | 4 个 CSV + gate/state JSON | R3：PR#37 门禁 + C(EP128) + B(48 性能) + D(200 精度) + E(E4/E5) |
 | `check_main_delta.py` | 每次上游更新后**先跑** | 基线 sha（默认 `83252a5`） | 变更归属表 | 判定 dispatch/combine/bench 是否真的变了 |
 | `gen_perf_cases.py` | 跑测**前** | `perf_cases_v2.json` | 60 条命令，按 EP 分脚本 | 性能 60 例 |
 | `gen_cases.py` | 跑测**前** | `cases_1148.json` | 1148 条命令 + shell 批次 | 泛化 1148 例 |
@@ -60,24 +61,32 @@ scripts/
 
 ## 用法
 
-### run_round2.py —— 换代码后重测（R2）
+### run_round3.py —— 换到 PR #37 后重测（R3）
 
-需求原文见 [`../需求原文_R2_20261127.txt`](../需求原文_R2_20261127.txt)，完整说明见
-[`../第二轮测试执行指南_20261127.md`](../第二轮测试执行指南_20261127.md)。
+需求原文见 [`../需求原文_R3_20261128.txt`](../需求原文_R3_20261128.txt)，完整说明见
+[`../第三轮测试执行指南_20261128.md`](../第三轮测试执行指南_20261128.md)。
 
 ```bash
-python run_round2.py plan                 # 离线看用例与波次，不 ssh
-python run_round2.py gate                 # 四机 commit/.so/空闲/大页，落 round2_gate.json
-python run_round2.py perf --eps 8,16,32,64
-python run_round2.py precision --eps 8,16,32,64
-python run_round2.py abnormal --eps 8,16 --api v1,v2 --scenarios E4,E5
+python run_round3.py plan                                   # 离线看用例与波次，不 ssh
+python run_round3.py gate                                   # 八机门禁，落 round3_gate.json
+python run_round3.py precision --eps 128 --epr-tiers main    # C: EP128（8 台，含 .7）
+python run_round3.py perf --eps 8,16,32,64                 # B: 48 例性能（7 台，去 .7）
+python run_round3.py precision --eps 8,16,32,64            # D: 200 例精度（8 台）
+python run_round3.py abnormal --eps 8,16 --api v1,v2       # E: E4/E5
 ```
 
-三条设计约束：
+执行顺序 **gate → C → B → D → E**（EP128 最稀缺，需 8 台整齐，故最优先）。设计约束：
 
-1. `gate` 不通过则 `perf`/`precision`/`abnormal` 拒绝执行——版本没换成功的跑批没有意义；
-2. 波次只为占满四机（EP64 独占四机；EP8/16/32 分居 node3/node2/node0+1），**不改任何用例参数**；
-3. 性能命令行断言不含 `--huge-pages`（本轮明确不开 1G 大页）。
+1. `gate` 不通过则 B/C/D/E 拒绝执行；门禁额外断言 `is_pr_head`(==`0d1eca2`)、
+   `not_origin_main`、`base_ancestor`、`same_container_image`、`container_bound`、
+   `same_interpreter`(/work/env/bin/python)、`deep_ep_buffer_sha`(==`f825a679…`)、
+   `qp_plans_unset`；
+2. **两个节点集合**：`PERF_NODES`={0,1,2,4,5,6,7} 硬排除 .7，`PREC_NODES`=0..7 全 8 台
+   （含 .7，EP128 由此凑满 128 卡）；性能 `perf_argv` 断言 host 集合 ∩ {.7} = ∅；
+3. **纯 auto**：`env -u DEEPEP_CLOS_QP_PLANS` 起跑，代码已不读该变量；
+   不传 `udma_*` 手动参数、不调初始化超时（PR 默认 10 min）；
+4. 性能命令行断言不含 `--huge-pages`（本轮明确不开 1G 大页）；
+5. 精度多机逐节点收集判据，不回传原始产物；EP128 双档 epr（主 4 / 探针 32）分开报。
 
 > bench 自带 torchrun（`bench_*:172` 起拼 `torch.distributed.run`），
 > 每节点只需 `python bench_*.py --node-rank=N`，**外面不要再套 torchrun**。

@@ -1,58 +1,58 @@
 #!/usr/bin/env python3
-"""R2（第二轮）测试编排：代码门禁 → 性能 48 例 → 精度 200 例 → 异常 E4/E5 重测。
+"""R3（第三轮）测试编排：PR #37 代码门禁 → C(EP128 精度) → B(性能 48) → D(精度 200) → E(异常 E4/E5)。
 
-对应需求原文 `../需求原文_R2_20261127.txt` 的四条：
+对应需求原文 `../需求原文_R3_20261128.txt` 的五条 + 用户补充（.7 只做精度、
+PR 已修 QP 保持 auto），指南 `../第三轮测试执行指南_20261128.md`。
 
-  1. 更新 deepep main 分支代码，重编译安装 dispatch / combine 算子
-  2. 新代码下重测性能 EP8-EP64，不开 1G 大页，充分利用 4 机
-  3. 新代码下 EP8-EP64 精度，各复测 50 条，充分利用 4 机
-  4. 异常场景重测 E4、E5
+  1. 代码切到 lueelu/DeepEP PR #37 head `0d1eca2`（未合并），重编译安装
+  2. 性能 EP8-EP64 共 48 例，不开 1G 大页，**7 台**（{0,1,2,4,5,6,7}，硬排除 .7）
+  3. EP128 泛化精度，**8 台**（含 .7，128 卡），epr 双档（主 4 / 探针 32）
+  4. EP8-64 精度各 50 条共 200 例，**8 台**一波打满（EP8 放 .7）
+  5. 异常重测 E4 / E5（严格口径，abnormal_worker_v2.py）
 
-代码仓 `https://github.com/lueelu/DeepEP`（branch `main`）。main 会持续前进
-（用户 2026-11-27 16:26：「main 还不是最新，等通知」），所以**开跑前先跑
-`check_main_delta.py`** 重新判一遍"新在哪"，别沿用上次结论。
-
-`gate` 除八机一致性外，还会校验：remote 指向 `lueelu/DeepEP`、HEAD 与 fetch 后的
-`origin/main` 同一提交、`_C.so` 与 `libdeepep_kernels.so` 都在包里、八机
-`_build_info.json` 一致。只看 `single_commit` 会漏掉"八机一起停在旧 commit"
-和"装了新 commit 但库还是旧的"这两种假通过。
+关键口径（§A2.5）
+------------------
+* 代码是 **PR head** 而非 `origin/main`；gate 额外断言 `not_origin_main`、
+  `base_ancestor`(83252a5 是祖先)、`same_container_image`、`container_bound`。
+* 容器里有两套 `deep_ep`（版本号都报 0.1.0.dev5）。装和跑必须用
+  `/work/env/bin/python`，并把 `/work/env/lib/python3.13/site-packages` 放在
+  PYTHONPATH **首位**；gate 用 `buffer.py` sha == `f825a679…` 判新旧，
+  **不能用 `backends/direct/__init__.py`**（新旧同 sha）。
+* **纯 auto**：`env -u DEEPEP_CLOS_QP_PLANS`（PR 的 2828eae 已删该变量读取），
+  不传 `udma_*` 手动参数，不调初始化超时（ebc8267 默认 10 min）。
 
 设计约束
 --------
-* **门禁优先**：`gate` 不通过，`perf` / `precision` 直接拒绝执行。否则会把
-  "版本没换"的结果当成"新代码结果"，这是本轮最容易犯的错。
-* **波次只为占满参与节点，不改任何用例参数**：EP64 独占 4 机（必须同时启动）；
-  EP8/16/32 分居 node3 / node2 / node0+1 并行，这四台机器都不空转。
-  R2 用例最多 EP64=4 机，故只用 node0..node3；node4..node7 只参与 gate 校验。
-* **不开大页**：命令行显式禁止出现 `--huge-pages`，并在产物里记录 `huge_pages=no`。
-* **每 case 一次进程组**（与上轮同口径，便于逐条对比），中断可用 `--start/--limit` 续跑。
-* `plan` 子命令完全离线，不 ssh、不碰设备，用于评审用例与拓扑。
+* **门禁优先**：gate 不通过，B/C/D/E 一律拒绝执行。
+* **两个节点集合**：`PERF_NODES`={0,1,2,4,5,6,7}（7 台），`PREC_NODES`=0..7（8 台）。
+  node 号 = IP 末位 − 4。性能波次 EP64‖EP32‖EP16 占满 7 台、EP8 尾波；
+  精度 EP128 独占一波、EP8-64 一波打满 8 台。
+* **不开大页**：命令行断言不含 `--huge-pages`，产物记录 `huge_pages=no`。
+* **多机精度逐节点收集判据**（不回传原始产物）；每 case 一次进程组便于逐条对比。
+* `plan` 子命令完全离线，不 ssh、不碰设备。
 
-拓扑（2026-11-28 统一到 128P 的 8 机容器）
-------------------------------------------
+拓扑（128P 的 8 机容器）
+------------------------
 node0..node7 = 30.104.128.4 ... .11，各 16 卡；ssh 端口 56000；
-容器统一为 `deepep_ep128_full_matrix_20261128_073617`（8 机同名）；
-容器内源码 `/work/DeepEP_lueelu`（lueelu/DeepEP main），deep_ep 装在 conda
-`site-packages`（**没有** `/workspace/deepep` / `/workspace/runtime`）；
-`/work` 是各机本地 xfs、不共享，脚本用 scp + docker cp 逐机部署到 `/work/round2`。
-R2 用例最多 EP64=4 机，故 EP_NODES 仍只用 node0..node3；node4..node7 参与
-gate 的八机一致性校验，但不参与跑测（保持上轮"充分利用 4 机"的语义）。
+容器统一为 `deepep_ep128_full_matrix_20261128_073617`（8 机同名，必须显式绑定）；
+容器内源码 `/work/DeepEP_lueelu`（已 checkout PR #37），deep_ep 装在
+`/work/env/lib/python3.13/site-packages`；`/work` 是各机本地 xfs、不共享。
 
 精度 bench（`bench_v1_precision.py` / `bench_v2_precision.py`）**不在**
-lueelu/DeepEP main 仓里，是本目录的本地补丁：脚本部署到各节点 `/work/round2`
+lueelu/DeepEP 仓里，是本目录的本地补丁：部署到各节点 `/work/round3`
 后用绝对路径运行，PYTHONPATH 补 `/work/DeepEP_lueelu/tests/clos` 提供 golden。
 
-bench 自带 torchrun 编排（`bench_*:172` 起拼 `torch.distributed.run`），
-所以每节点只需普通 `python bench_*.py --node-rank=N`，**不要外面再套 torchrun**。
+bench 自带 torchrun 编排，所以每节点只需 `python bench_*.py --node-rank=N`，
+**不要外面再套 torchrun**。
 
-用法
+用法（执行顺序 gate → C → B → D → E）
 ----
-    python run_round2.py plan                       # 离线看计划（默认）
-    python run_round2.py gate                       # 八机门禁：commit/.so/空闲/大页
-    python run_round2.py perf  --eps 8,16,32,64     # 48 例性能
-    python run_round2.py precision --eps 8,16,32,64 # 200 例精度
-    python run_round2.py abnormal --eps 8,16 --api v1,v2
-    python run_round2.py perf --only-ep 64 --start 0 --limit 6   # 断点续跑
+    python run_round3.py plan                                   # 离线看计划（默认）
+    python run_round3.py gate                                   # 八机门禁（PR head/.so/解释器/QP/空闲）
+    python run_round3.py precision --eps 128 --epr-tiers main   # C: EP128（8 台）
+    python run_round3.py perf --eps 8,16,32,64                 # B: 48 例（7 台，去 .7）
+    python run_round3.py precision --eps 8,16,32,64            # D: 200 例（8 台）
+    python run_round3.py abnormal --eps 8,16 --api v1,v2       # E: E4/E5
 """
 
 import argparse
@@ -71,34 +71,57 @@ import traceback
 
 HERE = pathlib.Path(__file__).resolve().parent
 DATA = HERE.parent
-LOGDIR = DATA / "round2_logs"
-STATE_PATH = DATA / "round2_state.json"
+LOGDIR = DATA / "round3_logs"
+STATE_PATH = DATA / "round3_state.json"
 
 SSH_PORT = 56000
 SSH_BASE = ["ssh", "-T", "-p", str(SSH_PORT), "-o", "BatchMode=yes",
             "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=30",
             "-o", "ServerAliveCountMax=6"]
 
+# node 号 = IP 末位 − 4（不要改序，否则 .7 一跳后面全错位）
 NODES = [{"node": i, "host": "30.104.128.%d" % (4 + i)} for i in range(8)]
 MASTER = NODES[0]["host"]
+# R3 定案（方案 A）：性能硬排除 node3(.7)；精度用全部 8 台（EP128 需 128 卡）
+PERF_NODES = {0, 1, 2, 4, 5, 6, 7}
+PREC_NODES = set(range(8))
+PERF_HOST_EXCLUDED = "30.104.128.7"
 
-REPO = "/work/DeepEP_lueelu"       # 8 机容器内 clone 的 lueelu/DeepEP main
+PR_HEAD = "0d1eca219d89f1f5e7120b48f01f1dd3654db4f8"
+PR_BASE = "83252a54d2363734a706a7dd8368bebc3094af5a"
+BUFFER_SHA_EXPECTED = ("f825a67986286d8f8b852e57028090e8762111e508af"
+                       "1991351a94e948cfbbcb")
+ENV_SITE = "/work/env/lib/python3.13/site-packages"
+ENV_PYTHON = "/work/env/bin/python"
+
+REPO = "/work/DeepEP_lueelu"       # 8 机容器内 clone 的 lueelu/DeepEP（已 checkout PR#37）
 BENCH_DIR = REPO + "/benchmarks/clos"
 GOLDEN_DIR = REPO + "/tests/clos"
-RUNTIME = ""                       # deep_ep 在 conda site-packages，无独立 runtime 目录
-STAGE = "/work/round2"
-CONTAINER_HINT = "deepep_ep128_full_matrix_20261128_073617"   # 8 机统一容器名
+RUNTIME = ""                       # 无独立 runtime 目录；site-packages 由 ENV_SITE 前置
+STAGE = "/work/round3"
+CONTAINER_HINT = "deepep_ep128_full_matrix_20261128_073617"   # 8 机统一容器名（必须显式绑定）
 PROXY = "http://star-proxy.oa.com:3128"  # 容器内默认无代理，git fetch 需要
 
 # 精度 bench 不在 lueelu/DeepEP main 仓里，是本目录的本地补丁：部署到 STAGE
 # 后以绝对路径运行（避免污染 git 工作区，gate 的 clean_worktree 才不会失败）
 PRECISION_BENCH_FILES = ("bench_v1_precision.py", "bench_v2_precision.py")
 
-# EP -> 节点编号。8/16/32 互不重叠，故可与 64 之外的彼此并行；
-# 64 需要四机全占，只能独占一波。R2 最多 4 机，只用 node0..node3；
-# node4..node7 参与 gate 八机一致性校验但不跑测。
-EP_NODES = {8: [3], 16: [2], 32: [0, 1], 64: [0, 1, 2, 3]}
+# 性能阶段 EP -> 节点（7 台集合，硬排除 node3/.7）：
+#   第 1 波 EP64(4) ‖ EP32(2) ‖ EP16(1) 占满 7 台；第 2 波 EP8(1) 复用 node7。
+# 精度阶段另用 PREC_EP_NODES（§六：EP8 放 node3/.7，一波打满 8 台）。
+EP_NODES = {8: [7], 16: [7], 32: [5, 6], 64: [0, 1, 2, 4], 128: list(range(8))}
+PREC_EP_NODES = {8: [3], 16: [7], 32: [5, 6], 64: [0, 1, 2, 4], 128: list(range(8))}
 PORTS = {"perf": 29860, "precision": 29880, "abnormal": 29900}
+
+# 当前阶段生效的节点映射：性能用 EP_NODES（7 台、去 .7），精度用 PREC_EP_NODES
+# （8 台、EP8 放 .7）。两个集合不同，产物路径带 node 号，绝不混。
+EP_NODES_ACTIVE = dict(EP_NODES)
+
+
+def set_phase(phase):
+    global EP_NODES_ACTIVE
+    EP_NODES_ACTIVE = dict(EP_NODES if phase == "perf" else PREC_EP_NODES)
+    STATE["phase"] = phase
 
 STATE = {}
 LOCK = threading.Lock()
@@ -132,47 +155,49 @@ def run_ssh(host, cmd, timeout=600, log=None):
 
 
 def container_of(node):
-    """自动发现容器名；可用 --containers host=name 覆盖。"""
-    key = node["host"]
+    """R3：禁用子串猜测。执行阶段必须经 --containers 显式绑定全部 8 台。
+
+    旧逻辑靠 CONTAINER_HINT 过滤 docker ps，命中多个时取最短名字，可能落到
+    上一轮的旧容器（镜像 / .so 全不同却查不出来）。见指南 §三·A0.6。
+    """
     override = STATE.get("container_override", {})
-    if key in override:
-        return override[key]
-    cached = STATE.setdefault("containers", {}).get(key)
-    if cached:
-        return cached
-    r = run_ssh(key, "docker ps --format '{{.Names}}'", timeout=60)
-    if r.returncode:
-        raise RuntimeError("%s: docker ps 失败: %s" % (key, (r.stderr or "")[-200:]))
-    names = [ln.strip() for ln in r.stdout.splitlines() if CONTAINER_HINT in ln]
-    if not names:
-        raise RuntimeError("%s: 未找到含 %r 的容器，请先拉起环境" % (key, CONTAINER_HINT))
-    if len(names) > 1:
-        names = sorted(names, key=len)          # 取名字最短的，通常是稳定命名
+    missing = [n["host"] for n in NODES if n["host"] not in override or not override[n["host"]]]
+    if missing:
+        sys.exit("--containers 必须显式绑定全部 8 台（host=name,...）；缺: %s"
+                 % ",".join(missing))
+    name = override[node["host"]]
     with LOCK:
-        STATE["containers"][key] = names[0]
+        STATE.setdefault("containers", {})[node["host"]] = name
         save_state()
-    return names[0]
+    return name
 
 
 def docker_exec(node, inner, timeout=600, log=None):
-    """在容器内用 login shell 跑一段命令。"""
-    cmd = "docker exec -e SHMEM_UDMA_CONNECT_TIMEOUT_MS=300000 %s bash -lc %s" % (
-        container_of(node), shlex.quote(inner))
+    """在容器内用 login shell 跑一段命令。
+
+    R3：不再注入 SHMEM_UDMA_CONNECT_TIMEOUT_MS——PR #37 的 ebc8267 已把
+    初始化超时改为按 Buffer 配置、默认 10 min，指南 §A2.5 明令不传 timeout。
+    """
+    cmd = "docker exec %s bash -lc %s" % (container_of(node), shlex.quote(inner))
     return run_ssh(node["host"], cmd, timeout=timeout, log=log)
 
 
 def env_prefix():
-    """环境基线；PYTHONPATH 追加而不是覆盖（8 机容器无 /workspace/runtime）。
+    """环境基线（R3）。
 
-    STAGE 放部署的脚本（含精度 bench 补丁）；BENCH_DIR 放 main 仓的 bench
-    依赖；GOLDEN_DIR 补给 golden common.py（补丁 bench 的 REPO 会算成 /）。
+    - ENV_SITE 放 PYTHONPATH **首位**：保证 import deep_ep 解析到 /work/env
+      新 wheel，而不是 /opt/conda 旧包（§A2.5，两套版本号都是 0.1.0.dev5）。
+    - STAGE 放部署的脚本（含精度 bench 补丁）；BENCH_DIR / GOLDEN_DIR 补依赖。
+    - `env -u DEEPEP_CLOS_QP_PLANS`：PR #37 的 2828eae 已删掉该变量读取，
+      保持纯 auto；env -u 清掉可能从旧 shell 继承的脏值（门禁断言为空）。
     """
-    paths = [STAGE, BENCH_DIR, GOLDEN_DIR, RUNTIME, "$PYTHONPATH"]
+    paths = [ENV_SITE, STAGE, BENCH_DIR, GOLDEN_DIR, RUNTIME, "$PYTHONPATH"]
     pp = ":".join(x for x in paths if x)
     return ("source /usr/local/Ascend/ascend-toolkit/set_env.sh && "
             "unset SHMEM_UID_SESSION_ID ASCEND_RT_VISIBLE_DEVICES && "
-            "export SHMEM_UDMA_CONNECT_TIMEOUT_MS=300000 OMP_NUM_THREADS=1 "
-            "OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 && "
+            "unset DEEPEP_CLOS_QP_PLANS && "
+            "export PATH=/work/env/bin:$PATH && "
+            "export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 && "
             "export PYTHONPATH=" + pp + " && "
             "cd " + BENCH_DIR + " && ")
 
@@ -185,9 +210,9 @@ def join_argv(argv):
 
 
 def deploy(node, local_path, name):
-    """本地 -> 宿主机 /tmp -> 容器 /work/round2，不依赖宿主机挂载路径。"""
+    """本地 -> 宿主机 /tmp -> 容器 /work/round3，不依赖宿主机挂载路径。"""
     host = node["host"]
-    tmp = "/tmp/round2_" + name
+    tmp = "/tmp/round3_" + name
     subprocess.run(["scp", "-q", "-P", str(SSH_PORT), "-o", "BatchMode=yes",
                     str(local_path), "root@%s:%s" % (host, tmp)], check=True)
     c = container_of(node)
@@ -204,7 +229,7 @@ def deploy_bench_files(eps):
     且不能塞进 REPO（会污染 git 工作区，gate 的 clean_worktree 会失败），
     因此部署到 STAGE 并以绝对路径运行。abnormal_worker_v2.py 也 import 它们。
     """
-    idxs = sorted({i for ep in eps for i in EP_NODES[ep]})
+    idxs = sorted({i for ep in eps for i in EP_NODES_ACTIVE[ep]})
     for name in PRECISION_BENCH_FILES:
         src = HERE / name
         if not src.exists():
@@ -255,24 +280,41 @@ def perf_cases(eps):
     return out
 
 
-def precision_cases(eps):
-    """复用 2-16P 的 50 条规格，只把 EP 与节点数投影过去（用例内容不变）。"""
+def precision_cases(eps, epr_tiers=("main",)):
+    """复用 2-16P 的 50 条规格，只把 EP 与节点数投影过去（用例内容不变）。
+
+    R3 §五·C2/C3：EP128 走双档，主档 epr=4（E=512，与性能/基线同口径）、
+    探针 epr=32（E=4096，沿用 R2 spec）。两档分开报，不混在一张通过率里。
+    EP8-64 一律沿用 spec 原样（epr=32），与 R2 逐条可比。
+    """
     sys.path.insert(0, str(HERE))
     import gen_precision_cases as gpc
     spec = json.loads((HERE / "precision_cases_2to16p.json").read_text(encoding="utf-8"))
     out = []
     for ep in eps:
-        for c in gpc.build(spec, ep):
-            p = c.params
-            out.append({
-                "stage": "precision", "ep": ep, "idx": c.idx, "group": c.group,
-                "tag": c.tag, "params": p, "nnodes": p.get("nnodes", 1),
-            })
+        tiers = epr_tiers if ep == 128 else ("spec",)
+        for tier in tiers:
+            cap = {"main": 4, "probe": 32}.get(tier)
+            for c in gpc.build(spec, ep):
+                p = dict(c.params)
+                tag = c.tag
+                if cap is not None:
+                    epr = min(int(p.get("experts-per-rank", 32)), cap)
+                    p["experts-per-rank"] = epr
+                    # 按所选档位重裁 topk 上限（min(128, ep*epr)）
+                    k = int(p.get("num-topk", 8))
+                    p["num-topk"] = min(k, gpc.topk_cap(ep, epr))
+                    tag = "%s_%s" % (c.tag, tier)
+                out.append({
+                    "stage": "precision", "ep": ep, "idx": c.idx, "group": c.group,
+                    "tag": tag, "epr_tier": tier, "params": p,
+                    "nnodes": p.get("nnodes", max(1, ep // 16)),
+                })
     return out
 
 
 def nnodes_of(ep):
-    return len(EP_NODES[ep])
+    return len(EP_NODES_ACTIVE[ep])
 
 
 # --------------------------------------------------------------------------- #
@@ -284,7 +326,7 @@ def run_on_nodes(ep, argv_tail, port, tag, timeout, extra_check=None):
     argv_tail 为不含 --node-rank 的参数列表；每个节点自动补 node-rank/master。
     返回 {node_idx: rc}。
     """
-    idxs = EP_NODES[ep]
+    idxs = EP_NODES_ACTIVE[ep]
     barrier = threading.Barrier(len(idxs))
     rcs = {}
 
@@ -297,7 +339,10 @@ def run_on_nodes(ep, argv_tail, port, tag, timeout, extra_check=None):
                      "--master-port=%d" % port]
         else:
             argv += ["--node-rank=0"]
-        inner = env_prefix() + "timeout %d " % max(60, timeout - 120) + join_argv(argv)
+        # env -u 显式证明「纯 auto 起跑」：PR #37 已不读该变量，残留值只会
+        # 让环境不干净；guide §十·五 要求 env -u 起跑并在 gate 断言为空。
+        inner = (env_prefix() + "timeout %d env -u DEEPEP_CLOS_QP_PLANS " %
+                 max(60, timeout - 120) + join_argv(argv))
         log = LOGDIR / ("%s_node%d.log" % (tag, node_idx))
         barrier.wait(timeout=300)
         t0 = time.time()
@@ -347,7 +392,11 @@ def read_text(node, path):
 
 
 def perf_argv(case, out_root, run_id):
-    a = ["python", "bench_v2_bandwidth.py",
+    # .7 硬排除：性能集合 ∩ {30.104.128.7} 必须为空（指南 §四·B2）
+    hosts = {NODES[i]["host"] for i in EP_NODES_ACTIVE[case["ep"]]}
+    assert PERF_HOST_EXCLUDED not in hosts, (
+        "性能批次混入 .7（node3），整批作废且无法事后剔除: %s" % sorted(hosts))
+    a = [ENV_PYTHON, "bench_v2_bandwidth.py",
          "--ep-size=%d" % case["ep"], "--nnodes=%d" % nnodes_of(case["ep"]),
          "--num-tokens=%d" % case["num_tokens"], "--hidden=%d" % case["hidden"],
          "--num-topk=%d" % case["num_topk"],
@@ -363,9 +412,10 @@ def perf_argv(case, out_root, run_id):
 
 def precision_argv(case, out_root, run_id, api):
     # 精度 bench 是部署到 STAGE 的本地补丁（main 仓没有），必须用绝对路径
+    # 解释器用 /work/env/bin/python（§A2.5）；QP 变量由 env_prefix 的 env -u 清掉
     bench = STAGE + "/bench_%s_precision.py" % api
     p = case["params"]
-    a = ["python", bench, "--precision-only",
+    a = [ENV_PYTHON, bench, "--precision-only",
          "--ep-size=%d" % case["ep"], "--nnodes=%d" % case["nnodes"]]
     for k in ("num-tokens", "hidden", "num-topk", "experts-per-rank",
               "route-skew", "route-group-size", "route-local-fraction",
@@ -416,13 +466,14 @@ def summarize_pref(text):
 # 阶段：gate
 # --------------------------------------------------------------------------- #
 GATE_CODE = r'''
-import hashlib, json, pathlib
+import hashlib, json, pathlib, os, sys
 import deep_ep
 from deep_ep.backends.global_clos import Buffer, ElasticBuffer
 bad = [c.__module__ for c in (Buffer, ElasticBuffer) if "mesh_clos" in c.__module__]
 root = pathlib.Path(deep_ep.__file__).resolve().parent
 sos = sorted(str(p) for p in root.rglob("*.so"))
 bi = root / "_build_info.json"
+bp = root / "backends/direct/buffer.py"
 ver = "unknown"
 try:
     import importlib.metadata as md
@@ -430,8 +481,11 @@ try:
 except Exception:
     pass
 print(json.dumps({
+    "interpreter": sys.executable,
     "deep_ep": str(root),
     "version": ver,
+    "buffer_sha": hashlib.sha256(bp.read_bytes()).hexdigest() if bp.exists() else "",
+    "qp_plans": os.environ.get("DEEPEP_CLOS_QP_PLANS", ""),
     "build_info_sha": hashlib.sha256(bi.read_bytes()).hexdigest() if bi.exists() else "",
     "backends": [Buffer.__module__, ElasticBuffer.__module__],
     "mesh_clos": bad,
@@ -475,14 +529,29 @@ def stage_gate(args):
             # origin/main 的本地引用可能过期：fetch 一次再看，避免"同步"是假象
             git_in(node, "fetch --quiet origin main", timeout=180)
             rec["origin_main_fetched"], _ = git_in(node, "rev-parse origin/main")
-            r = docker_exec(node, "python -c " + shlex.quote(GATE_CODE), timeout=180)
+            # 显式用 /work/env/bin/python + ENV_SITE 首位，保证 gate 校验的
+            # 解释器/模块与实测完全一致（§A2.5）
+            gate_py = ("export PYTHONPATH=%s:$PYTHONPATH && %s -c " %
+                       (ENV_SITE, ENV_PYTHON)) + shlex.quote(GATE_CODE)
+            r = docker_exec(node, gate_py, timeout=180)
             if r.returncode:
                 rec["import_error"] = (r.stderr or r.stdout or "")[-500:]
             else:
                 rec.update(json.loads(r.stdout.strip().splitlines()[-1]))
+            rec["base_ancestor"], _ = git_in(
+                node, "merge-base --is-ancestor %s HEAD && echo OK || echo FAIL" % PR_BASE)
+            rec["image"] = run_ssh(
+                host, "docker inspect --format '{{.Image}}' %s" % c,
+                timeout=60).stdout.strip()
+            rec["container_bound"] = host in STATE.get("container_override", {})
+            rec["qp_plans_env"] = docker_exec(
+                node, "printenv DEEPEP_CLOS_QP_PLANS || true", timeout=60).stdout.strip()
             r = run_ssh(host, "grep -i Huge /proc/meminfo", timeout=30)
             rec["hugepages"] = [ln for ln in r.stdout.splitlines() if ln.strip()]
-            r = run_ssh(host, "npu-smi info | head -14", timeout=60)
+            r = run_ssh(host, "npu-smi info", timeout=60)
+            import re as _re
+            rec["idle_npus"] = len(_re.findall(
+                r"No running processes found in NPU\s+(\d+)", r.stdout))
             rec["npu_head"] = r.stdout.splitlines()[:4]
         except Exception as exc:
             rec["error"] = str(exc)[:400]
@@ -505,16 +574,42 @@ def stage_gate(args):
                    "device_kernels": any(n == "libdeepep_kernels.so" for n in names)}
     kernels_ok = bool(kern) and all(v["host_ext"] and v["device_kernels"] for v in kern.values())
 
+    def node_vals(key):
+        return [report["nodes"][h].get(key) for h in ok_nodes]
+
+    interpreters = set(node_vals("interpreter"))
+    images = set(node_vals("image"))
+    buf_shas = set(node_vals("buffer_sha"))
+    commit = (list(commits)[0] if len(commits) == 1 and "" not in commits
+              else sorted(map(str, commits)))
     report["checks"] = {
         "all_nodes_reachable": len(ok_nodes) == len(NODES),
         "remote_repo": bool(remotes) and all(r and "lueelu/DeepEP" in r for r in remotes),
         "remotes": sorted(map(str, remotes)),
-        "in_sync_with_origin_main": (bool(commits) and len(commits) == 1
-                                     and "" not in commits and commits == origin),
-        "single_commit": len(commits) == 1 and "" not in commits,
-        "commit": (list(commits)[0] if len(commits) == 1 and "" not in commits
-                   else sorted(map(str, commits))),
+        "is_pr_head": commit == PR_HEAD,
+        "commit": commit,
+        "pr_head_expected": PR_HEAD,
+        "not_origin_main": (bool(commit) and isinstance(commit, str)
+                            and commit not in origin),
         "origin_main": sorted(map(str, origin)),
+        "base_ancestor": bool(ok_nodes) and all(v == "OK" for v in node_vals("base_ancestor")),
+        "single_commit": len(commits) == 1 and "" not in commits,
+        "same_container_image": len(images) == 1 and "" not in images,
+        "image": sorted(map(str, images)),
+        "container_bound": bool(ok_nodes) and all(node_vals("container_bound")),
+        "same_interpreter": (len(interpreters) == 1
+                             and next(iter(interpreters), "") == ENV_PYTHON),
+        "interpreters": sorted(map(str, interpreters)),
+        "deep_ep_module_path": bool(ok_nodes) and all(
+            "/opt/conda/" not in (report["nodes"][h].get("deep_ep") or "")
+            for h in ok_nodes),
+        "deep_ep_buffer_sha": (len(buf_shas) == 1
+                               and next(iter(buf_shas), "") == BUFFER_SHA_EXPECTED),
+        "buffer_sha": sorted(map(str, buf_shas)),
+        "qp_plans_unset": bool(ok_nodes) and all(
+            not (report["nodes"][h].get("qp_plans") or "")
+            and not (report["nodes"][h].get("qp_plans_env") or "")
+            for h in ok_nodes),
         "so_identical": same,
         "kernels_so_present": kernels_ok,
         "build_info_identical": len(set(infos.values())) == 1,
@@ -523,32 +618,44 @@ def stage_gate(args):
         "versions": sorted({report["nodes"][h].get("version", "") for h in ok_nodes}),
         "no_mesh_clos": all(not report["nodes"][h].get("mesh_clos") for h in ok_nodes),
         "clean_worktree": all(not report["nodes"][h].get("dirty") for h in ok_nodes),
+        "cards_idle_all8": bool(ok_nodes) and len(ok_nodes) == len(NODES) and all(
+            report["nodes"][h].get("idle_npus", -1) >= 16 for h in ok_nodes),
+        "idle_npus": {h: report["nodes"][h].get("idle_npus", -1) for h in ok_nodes},
     }
     report["pass"] = all([report["checks"]["all_nodes_reachable"],
                           report["checks"]["remote_repo"],
-                          report["checks"]["in_sync_with_origin_main"],
+                          report["checks"]["is_pr_head"],
+                          report["checks"]["not_origin_main"],
+                          report["checks"]["base_ancestor"],
                           report["checks"]["single_commit"],
+                          report["checks"]["same_container_image"],
+                          report["checks"]["container_bound"],
+                          report["checks"]["same_interpreter"],
+                          report["checks"]["deep_ep_module_path"],
+                          report["checks"]["deep_ep_buffer_sha"],
+                          report["checks"]["qp_plans_unset"],
                           report["checks"]["so_identical"],
                           report["checks"]["kernels_so_present"],
                           report["checks"]["build_info_identical"],
                           report["checks"]["no_mesh_clos"],
-                          report["checks"]["clean_worktree"]])
-    (DATA / "round2_gate.json").write_text(
+                          report["checks"]["clean_worktree"],
+                          report["checks"]["cards_idle_all8"]])
+    (DATA / "round3_gate.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report["checks"], indent=2, ensure_ascii=False))
     print("GATE %s -> %s" % ("PASS" if report["pass"] else "FAIL",
-                             DATA / "round2_gate.json"))
+                             DATA / "round3_gate.json"))
     return 0 if report["pass"] else 2
 
 
 def require_gate():
-    p = DATA / "round2_gate.json"
+    p = DATA / "round3_gate.json"
     if not p.exists():
-        sys.exit("没有 round2_gate.json：先跑 `python run_round2.py gate`。"
-                 "本轮换了代码，必须先用门禁确认八机同一 commit、同一 .so。")
+        sys.exit("没有 round3_gate.json：先跑 `python run_round3.py gate --containers ...`。"
+                 "本轮换了代码，必须先用门禁确认八机同一 PR head、同一 .so、纯 auto。")
     g = json.loads(p.read_text(encoding="utf-8"))
     if not g.get("pass"):
-        sys.exit("gate 未通过（见 round2_gate.json），拒绝执行性能/精度，"
+        sys.exit("gate 未通过（见 round3_gate.json），拒绝执行性能/精度，"
                  "否则结果不能代表新代码。")
     return g
 
@@ -573,9 +680,10 @@ def append_csv(path, cols, rows):
 
 
 def stage_perf(args):
+    set_phase("perf")            # 7 台集合，硬排除 node3/.7
     gate = require_gate()
     commit = gate["checks"].get("commit")
-    cases = perf_cases(args.eps)
+    cases = perf_cases([e for e in args.eps if e != 128])
     if args.only_ep:
         cases = [c for c in cases if c["ep"] in args.only_ep]
     cases = cases[args.start:]
@@ -584,7 +692,7 @@ def stage_perf(args):
     if not cases:
         sys.exit("没有可跑的用例")
     LOGDIR.mkdir(parents=True, exist_ok=True)
-    csv_path = DATA / "round2_perf.csv"
+    csv_path = DATA / "round3_perf.csv"
     out_root = STAGE + "/out/perf"
     print("perf: %d 例，commit=%s，huge_pages=no" % (len(cases), commit))
 
@@ -603,11 +711,11 @@ def stage_perf(args):
 
 def run_perf_ep(ep, cases, commit, out_root, csv_path, args):
     need = nnodes_of(ep)
-    for i in EP_NODES[ep]:
+    for i in EP_NODES_ACTIVE[ep]:
         check_idle(node_by_idx(i), ep // need)
     tag_base = "perf_ep%d_r2_%s" % (ep, time.strftime("%Y%m%d_%H%M%S"))
     print("-- EP%d：%d 例，%d 机 × %d 卡（node%s）" % (
-        ep, len(cases), need, ep // need, ",".join(map(str, EP_NODES[ep]))), flush=True)
+        ep, len(cases), need, ep // need, ",".join(map(str, EP_NODES_ACTIVE[ep]))), flush=True)
     for c in cases:
         run_id = "%s_c%02d" % (tag_base, c["idx"])
         argv = perf_argv(c, out_root, run_id)
@@ -616,10 +724,10 @@ def run_perf_ep(ep, cases, commit, out_root, csv_path, args):
         ok = all(v == 0 for v in rcs.values())
         rows = []
         if ok:
-            text = read_text(node_by_idx(EP_NODES[ep][0]),
+            text = read_text(node_by_idx(EP_NODES_ACTIVE[ep][0]),
                              "%s/%s/node0/summary.csv" % (out_root, run_id))
             if not text.strip():
-                text = read_text(node_by_idx(EP_NODES[ep][0]),
+                text = read_text(node_by_idx(EP_NODES_ACTIVE[ep][0]),
                                  "%s/%s/summary.csv" % (out_root, run_id))
             for s in summarize_pref(text):
                 rows.append(dict(s, run_id=run_id, ts=now(), ep_size=ep,
@@ -646,7 +754,7 @@ def run_perf_ep(ep, cases, commit, out_root, csv_path, args):
 # --------------------------------------------------------------------------- #
 # 阶段：precision
 # --------------------------------------------------------------------------- #
-PREC_COLS = ["run_id", "ts", "api", "ep_size", "nnodes", "group", "tag",
+PREC_COLS = ["run_id", "ts", "api", "ep_size", "nnodes", "group", "tag", "epr_tier",
              "num_tokens", "hidden", "num_topk", "experts_per_rank", "aiv",
              "dtype", "expand", "ranks_expected", "ranks_ok", "digest",
              "state", "commit", "output"]
@@ -691,9 +799,10 @@ def judge_precision(files, ep):
 
 
 def stage_precision(args):
+    set_phase("precision")       # 8 台集合（含 node3/.7），EP8 放 .7
     gate = require_gate()
     commit = gate["checks"].get("commit")
-    cases = precision_cases(args.eps)
+    cases = precision_cases(args.eps, args.epr_tiers)
     if args.only_ep:
         cases = [c for c in cases if c["ep"] in args.only_ep]
     cases = cases[args.start:]
@@ -703,7 +812,7 @@ def stage_precision(args):
         sys.exit("没有可跑的用例")
     LOGDIR.mkdir(parents=True, exist_ok=True)
     deploy_bench_files({c["ep"] for c in cases})
-    csv_path = DATA / "round2_precision.csv"
+    csv_path = DATA / "round3_precision.csv"
     out_root = STAGE + "/out/prec"
     apis = args.api
     print("precision: %d 例/API × %s，commit=%s" % (len(cases), apis, commit))
@@ -723,7 +832,7 @@ def stage_precision(args):
 
 def run_prec_ep(ep, cases, apis, commit, out_root, csv_path, args):
     need = nnodes_of(ep)
-    for i in EP_NODES[ep]:
+    for i in EP_NODES_ACTIVE[ep]:
         check_idle(node_by_idx(i), ep // need)
     tag_base = "prec_ep%d_r2_%s" % (ep, time.strftime("%Y%m%d_%H%M%S"))
     print("-- EP%d：%d 例 × %d API，%d 机 × %d 卡" % (
@@ -738,12 +847,17 @@ def run_prec_ep(ep, cases, apis, commit, out_root, csv_path, args):
             state = "failed_runtime"
             errs = []
             if ok_rc:
-                files = collect_json(node_by_idx(EP_NODES[ep][0]), out_root + "/" + run_id)
+                # 逐节点收集后合并（8 机 /work 不共享，首节点只有本机的 16 rank）。
+                # 仅读取判据所需的 json，不回传原始产物（既定「产物不回传」口径）。
+                files = {}
+                for i in EP_NODES_ACTIVE[ep]:
+                    files.update(collect_json(node_by_idx(i), out_root + "/" + run_id))
                 ranks, digest, errs = judge_precision(files, ep)
                 state = "passed" if ranks == ep else "failed_judge"
             append_csv(csv_path, PREC_COLS, [{
                 "run_id": run_id, "ts": now(), "api": api, "ep_size": ep,
                 "nnodes": need, "group": c.get("group", ""), "tag": c.get("tag", ""),
+                "epr_tier": c.get("epr_tier", "spec"),
                 "num_tokens": c["params"].get("num-tokens", ""),
                 "hidden": c["params"].get("hidden", ""),
                 "num_topk": c["params"].get("num-topk", ""),
@@ -771,6 +885,7 @@ def run_prec_ep(ep, cases, apis, commit, out_root, csv_path, args):
 # 阶段：abnormal（E4 / E5 严格重测）
 # --------------------------------------------------------------------------- #
 def stage_abnormal(args):
+    set_phase("precision")       # 异常用 EP8/EP16 单机，沿用精度集合（.7 可用）
     gate = require_gate()
     commit = gate["checks"].get("commit")
     # 用严格口径的 v2 worker（超容量 E5 + 纯张量 E4，见 commit 5cc6d2d）。
@@ -790,7 +905,7 @@ def stage_abnormal(args):
 
     for ep in sorted({j["ep"] for j in jobs}):
         need = nnodes_of(ep)
-        for i in EP_NODES[ep]:
+        for i in EP_NODES_ACTIVE[ep]:
             check_idle(node_by_idx(i), ep // need)
             deploy(node_by_idx(i), worker, "abnormal_worker_v2.py")
 
@@ -798,7 +913,7 @@ def stage_abnormal(args):
 
     def one(job):
         ep, api, sid = job["ep"], job["api"], job["sid"]
-        node = node_by_idx(EP_NODES[ep][0])       # 异常场景沿用上轮的 EP8/EP16 单机
+        node = node_by_idx(EP_NODES_ACTIVE[ep][0])       # 异常场景沿用上轮的 EP8/EP16 单机
         run_id = "abn_ep%d_%s_%s_r2" % (ep, api, sid)
         out_root = "%s/out/abn/%s" % (STAGE, run_id)
         argv = ["python", "-m", "torch.distributed.run",
@@ -843,7 +958,7 @@ def stage_abnormal(args):
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
         list(pool.map(one, jobs))
 
-    csv_path = DATA / "round2_abnormal.csv"
+    csv_path = DATA / "round3_abnormal.csv"
     cols = ["run_id", "ts", "ep", "api", "scenario", "classification", "ranks", "rc",
             "notes", "output"]
     if csv_path.exists():
@@ -857,62 +972,105 @@ def stage_abnormal(args):
 # 阶段：plan（离线）
 # --------------------------------------------------------------------------- #
 def stage_plan(args):
-    print("R2 第二轮测试计划（离线，不碰设备）")
+    print("R3 第三轮测试计划（离线，不碰设备）")
     print("=" * 74)
+    print("代码: PR #37 head %s（未合并；base 83252a5 须为祖先）" % PR_HEAD)
+    print("容器: %s（8 机同名，显式绑定）" % CONTAINER_HINT)
+    print("解释器: %s；PYTHONPATH 首位 %s" % (ENV_PYTHON, ENV_SITE))
+    print("QP: env -u DEEPEP_CLOS_QP_PLANS，纯 auto（不传 udma_*、不调 timeout）")
     print("拓扑: " + "  ".join("node%d=%s" % (n["node"], n["host"]) for n in NODES))
     print("      各 16 卡；master=%s；ssh -p %d" % (MASTER, SSH_PORT))
+    print("性能集合 PERF_NODES=%s（硬排除 node3/.7）" % sorted(PERF_NODES))
+    print("精度集合 PREC_NODES=%s（全 8 台，含 .7）" % sorted(PREC_NODES))
     print()
 
-    perf = perf_cases(args.eps)
-    prec = precision_cases(args.eps)
-    print("阶段 B 性能：%d 例（每 EP 12 例：2 tokens × 3 hidden × 2 aiv）" % len(perf))
+    plan_eps = [e for e in args.eps if e != 128]
+    perf = perf_cases(plan_eps)
+    print("阶段 B 性能（7 台）：%d 例（每 EP 12 例：2 tokens × 3 hidden × 2 aiv）" % len(perf))
+    set_phase("perf")
     print("  %-4s %-5s %-6s %s" % ("EP", "例数", "拓扑", "节点分配"))
-    for ep in args.eps:
+    for ep in plan_eps:
         print("  %-4d %-5d %-6s node%s" % (
             ep, len([c for c in perf if c["ep"] == ep]),
             "%d机x%d卡" % (nnodes_of(ep), ep // nnodes_of(ep)),
-            ",".join(map(str, EP_NODES[ep]))))
+            ",".join(map(str, EP_NODES_ACTIVE[ep]))))
     print("  大页: 关闭（argv 断言不含 --huge-pages）")
     print("  波次: " + " | ".join(
-        " + ".join("EP%d" % e for e in w) for w in perf_waves(args.eps)))
+        " + ".join("EP%d" % e for e in w) for w in perf_waves(plan_eps)))
+    print("  .7 排除断言: perf_argv 里 host 集合 ∩ {.7} = ∅")
     print()
-    print("阶段 C 精度：%d 例（每 EP 50 条，沿用 2-16P 同一套规格）" % len(prec))
-    print("  API: %s" % ",".join(args.api))
+
+    set_phase("precision")
+    prec = precision_cases(args.eps, args.epr_tiers)
+    print("阶段 C/D 精度（8 台）：%d 例（每 EP 50 条 × epr 档位）" % len(prec))
+    print("  API: %s；EP128 epr 档位: %s（主 4 / 探针 32，分开报不混算）" %
+          (",".join(args.api), ",".join(args.epr_tiers)))
+    print("  %-4s %-5s %-6s %s" % ("EP", "例数", "拓扑", "节点分配"))
+    for ep in args.eps:
+        print("  %-4d %-5d %-6s node%s" % (
+            ep, len([c for c in prec if c["ep"] == ep]),
+            "%d机x%d卡" % (nnodes_of(ep), ep // nnodes_of(ep)),
+            ",".join(map(str, EP_NODES_ACTIVE[ep]))))
     print("  波次: " + " | ".join(
         " + ".join("EP%d" % e for e in w) for w in perf_waves(args.eps)))
     print()
-    print("阶段 D 异常：E4 / E5 严格重构造")
-    print("  E4: 一次 dispatch + 同一 handle 两次 combine，第二次换本地生成的同布局专家输出")
-    print("      （旧实现用 dispatch_cached 多跑了一次 dispatch，已改掉）")
+
+    print("阶段 E 异常：E4 / E5 严格重构造（abnormal_worker_v2.py，2 台）")
+    print("  E4: 一次 dispatch + 同一 handle 两次 combine，第二次换本地同布局专家输出")
     print("  E5: 第二轮传超容量 tokens（num_tokens = capacity+1），期望 ValueError")
-    print("      （v1 脚本用越界 expert id，触发设备级崩溃，属另一个缺口）")
-    print("  矩阵: EP%s × {%s} × {%s}" % (
-        ",".join(map(str, args.eps)), ",".join(args.api), ",".join(args.scenarios)))
+    print("  矩阵: EP8,EP16 × {%s} × {%s}" % (
+        ",".join(args.api), ",".join(args.scenarios)))
     print()
-    sample = perf[0]
-    ep = sample["ep"]
-    rid = "perf_ep%d_r2_preview_c01" % ep
-    print("示例命令（node%s，EP%d）：" % (EP_NODES[ep][0], ep))
-    print("  " + " ".join(perf_argv(sample, STAGE + "/out/perf", rid)))
-    if len(EP_NODES[ep]) > 1:
-        print("  ＋ 各节点补 --node-rank=<0..%d> --master-addr=%s --master-port=%d"
-              % (len(EP_NODES[ep]) - 1, MASTER, PORTS["perf"]))
+
+    print("门禁判据(round3_gate.json): is_pr_head / not_origin_main / base_ancestor /")
+    print("  same_container_image / container_bound / same_interpreter /")
+    print("  deep_ep_module_path / deep_ep_buffer_sha(==f825a679…) / qp_plans_unset /")
+    print("  so_identical / kernels_so_present / no_mesh_clos / clean_worktree / cards_idle_all8")
+    print("执行顺序: gate → C(EP128,8台) → B(性能,7台) → D(精度200,8台) → E(异常,2台)")
+    print()
+    if perf:
+        set_phase("perf")
+        sample = perf[0]
+        ep = sample["ep"]
+        rid = "perf_ep%d_r3_preview_c01" % ep
+        print("示例命令（node%s，EP%d）：" % (EP_NODES_ACTIVE[ep][0], ep))
+        print("  " + " ".join(perf_argv(sample, STAGE + "/out/perf", rid)))
+        if len(EP_NODES_ACTIVE[ep]) > 1:
+            print("  ＋ 各节点补 --node-rank=<0..%d> --master-addr=%s --master-port=%d"
+                  % (len(EP_NODES_ACTIVE[ep]) - 1, MASTER, PORTS["perf"]))
+    set_phase("precision")
     p0 = prec[0]
     print()
-    print("示例精度命令（EP%d）：" % p0["ep"])
+    print("示例精度命令（EP%d，%s）：" % (p0["ep"], p0["epr_tier"]))
     print("  " + " ".join(precision_argv(p0, STAGE + "/out/prec", "prec_preview", args.api[0])))
     return 0
 
 
 def perf_waves(eps):
-    """EP64 独占一波；其余并行一波（节点互不重叠）。"""
-    eps = sorted(set(eps), reverse=True)
+    """R3 波次（指南 §四·B2 / §六）。
+
+    性能（7 台）：第 1 波 EP64(0,1,2,4) ‖ EP32(5,6) ‖ EP16(7) 占满 7 台；
+                  第 2 波 EP8(7) 尾波（EP8 与 EP16 共用 node7，必须串行）。
+                  .7 全程空置。
+    精度（8 台）：EP128 独占一波（128 卡全占）；其余 EP64+EP32+EP16+EP8
+                  一波打满 8 台（EP8 在 node3/.7）。
+    """
+    eps = set(eps)
+    phase = STATE.get("phase", "perf")
     waves = []
-    if 64 in eps:
-        waves.append([64])
-    rest = [e for e in eps if e != 64]
-    if rest:
-        waves.append(sorted(rest))
+    if 128 in eps:
+        waves.append([128])
+    rest = eps - {128}
+    if phase == "perf":
+        first = [e for e in (64, 32, 16) if e in rest]
+        if first:
+            waves.append(first)
+        if 8 in rest:
+            waves.append([8])
+    else:
+        one = [e for e in (64, 32, 16, 8) if e in rest]
+        if one:
+            waves.append(one)
     return waves
 
 
@@ -922,16 +1080,18 @@ def parse_eps(text):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="DeepEP CLOS 第二轮（R2）测试编排")
+    ap = argparse.ArgumentParser(description="DeepEP CLOS 第三轮（R3）测试编排")
     ap.add_argument("stage", nargs="?", default="plan",
                     choices=["plan", "gate", "perf", "precision", "abnormal"])
     ap.add_argument("--eps", default="8,16,32,64",
-                    help="性能/精度阶段参与编排的 EP，默认全部")
+                    help="性能/精度阶段参与编排的 EP；C 阶段用 --eps 128")
     ap.add_argument("--only-ep", default="", help="只跑指定 EP，如 64")
     ap.add_argument("--api", default="v2", help="精度/异常阶段的 API，如 v2 或 v1,v2")
     ap.add_argument("--scenarios", default="E4,E5", help="异常场景，默认 E4,E5")
+    ap.add_argument("--epr-tiers", default="main",
+                    help="EP128 的 epr 档位：main(4,与基线同口径) / probe(32,大E泛化) / main,probe 双跑")
     ap.add_argument("--containers", default="",
-                    help="覆盖容器发现，格式 host=name,host=name")
+                    help="显式绑定容器，格式 host=name,... 必须 8 台；默认 8 台同名新容器")
     ap.add_argument("--start", type=int, default=0)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--timeout", type=int, default=3600, help="单个 case 超时秒")
@@ -947,10 +1107,16 @@ def main():
     args.only_ep = parse_eps(args.only_ep) if args.only_ep else []
     args.api = [x for x in args.api.replace(" ", "").split(",") if x]
     args.scenarios = [x for x in args.scenarios.replace(" ", "").split(",") if x]
+    args.epr_tiers = tuple(x for x in args.epr_tiers.replace(" ", "").split(",") if x)
+    assert all(t in ("main", "probe") for t in args.epr_tiers), \
+        "--epr-tiers 只能是 main / probe / main,probe"
 
+    # 8 台显式绑定（不靠子串猜测）。未给 --containers 时用已确认的 8 台同名新容器。
     if args.containers:
         STATE["container_override"] = dict(
             kv.split("=", 1) for kv in args.containers.split(",") if "=" in kv)
+    else:
+        STATE["container_override"] = {n["host"]: CONTAINER_HINT for n in NODES}
 
     LOGDIR.mkdir(parents=True, exist_ok=True)
     STATE.setdefault("runs", []).append({"stage": args.stage, "ts": now(),
