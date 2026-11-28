@@ -112,11 +112,16 @@ PRECISION_BENCH_FILES = ("bench_v1_precision.py", "bench_v2_precision.py")
 PRECISION_DEPS_FILES = ("stage_metrics.py", "route_workloads.py",
                         "bandwidth_multinode.py", "profiling.py")
 
-# 性能阶段 EP -> 节点（7 台集合，硬排除 node3/.7）：
-#   第 1 波 EP64(4) ‖ EP32(2) ‖ EP16(1) 占满 7 台；第 2 波 EP8(1) 复用 node7。
+# 性能阶段 EP -> 节点（性能集合硬排除 node3/.7，用户 2026-11-28 确认）：
+#   R3 主 48 例：第 1 波 EP64 ‖ EP32 ‖ EP16；第 2 波 EP8 复用 node7(.11)。
+#   补测 EP4/EP64（1128 表）：用户指示「换其他空闲机器」——原 EP64=[0,1,2,4]
+#   含被别人占的 .4/.5，改为 [2,4,5,6]=.6/.8/.9/.10；EP4 用 [7]=.11 单机 4 卡。
+#   两组节点不重叠，可一波并行；均不含 .7 与 .4/.5。
 # 精度阶段另用 PREC_EP_NODES（§六：EP8 放 node3/.7，一波打满 8 台）。
-EP_NODES = {8: [7], 16: [7], 32: [5, 6], 64: [0, 1, 2, 4], 128: list(range(8))}
+EP_NODES = {4: [7], 8: [7], 16: [7], 32: [5, 6], 64: [2, 4, 5, 6], 128: list(range(8))}
 PREC_EP_NODES = {8: [3], 16: [7], 32: [5, 6], 64: [0, 1, 2, 4], 128: list(range(8))}
+# 补测专用节点（覆盖 EP_NODES 的 4/64）：避开 .4/.5 被占、避开 .7 性能禁区
+SUPP_EP_NODES = {4: [7], 64: [2, 4, 5, 6]}
 PORTS = {"perf": 29860, "precision": 29880, "abnormal": 29900}
 
 # 当前阶段生效的节点映射：性能用 EP_NODES（7 台、去 .7），精度用 PREC_EP_NODES
@@ -126,7 +131,10 @@ EP_NODES_ACTIVE = dict(EP_NODES)
 
 def set_phase(phase):
     global EP_NODES_ACTIVE
-    EP_NODES_ACTIVE = dict(EP_NODES if phase == "perf" else PREC_EP_NODES)
+    if phase == "supp":
+        EP_NODES_ACTIVE = dict(SUPP_EP_NODES)
+    else:
+        EP_NODES_ACTIVE = dict(EP_NODES if phase == "perf" else PREC_EP_NODES)
     STATE["phase"] = phase
 
 STATE = {}
@@ -713,7 +721,8 @@ def append_csv(path, cols, rows):
 
 
 def stage_perf(args):
-    set_phase("perf")            # 7 台集合，硬排除 node3/.7
+    supp = getattr(args, "supp", False)
+    set_phase("supp" if supp else "perf")   # 补测用空闲节点集；主 B 用 7 台集合
     gate = require_gate()
     commit = gate["checks"].get("commit")
     cases = perf_cases([e for e in args.eps if e != 128])
@@ -725,9 +734,11 @@ def stage_perf(args):
     if not cases:
         sys.exit("没有可跑的用例")
     LOGDIR.mkdir(parents=True, exist_ok=True)
-    csv_path = DATA / "round3_perf.csv"
-    out_root = STAGE + "/out/perf"
-    print("perf: %d 例，commit=%s，huge_pages=no" % (len(cases), commit))
+    csv_path = DATA / ("round3_perf_supp.csv" if supp else "round3_perf.csv")
+    out_root = STAGE + ("/out/perf_supp" if supp else "/out/perf")
+    print("perf%s: %d 例，commit=%s，huge_pages=no，节点=%s" %
+          ("(补测)" if supp else "", len(cases), commit,
+           {ep: EP_NODES_ACTIVE[ep] for ep in sorted({c["ep"] for c in cases})}))
 
     for wave in perf_waves({c["ep"] for c in cases}):
         jobs = [(ep, [c for c in cases if c["ep"] == ep]) for ep in wave]
@@ -1017,10 +1028,12 @@ def stage_plan(args):
     print("精度集合 PREC_NODES=%s（全 8 台，含 .7）" % sorted(PREC_NODES))
     print()
 
+    supp = getattr(args, "supp", False)
     plan_eps = [e for e in args.eps if e != 128]
     perf = perf_cases(plan_eps)
-    print("阶段 B 性能（7 台）：%d 例（每 EP 12 例：2 tokens × 3 hidden × 2 aiv）" % len(perf))
-    set_phase("perf")
+    print("%s：%d 例（每 EP 12 例：2 tokens × 3 hidden × 2 aiv）" %
+          ("补测 EP4/EP64（空闲 5 台）" if supp else "阶段 B 性能（7 台）", len(perf)))
+    set_phase("supp" if supp else "perf")
     print("  %-4s %-5s %-6s %s" % ("EP", "例数", "拓扑", "节点分配"))
     for ep in plan_eps:
         print("  %-4d %-5d %-6s node%s" % (
@@ -1031,6 +1044,15 @@ def stage_plan(args):
     print("  波次: " + " | ".join(
         " + ".join("EP%d" % e for e in w) for w in perf_waves(plan_eps)))
     print("  .7 排除断言: perf_argv 里 host 集合 ∩ {.7} = ∅")
+    if supp:
+        print("  补测节点: EP64=[2,4,5,6]=.6/.8/.9/.10，EP4=[7]=.11；避开 .4/.5 与 .7")
+        print("  结果: round3_perf_supp.csv")
+        print()
+        if perf:
+            sample = perf[0]
+            print("示例命令（EP%d）：" % sample["ep"])
+            print("  " + " ".join(perf_argv(sample, STAGE + "/out/perf_supp", "supp_preview_c01")))
+        return 0
     print()
 
     set_phase("precision")
@@ -1094,7 +1116,12 @@ def perf_waves(eps):
     if 128 in eps:
         waves.append([128])
     rest = eps - {128}
-    if phase == "perf":
+    if phase == "supp":
+        # 补测 EP4/EP64：节点不重叠（EP64=.6/.8/.9/.10, EP4=.11），一波并行。
+        one = [e for e in (64, 4) if e in rest]
+        if one:
+            waves.append(one)
+    elif phase == "perf":
         first = [e for e in (64, 32, 16) if e in rest]
         if first:
             waves.append(first)
@@ -1117,7 +1144,9 @@ def main():
     ap.add_argument("stage", nargs="?", default="plan",
                     choices=["plan", "gate", "perf", "precision", "abnormal"])
     ap.add_argument("--eps", default="8,16,32,64",
-                    help="性能/精度阶段参与编排的 EP；C 阶段用 --eps 128")
+                    help="性能/精度阶段参与编排的 EP；C 阶段用 --eps 128；补测用 --eps 4,64 --supp")
+    ap.add_argument("--supp", action="store_true",
+                    help="补测模式：EP4/EP64 用空闲节点(.6/.8/.9/.10/.11)，避开 .4/.5 与 .7，结果写 round3_perf_supp.csv")
     ap.add_argument("--only-ep", default="", help="只跑指定 EP，如 64")
     ap.add_argument("--api", default="v2", help="精度/异常阶段的 API，如 v2 或 v1,v2")
     ap.add_argument("--scenarios", default="E4,E5", help="异常场景，默认 E4,E5")
