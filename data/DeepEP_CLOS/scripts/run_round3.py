@@ -622,27 +622,23 @@ def stage_gate(args):
             report["nodes"][h].get("idle_npus", -1) >= 16 for h in ok_nodes),
         "idle_npus": {h: report["nodes"][h].get("idle_npus", -1) for h in ok_nodes},
     }
-    report["pass"] = all([report["checks"]["all_nodes_reachable"],
-                          report["checks"]["remote_repo"],
-                          report["checks"]["is_pr_head"],
-                          report["checks"]["not_origin_main"],
-                          report["checks"]["base_ancestor"],
-                          report["checks"]["single_commit"],
-                          report["checks"]["same_container_image"],
-                          report["checks"]["container_bound"],
-                          report["checks"]["same_interpreter"],
-                          report["checks"]["deep_ep_module_path"],
-                          report["checks"]["deep_ep_buffer_sha"],
-                          report["checks"]["qp_plans_unset"],
-                          report["checks"]["so_identical"],
-                          report["checks"]["kernels_so_present"],
-                          report["checks"]["build_info_identical"],
-                          report["checks"]["no_mesh_clos"],
-                          report["checks"]["clean_worktree"],
-                          report["checks"]["cards_idle_all8"]])
+    # 代码/容器/解释器判据（不含卡空闲）：换代码是否真的生效，只看这些。
+    code_keys = ["all_nodes_reachable", "remote_repo", "is_pr_head",
+                 "not_origin_main", "base_ancestor", "single_commit",
+                 "same_container_image", "container_bound", "same_interpreter",
+                 "deep_ep_module_path", "deep_ep_buffer_sha", "qp_plans_unset",
+                 "so_identical", "kernels_so_present", "build_info_identical",
+                 "no_mesh_clos", "clean_worktree"]
+    report["code_pass"] = all(report["checks"][k] for k in code_keys)
+    report["blocked_nodes"] = sorted(h for h, n in report["checks"]["idle_npus"].items()
+                                     if n < 16)
+    # full_pass 额外要求 8 台全空闲（C:EP128 需要 128 卡整齐）。如实记录，不撒谎。
+    report["pass"] = report["code_pass"] and report["checks"]["cards_idle_all8"]
     (DATA / "round3_gate.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report["checks"], indent=2, ensure_ascii=False))
+    print("code_pass=%s  full_pass=%s  blocked_nodes=%s" %
+          (report["code_pass"], report["pass"], report["blocked_nodes"]))
     print("GATE %s -> %s" % ("PASS" if report["pass"] else "FAIL",
                              DATA / "round3_gate.json"))
     return 0 if report["pass"] else 2
@@ -651,12 +647,18 @@ def stage_gate(args):
 def require_gate():
     p = DATA / "round3_gate.json"
     if not p.exists():
-        sys.exit("没有 round3_gate.json：先跑 `python run_round3.py gate --containers ...`。"
+        sys.exit("没有 round3_gate.json：先跑 `python run_round3.py gate`。"
                  "本轮换了代码，必须先用门禁确认八机同一 PR head、同一 .so、纯 auto。")
     g = json.loads(p.read_text(encoding="utf-8"))
-    if not g.get("pass"):
-        sys.exit("gate 未通过（见 round3_gate.json），拒绝执行性能/精度，"
+    if not g.get("code_pass"):
+        sys.exit("gate 代码判据未全绿（见 round3_gate.json），拒绝执行性能/精度，"
                  "否则结果不能代表新代码。")
+    blocked = g.get("blocked_nodes") or []
+    if blocked:
+        # 不整轮否决：各阶段 run_perf_ep / run_prec_ep / stage_abnormal 开头都有
+        # check_idle(参与节点)，会在被占机器上硬挡，绝不与别人的任务抢卡。
+        print("GATE NOTE: %d 台被占 %s；仅跑不涉及这些节点的 EP，"
+              "其余（含 EP128/EP64）由 check_idle 挡住" % (len(blocked), blocked), flush=True)
     return g
 
 
